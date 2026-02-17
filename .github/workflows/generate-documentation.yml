@@ -28,15 +28,15 @@ jobs:
       - name: Generate documentation
         run: /entrypoint.py
         env:
-          INPUT_SITE_URL: "https://ponylang.github.io/json-ng/"
-          INPUT_LIBRARY_NAME: "json"
-          INPUT_DOCS_BUILD_DIR: "build/json-docs"
+          INPUT_SITE_URL: "https://ponylang.github.io/uri/"
+          INPUT_LIBRARY_NAME: "uri"
+          INPUT_DOCS_BUILD_DIR: "build/uri-docs"
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/json-docs/site/'
+          path: 'build/uri-docs/site/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
