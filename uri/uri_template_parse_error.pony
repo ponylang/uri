@@ -14,9 +14,12 @@ class val UriTemplateParseError
 
   fun string(): String iso^ =>
     """Format as "offset N: message"."""
-    let out = recover iso String end
-    out.append("offset ")
-    out.append(offset.string())
-    out.append(": ")
-    out.append(message)
+    let num: String val = offset.string()
+    let out = recover iso
+      String(7 + num.size() + 2 + message.size())
+    end
+    out.>append("offset ")
+      .>append(num)
+      .>append(": ")
+      .>append(message)
     consume out
