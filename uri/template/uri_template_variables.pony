@@ -2,12 +2,12 @@ use "collections"
 
 // A variable value: a string, a list of strings, or an associative array
 // of key-value string pairs.
-type UriTemplateValue is
+type URITemplateValue is
   ( String val
   | Array[String val] val
   | Array[(String val, String val)] val )
 
-class UriTemplateVariables
+class URITemplateVariables
   """
   A collection of named variable bindings for URI template expansion.
 
@@ -16,10 +16,10 @@ class UriTemplateVariables
   Variables not present in the collection are treated as undefined
   per RFC 6570 and produce no output during expansion.
   """
-  let _vars: Map[String val, UriTemplateValue]
+  let _vars: Map[String val, URITemplateValue]
 
   new create() =>
-    _vars = Map[String val, UriTemplateValue]
+    _vars = Map[String val, URITemplateValue]
 
   fun ref set(name: String, value: String) =>
     """Bind a string variable."""
@@ -36,7 +36,7 @@ class UriTemplateVariables
     """Bind an associative array variable."""
     _vars(name) = pairs
 
-  fun box _get(name: String): (UriTemplateValue | None) =>
+  fun box _get(name: String): (URITemplateValue | None) =>
     try
       _vars(name)?
     else

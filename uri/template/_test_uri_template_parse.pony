@@ -2,7 +2,7 @@ use "pony_test"
 
 class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
   """Reserved operators produce specific error messages."""
-  fun name(): String => "UriTemplate/parse error: reserved operator"
+  fun name(): String => "URITemplate/parse error: reserved operator"
 
   fun apply(h: TestHelper) =>
     _assert_parse_error(h, "{=var}", "reserved operator '='", 1)
@@ -17,10 +17,10 @@ class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
     expected_msg: String,
     expected_offset: USize)
   =>
-    match UriTemplateParse(template)
-    | let _: UriTemplate =>
+    match URITemplateParse(template)
+    | let _: URITemplate =>
       h.fail("expected parse error for: " + template)
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val](expected_msg, err.message
         where msg = "template: " + template)
       h.assert_eq[USize](expected_offset, err.offset
@@ -29,113 +29,113 @@ class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
 
 class \nodoc\ iso _TestParseErrorUnclosed is UnitTest
   """Unclosed expression produces error at the opening brace."""
-  fun name(): String => "UriTemplate/parse error: unclosed"
+  fun name(): String => "URITemplate/parse error: unclosed"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("{var")
-    | let _: UriTemplate =>
+    match URITemplateParse("{var")
+    | let _: URITemplate =>
       h.fail("expected parse error")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val]("unclosed expression", err.message)
       h.assert_eq[USize](0, err.offset)
     end
 
 class \nodoc\ iso _TestParseErrorEmptyExpression is UnitTest
   """Empty expression {} produces error."""
-  fun name(): String => "UriTemplate/parse error: empty expression"
+  fun name(): String => "URITemplate/parse error: empty expression"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("{}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{}")
+    | let _: URITemplate =>
       h.fail("expected parse error")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val]("empty expression", err.message)
       h.assert_eq[USize](0, err.offset)
     end
 
 class \nodoc\ iso _TestParseErrorEmptyVarname is UnitTest
   """Trailing comma with no varname produces error."""
-  fun name(): String => "UriTemplate/parse error: empty varname"
+  fun name(): String => "URITemplate/parse error: empty varname"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("{,}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{,}")
+    | let _: URITemplate =>
       h.fail("expected parse error")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       // The comma is parsed as reserved operator
       h.assert_eq[String val]("reserved operator ','", err.message)
     end
 
 class \nodoc\ iso _TestParseErrorPrefixBounds is UnitTest
   """Prefix values at boundaries: 0 too low, 10000 too high."""
-  fun name(): String => "UriTemplate/parse error: prefix bounds"
+  fun name(): String => "URITemplate/parse error: prefix bounds"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("{var:0}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{var:0}")
+    | let _: URITemplate =>
       h.fail("expected parse error for :0")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val](
         "prefix length must be at least 1", err.message)
     end
 
-    match UriTemplateParse("{var:10000}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{var:10000}")
+    | let _: URITemplate =>
       h.fail("expected parse error for :10000")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val](
         "prefix length exceeds 4 digits", err.message)
     end
 
 class \nodoc\ iso _TestParseErrorDotInVarname is UnitTest
   """Leading and consecutive dots in varnames produce errors."""
-  fun name(): String => "UriTemplate/parse error: dots in varname"
+  fun name(): String => "URITemplate/parse error: dots in varname"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("{..var}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{..var}")
+    | let _: URITemplate =>
       h.fail("expected parse error for leading dot")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val]("leading dot in varname", err.message)
     end
 
-    match UriTemplateParse("{var..x}")
-    | let _: UriTemplate =>
+    match URITemplateParse("{var..x}")
+    | let _: URITemplate =>
       h.fail("expected parse error for consecutive dots")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val](
         "consecutive dots in varname", err.message)
     end
 
 class \nodoc\ iso _TestParseErrorUnexpectedCloseBrace is UnitTest
   """Stray } in literal text produces error."""
-  fun name(): String => "UriTemplate/parse error: unexpected }"
+  fun name(): String => "URITemplate/parse error: unexpected }"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("foo}bar")
-    | let _: UriTemplate =>
+    match URITemplateParse("foo}bar")
+    | let _: URITemplate =>
       h.fail("expected parse error")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val]("unexpected '}'", err.message)
       h.assert_eq[USize](3, err.offset)
     end
 
 class \nodoc\ iso _TestParseErrorInvalidLiteralChar is UnitTest
   """Invalid literal characters (space, <, >) produce errors."""
-  fun name(): String => "UriTemplate/parse error: invalid literal char"
+  fun name(): String => "URITemplate/parse error: invalid literal char"
 
   fun apply(h: TestHelper) =>
-    match UriTemplateParse("foo bar")
-    | let _: UriTemplate =>
+    match URITemplateParse("foo bar")
+    | let _: URITemplate =>
       h.fail("expected parse error for space")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.assert_eq[String val]("invalid literal character", err.message)
       h.assert_eq[USize](3, err.offset)
     end
 
 class \nodoc\ iso _TestParseValidTemplates is UnitTest
   """Valid templates with various operators parse successfully."""
-  fun name(): String => "UriTemplate/parse valid templates"
+  fun name(): String => "URITemplate/parse valid templates"
 
   fun apply(h: TestHelper) =>
     let valid: Array[String] val = [
@@ -158,9 +158,9 @@ class \nodoc\ iso _TestParseValidTemplates is UnitTest
     ]
 
     for template in valid.values() do
-      match UriTemplateParse(template)
-      | let _: UriTemplate => None
-      | let err: UriTemplateParseError =>
+      match URITemplateParse(template)
+      | let _: URITemplate => None
+      | let err: URITemplateParseError =>
         h.fail("unexpected parse error for '" + template + "': "
           + err.string())
       end

@@ -4,8 +4,8 @@ primitive \nodoc\ _RFC6570Vars
   """
   Build the RFC 6570 standard variable set used across test groups.
   """
-  fun apply(): UriTemplateVariables =>
-    let vars = UriTemplateVariables
+  fun apply(): URITemplateVariables =>
+    let vars = URITemplateVariables
     vars.set("count", "one,two,three")
     vars.set("dom", "example.com")
     vars.set("dub", "me/too")
@@ -26,7 +26,7 @@ primitive \nodoc\ _RFC6570Vars
 
 class \nodoc\ iso _TestSimpleExpansion is UnitTest
   """RFC 6570 Section 3.2.2: Simple string expansion."""
-  fun name(): String => "UriTemplate/simple expansion"
+  fun name(): String => "URITemplate/simple expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -52,10 +52,10 @@ class \nodoc\ iso _TestSimpleExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -65,7 +65,7 @@ class \nodoc\ iso _TestSimpleExpansion is UnitTest
 
 class \nodoc\ iso _TestReservedExpansion is UnitTest
   """RFC 6570 Section 3.2.3: Reserved expansion (+)."""
-  fun name(): String => "UriTemplate/reserved expansion"
+  fun name(): String => "URITemplate/reserved expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -94,10 +94,10 @@ class \nodoc\ iso _TestReservedExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -107,7 +107,7 @@ class \nodoc\ iso _TestReservedExpansion is UnitTest
 
 class \nodoc\ iso _TestFragmentExpansion is UnitTest
   """RFC 6570 Section 3.2.4: Fragment expansion (#)."""
-  fun name(): String => "UriTemplate/fragment expansion"
+  fun name(): String => "URITemplate/fragment expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -129,10 +129,10 @@ class \nodoc\ iso _TestFragmentExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -142,7 +142,7 @@ class \nodoc\ iso _TestFragmentExpansion is UnitTest
 
 class \nodoc\ iso _TestLabelExpansion is UnitTest
   """RFC 6570 Section 3.2.5: Label expansion with dot-prefix (.)."""
-  fun name(): String => "UriTemplate/label expansion"
+  fun name(): String => "URITemplate/label expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -164,10 +164,10 @@ class \nodoc\ iso _TestLabelExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -177,7 +177,7 @@ class \nodoc\ iso _TestLabelExpansion is UnitTest
 
 class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
   """RFC 6570 Section 3.2.6: Path segments (/)."""
-  fun name(): String => "UriTemplate/path segment expansion"
+  fun name(): String => "URITemplate/path segment expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -201,10 +201,10 @@ class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -214,7 +214,7 @@ class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
 
 class \nodoc\ iso _TestPathParameterExpansion is UnitTest
   """RFC 6570 Section 3.2.7: Path-style parameters (;)."""
-  fun name(): String => "UriTemplate/path parameter expansion"
+  fun name(): String => "URITemplate/path parameter expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -237,10 +237,10 @@ class \nodoc\ iso _TestPathParameterExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -250,7 +250,7 @@ class \nodoc\ iso _TestPathParameterExpansion is UnitTest
 
 class \nodoc\ iso _TestQueryExpansion is UnitTest
   """RFC 6570 Section 3.2.8: Form-style query (?)."""
-  fun name(): String => "UriTemplate/query expansion"
+  fun name(): String => "URITemplate/query expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -270,10 +270,10 @@ class \nodoc\ iso _TestQueryExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -283,7 +283,7 @@ class \nodoc\ iso _TestQueryExpansion is UnitTest
 
 class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
   """RFC 6570 Section 3.2.9: Form-style query continuation (&)."""
-  fun name(): String => "UriTemplate/query continuation expansion"
+  fun name(): String => "URITemplate/query continuation expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -303,10 +303,10 @@ class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
     h: TestHelper,
     template: String,
     expected: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](expected, result
         where msg = "template: " + template)
@@ -316,15 +316,15 @@ class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
 
 class \nodoc\ iso _TestEmptyListUndefined is UnitTest
   """Empty list is treated as undefined — produces no output."""
-  fun name(): String => "UriTemplate/empty list is undefined"
+  fun name(): String => "URITemplate/empty list is undefined"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set_list("empty_list", recover val Array[String val] end)
     vars.set("x", "1024")
 
     try
-      let tpl = UriTemplate("{?x,empty_list}")?
+      let tpl = URITemplate("{?x,empty_list}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val]("?x=1024", result)
     else
@@ -333,16 +333,16 @@ class \nodoc\ iso _TestEmptyListUndefined is UnitTest
 
 class \nodoc\ iso _TestEmptyPairsUndefined is UnitTest
   """Empty pairs is treated as undefined — produces no output."""
-  fun name(): String => "UriTemplate/empty pairs is undefined"
+  fun name(): String => "URITemplate/empty pairs is undefined"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set_pairs("empty_pairs",
       recover val Array[(String val, String val)] end)
     vars.set("x", "1024")
 
     try
-      let tpl = UriTemplate("{?x,empty_pairs}")?
+      let tpl = URITemplate("{?x,empty_pairs}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val]("?x=1024", result)
     else
@@ -351,13 +351,13 @@ class \nodoc\ iso _TestEmptyPairsUndefined is UnitTest
 
 class \nodoc\ iso _TestAllUndefined is UnitTest
   """All variables undefined produces empty string for expression."""
-  fun name(): String => "UriTemplate/all undefined"
+  fun name(): String => "URITemplate/all undefined"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
 
     try
-      let tpl = UriTemplate("{?x,y,z}")?
+      let tpl = URITemplate("{?x,y,z}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val]("", result)
     else
@@ -366,15 +366,15 @@ class \nodoc\ iso _TestAllUndefined is UnitTest
 
 class \nodoc\ iso _TestExplodeListQuery is UnitTest
   """Exploded list with query: each item gets name= prefix."""
-  fun name(): String => "UriTemplate/explode list query"
+  fun name(): String => "URITemplate/explode list query"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set_list("colors",
       recover val ["red"; "green"; "blue"] end)
 
     try
-      let tpl = UriTemplate("{?colors*}")?
+      let tpl = URITemplate("{?colors*}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val]("?colors=red&colors=green&colors=blue", result)
     else
@@ -383,15 +383,15 @@ class \nodoc\ iso _TestExplodeListQuery is UnitTest
 
 class \nodoc\ iso _TestExplodePairsQuery is UnitTest
   """Exploded pairs with query: each pair becomes key=value."""
-  fun name(): String => "UriTemplate/explode pairs query"
+  fun name(): String => "URITemplate/explode pairs query"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set_pairs("opts",
       recover val [("page", "1"); ("size", "10")] end)
 
     try
-      let tpl = UriTemplate("{?opts*}")?
+      let tpl = URITemplate("{?opts*}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val]("?page=1&size=10", result)
     else
@@ -400,13 +400,13 @@ class \nodoc\ iso _TestExplodePairsQuery is UnitTest
 
 class \nodoc\ iso _TestExplodeListSemicolon is UnitTest
   """Exploded list with semicolon: name=value for each item per RFC 6570."""
-  fun name(): String => "UriTemplate/explode list semicolon"
+  fun name(): String => "URITemplate/explode list semicolon"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
 
     try
-      let tpl = UriTemplate("{;list*}")?
+      let tpl = URITemplate("{;list*}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](";list=red;list=green;list=blue", result)
     else
@@ -415,10 +415,10 @@ class \nodoc\ iso _TestExplodeListSemicolon is UnitTest
 
 class \nodoc\ iso _TestPrefixUnicode is UnitTest
   """Prefix modifier counts codepoints, not bytes."""
-  fun name(): String => "UriTemplate/prefix counts codepoints"
+  fun name(): String => "URITemplate/prefix counts codepoints"
 
   fun apply(h: TestHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     // Build "cafés" manually: c a f é(0xC3 0xA9) s
     let word = recover val
       let s = String
@@ -433,7 +433,7 @@ class \nodoc\ iso _TestPrefixUnicode is UnitTest
     vars.set("word", word)
 
     try
-      let tpl = UriTemplate("{word:4}")?
+      let tpl = URITemplate("{word:4}")?
       let result: String val = tpl.expand(vars)
       // First 4 codepoints: c a f é => encoded as caf%C3%A9
       h.assert_eq[String val]("caf%C3%A9", result)
@@ -442,8 +442,8 @@ class \nodoc\ iso _TestPrefixUnicode is UnitTest
     end
 
 class \nodoc\ iso _TestTemplateString is UnitTest
-  """UriTemplate.string() returns the original template."""
-  fun name(): String => "UriTemplate/string roundtrip"
+  """URITemplate.string() returns the original template."""
+  fun name(): String => "URITemplate/string roundtrip"
 
   fun apply(h: TestHelper) =>
     let templates: Array[String] val = [
@@ -455,7 +455,7 @@ class \nodoc\ iso _TestTemplateString is UnitTest
 
     for template in templates.values() do
       try
-        let tpl = UriTemplate(template)?
+        let tpl = URITemplate(template)?
         h.assert_eq[String val](template, tpl.string())
       else
         h.fail("failed to parse: " + template)

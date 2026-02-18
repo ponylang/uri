@@ -1,6 +1,7 @@
 {
   "packages": [
-    "uri"
+    "uri",
+    "uri/template"
   ],
   "info": {
     "description": "URI parsing, manipulation, and template expansion library for Pony",

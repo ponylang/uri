@@ -1,4 +1,4 @@
-class val UriTemplateParseError
+class val URITemplateParseError
   """
   Describes why a URI template string failed to parse.
 

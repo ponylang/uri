@@ -1,15 +1,15 @@
 use "collections"
 
-primitive _UriTemplateParser
+primitive _URITemplateParser
   """
   Single-pass left-to-right parser for RFC 6570 URI templates.
 
   Scans the template string, producing an array of `_TemplatePart` values
-  (literals and expressions) on success, or a `UriTemplateParseError`
+  (literals and expressions) on success, or a `URITemplateParseError`
   describing the first syntax error encountered.
   """
   fun parse(template: String)
-    : (Array[_TemplatePart] val | UriTemplateParseError)
+    : (Array[_TemplatePart] val | URITemplateParseError)
   =>
     let parts: Array[_TemplatePart] iso =
       recover iso Array[_TemplatePart] end
@@ -22,7 +22,7 @@ primitive _UriTemplateParser
           | (let expr: _Expression, let next: USize) =>
             parts.push(expr)
             i = next
-          | let err: UriTemplateParseError =>
+          | let err: URITemplateParseError =>
             return err
           end
         else
@@ -30,20 +30,20 @@ primitive _UriTemplateParser
           | (let lit: _Literal, let next: USize) =>
             parts.push(lit)
             i = next
-          | let err: UriTemplateParseError =>
+          | let err: URITemplateParseError =>
             return err
           end
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
     end
 
     consume parts
 
   fun _parse_literal(template: String, start: USize)
-    : ((_Literal, USize) | UriTemplateParseError)
+    : ((_Literal, USize) | URITemplateParseError)
   =>
     var i = start
     while i < template.size() do
@@ -52,7 +52,7 @@ primitive _UriTemplateParser
         if byte == '{' then
           break
         elseif byte == '}' then
-          return UriTemplateParseError("unexpected '}'", i)
+          return URITemplateParseError("unexpected '}'", i)
         elseif not _is_literal_char(byte) then
           // Check for pct-encoded triplet
           if (byte == '%') and ((i + 2) < template.size())
@@ -61,14 +61,14 @@ primitive _UriTemplateParser
           then
             i = i + 3
           else
-            return UriTemplateParseError("invalid literal character", i)
+            return URITemplateParseError("invalid literal character", i)
           end
         else
           i = i + 1
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
     end
 
@@ -77,7 +77,7 @@ primitive _UriTemplateParser
     else
       // Should not happen — caller checks for '{' before calling
       _Unreachable()
-      UriTemplateParseError("internal error", start)
+      URITemplateParseError("internal error", start)
     end
 
   fun _is_literal_char(byte: U8): Bool =>
@@ -105,13 +105,13 @@ primitive _UriTemplateParser
     end
 
   fun _parse_expression(template: String, start: USize)
-    : ((_Expression, USize) | UriTemplateParseError)
+    : ((_Expression, USize) | URITemplateParseError)
   =>
     // start points at '{'
     var i = start + 1
 
     if i >= template.size() then
-      return UriTemplateParseError("unclosed expression", start)
+      return URITemplateParseError("unclosed expression", start)
     end
 
     // Check for operator
@@ -125,24 +125,24 @@ primitive _UriTemplateParser
         | ';' => i = i + 1; _OpSemicolon
         | '?' => i = i + 1; _OpQuestion
         | '&' => i = i + 1; _OpAmpersand
-        | '=' => return UriTemplateParseError(
+        | '=' => return URITemplateParseError(
             "reserved operator '='", start + 1)
-        | ',' => return UriTemplateParseError(
+        | ',' => return URITemplateParseError(
             "reserved operator ','", start + 1)
-        | '!' => return UriTemplateParseError(
+        | '!' => return URITemplateParseError(
             "reserved operator '!'", start + 1)
-        | '@' => return UriTemplateParseError(
+        | '@' => return URITemplateParseError(
             "reserved operator '@'", start + 1)
-        | '|' => return UriTemplateParseError(
+        | '|' => return URITemplateParseError(
             "reserved operator '|'", start + 1)
-        | '}' => return UriTemplateParseError(
+        | '}' => return URITemplateParseError(
             "empty expression", start)
         else
           _OpNone
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
 
     // Parse comma-separated varspecs
@@ -154,26 +154,26 @@ primitive _UriTemplateParser
       try
         if template(i)? == '}' then
           if first then
-            return UriTemplateParseError("empty expression", start)
+            return URITemplateParseError("empty expression", start)
           end
           return (_Expression(op, consume varspecs), i + 1)
         end
 
         if not first then
           if template(i)? != ',' then
-            return UriTemplateParseError("expected ',' or '}'", i)
+            return URITemplateParseError("expected ',' or '}'", i)
           end
           i = i + 1
           if (i >= template.size()) then
-            return UriTemplateParseError("unclosed expression", start)
+            return URITemplateParseError("unclosed expression", start)
           end
           try
             if template(i)? == '}' then
-              return UriTemplateParseError("empty varname", i)
+              return URITemplateParseError("empty varname", i)
             end
           else
             _Unreachable()
-            return UriTemplateParseError("internal error", i)
+            return URITemplateParseError("internal error", i)
           end
         end
 
@@ -182,26 +182,26 @@ primitive _UriTemplateParser
           varspecs.push(vs)
           i = next
           first = false
-        | let err: UriTemplateParseError =>
+        | let err: URITemplateParseError =>
           return err
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
     end
 
-    UriTemplateParseError("unclosed expression", start)
+    URITemplateParseError("unclosed expression", start)
 
   fun _parse_varspec(template: String, start: USize)
-    : ((_VarSpec, USize) | UriTemplateParseError)
+    : ((_VarSpec, USize) | URITemplateParseError)
   =>
     // Parse varname
     match _parse_varname(template, start)
     | (let name: String val, let i: USize) =>
       // Check for modifier
       if i >= template.size() then
-        return UriTemplateParseError("unclosed expression",
+        return URITemplateParseError("unclosed expression",
           _find_open_brace(template, start))
       end
       try
@@ -211,7 +211,7 @@ primitive _UriTemplateParser
           match _parse_prefix(template, i + 1)
           | (let max_len: USize, let next: USize) =>
             (_VarSpec(name, _ModPrefix(max_len)), next)
-          | let err: UriTemplateParseError =>
+          | let err: URITemplateParseError =>
             err
           end
         | '*' =>
@@ -221,33 +221,33 @@ primitive _UriTemplateParser
         end
       else
         _Unreachable()
-        UriTemplateParseError("internal error", i)
+        URITemplateParseError("internal error", i)
       end
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       err
     end
 
   fun _parse_varname(template: String, start: USize)
-    : ((String val, USize) | UriTemplateParseError)
+    : ((String val, USize) | URITemplateParseError)
   =>
     var i = start
     var after_dot = false
 
     // First character must be a varchar (not a dot)
     if i >= template.size() then
-      return UriTemplateParseError("empty varname", start)
+      return URITemplateParseError("empty varname", start)
     end
 
     try
       if not _is_varchar_start(template(i)?) then
         if template(i)? == '.' then
-          return UriTemplateParseError("leading dot in varname", i)
+          return URITemplateParseError("leading dot in varname", i)
         end
-        return UriTemplateParseError("invalid varname character", i)
+        return URITemplateParseError("invalid varname character", i)
       end
     else
       _Unreachable()
-      return UriTemplateParseError("internal error", i)
+      return URITemplateParseError("internal error", i)
     end
 
     // Consume varchar characters with optional dots between segments
@@ -263,7 +263,7 @@ primitive _UriTemplateParser
             then
               i = i + 3
             else
-              return UriTemplateParseError(
+              return URITemplateParseError(
                 "invalid pct-encoded triplet in varname", i)
             end
           else
@@ -272,7 +272,7 @@ primitive _UriTemplateParser
           after_dot = false
         elseif byte == '.' then
           if after_dot then
-            return UriTemplateParseError(
+            return URITemplateParseError(
               "consecutive dots in varname", i)
           end
           after_dot = true
@@ -282,16 +282,16 @@ primitive _UriTemplateParser
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
     end
 
     if after_dot then
-      return UriTemplateParseError("trailing dot in varname", i - 1)
+      return URITemplateParseError("trailing dot in varname", i - 1)
     end
 
     if i == start then
-      return UriTemplateParseError("empty varname", start)
+      return URITemplateParseError("empty varname", start)
     end
 
     (template.substring(start.isize(), i.isize()), i)
@@ -308,7 +308,7 @@ primitive _UriTemplateParser
       or (byte == '%')
 
   fun _parse_prefix(template: String, start: USize)
-    : ((USize, USize) | UriTemplateParseError)
+    : ((USize, USize) | URITemplateParseError)
   =>
     var i = start
     var digits: USize = 0
@@ -320,7 +320,7 @@ primitive _UriTemplateParser
         if (byte >= '0') and (byte <= '9') then
           digits = digits + 1
           if digits > 4 then
-            return UriTemplateParseError(
+            return URITemplateParseError(
               "prefix length exceeds 4 digits", start)
           end
           value = (value * 10) + (byte - '0').usize()
@@ -330,21 +330,21 @@ primitive _UriTemplateParser
         end
       else
         _Unreachable()
-        return UriTemplateParseError("internal error", i)
+        return URITemplateParseError("internal error", i)
       end
     end
 
     if digits == 0 then
-      return UriTemplateParseError("prefix length missing", start)
+      return URITemplateParseError("prefix length missing", start)
     end
 
     if value == 0 then
-      return UriTemplateParseError("prefix length must be at least 1",
+      return URITemplateParseError("prefix length must be at least 1",
         start)
     end
 
     if value > 9999 then
-      return UriTemplateParseError("prefix length exceeds 9999", start)
+      return URITemplateParseError("prefix length exceeds 9999", start)
     end
 
     (value, i)
