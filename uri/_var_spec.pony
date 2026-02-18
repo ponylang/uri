@@ -24,5 +24,5 @@ class val _ModPrefix
 primitive _ModExplode
   """Explode modifier (*) — expand composite values."""
 
-// Type alias can't have docstrings in Pony
+// A variable modifier: none, prefix (:N), or explode (*).
 type _Modifier is (_ModNone | _ModPrefix | _ModExplode)

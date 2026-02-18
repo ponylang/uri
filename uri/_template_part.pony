@@ -23,5 +23,5 @@ class val _Expression
     operator = operator'
     varspecs = varspecs'
 
-// Type alias can't have docstrings in Pony
+// A segment of a parsed URI template: either literal text or an expression.
 type _TemplatePart is (_Literal | _Expression)

@@ -22,7 +22,7 @@ primitive _OpQuestion
 primitive _OpAmpersand
   """Form-style query continuation (&)."""
 
-// Type alias can't have docstrings in Pony
+// The set of RFC 6570 expression operators.
 type _Operator is
   ( _OpNone | _OpPlus | _OpHash | _OpDot
   | _OpSlash | _OpSemicolon | _OpQuestion | _OpAmpersand )

@@ -1,6 +1,7 @@
 use "collections"
 
-// Type alias can't have docstrings in Pony
+// A variable value: a string, a list of strings, or an associative array
+// of key-value string pairs.
 type UriTemplateValue is
   ( String val
   | Array[String val] val
