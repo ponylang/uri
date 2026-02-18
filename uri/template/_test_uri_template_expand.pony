@@ -26,7 +26,7 @@ primitive \nodoc\ _RFC6570Vars
 
 class \nodoc\ iso _TestSimpleExpansion is UnitTest
   """RFC 6570 Section 3.2.2: Simple string expansion."""
-  fun name(): String => "URITemplate/simple expansion"
+  fun name(): String => "uri/template/simple expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -65,7 +65,7 @@ class \nodoc\ iso _TestSimpleExpansion is UnitTest
 
 class \nodoc\ iso _TestReservedExpansion is UnitTest
   """RFC 6570 Section 3.2.3: Reserved expansion (+)."""
-  fun name(): String => "URITemplate/reserved expansion"
+  fun name(): String => "uri/template/reserved expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -107,7 +107,7 @@ class \nodoc\ iso _TestReservedExpansion is UnitTest
 
 class \nodoc\ iso _TestFragmentExpansion is UnitTest
   """RFC 6570 Section 3.2.4: Fragment expansion (#)."""
-  fun name(): String => "URITemplate/fragment expansion"
+  fun name(): String => "uri/template/fragment expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -142,7 +142,7 @@ class \nodoc\ iso _TestFragmentExpansion is UnitTest
 
 class \nodoc\ iso _TestLabelExpansion is UnitTest
   """RFC 6570 Section 3.2.5: Label expansion with dot-prefix (.)."""
-  fun name(): String => "URITemplate/label expansion"
+  fun name(): String => "uri/template/label expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -177,7 +177,7 @@ class \nodoc\ iso _TestLabelExpansion is UnitTest
 
 class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
   """RFC 6570 Section 3.2.6: Path segments (/)."""
-  fun name(): String => "URITemplate/path segment expansion"
+  fun name(): String => "uri/template/path segment expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -214,7 +214,7 @@ class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
 
 class \nodoc\ iso _TestPathParameterExpansion is UnitTest
   """RFC 6570 Section 3.2.7: Path-style parameters (;)."""
-  fun name(): String => "URITemplate/path parameter expansion"
+  fun name(): String => "uri/template/path parameter expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -250,7 +250,7 @@ class \nodoc\ iso _TestPathParameterExpansion is UnitTest
 
 class \nodoc\ iso _TestQueryExpansion is UnitTest
   """RFC 6570 Section 3.2.8: Form-style query (?)."""
-  fun name(): String => "URITemplate/query expansion"
+  fun name(): String => "uri/template/query expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -283,7 +283,7 @@ class \nodoc\ iso _TestQueryExpansion is UnitTest
 
 class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
   """RFC 6570 Section 3.2.9: Form-style query continuation (&)."""
-  fun name(): String => "URITemplate/query continuation expansion"
+  fun name(): String => "uri/template/query continuation expansion"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -316,7 +316,7 @@ class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
 
 class \nodoc\ iso _TestEmptyListUndefined is UnitTest
   """Empty list is treated as undefined — produces no output."""
-  fun name(): String => "URITemplate/empty list is undefined"
+  fun name(): String => "uri/template/empty list is undefined"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -333,7 +333,7 @@ class \nodoc\ iso _TestEmptyListUndefined is UnitTest
 
 class \nodoc\ iso _TestEmptyPairsUndefined is UnitTest
   """Empty pairs is treated as undefined — produces no output."""
-  fun name(): String => "URITemplate/empty pairs is undefined"
+  fun name(): String => "uri/template/empty pairs is undefined"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -351,7 +351,7 @@ class \nodoc\ iso _TestEmptyPairsUndefined is UnitTest
 
 class \nodoc\ iso _TestAllUndefined is UnitTest
   """All variables undefined produces empty string for expression."""
-  fun name(): String => "URITemplate/all undefined"
+  fun name(): String => "uri/template/all undefined"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -366,7 +366,7 @@ class \nodoc\ iso _TestAllUndefined is UnitTest
 
 class \nodoc\ iso _TestExplodeListQuery is UnitTest
   """Exploded list with query: each item gets name= prefix."""
-  fun name(): String => "URITemplate/explode list query"
+  fun name(): String => "uri/template/explode list query"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -383,7 +383,7 @@ class \nodoc\ iso _TestExplodeListQuery is UnitTest
 
 class \nodoc\ iso _TestExplodePairsQuery is UnitTest
   """Exploded pairs with query: each pair becomes key=value."""
-  fun name(): String => "URITemplate/explode pairs query"
+  fun name(): String => "uri/template/explode pairs query"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -400,7 +400,7 @@ class \nodoc\ iso _TestExplodePairsQuery is UnitTest
 
 class \nodoc\ iso _TestExplodeListSemicolon is UnitTest
   """Exploded list with semicolon: name=value for each item per RFC 6570."""
-  fun name(): String => "URITemplate/explode list semicolon"
+  fun name(): String => "uri/template/explode list semicolon"
 
   fun apply(h: TestHelper) =>
     let vars = _RFC6570Vars()
@@ -415,7 +415,7 @@ class \nodoc\ iso _TestExplodeListSemicolon is UnitTest
 
 class \nodoc\ iso _TestPrefixUnicode is UnitTest
   """Prefix modifier counts codepoints, not bytes."""
-  fun name(): String => "URITemplate/prefix counts codepoints"
+  fun name(): String => "uri/template/prefix counts codepoints"
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
@@ -443,7 +443,7 @@ class \nodoc\ iso _TestPrefixUnicode is UnitTest
 
 class \nodoc\ iso _TestTemplateString is UnitTest
   """URITemplate.string() returns the original template."""
-  fun name(): String => "URITemplate/string roundtrip"
+  fun name(): String => "uri/template/string roundtrip"
 
   fun apply(h: TestHelper) =>
     let templates: Array[String] val = [

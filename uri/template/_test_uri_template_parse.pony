@@ -2,7 +2,7 @@ use "pony_test"
 
 class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
   """Reserved operators produce specific error messages."""
-  fun name(): String => "URITemplate/parse error: reserved operator"
+  fun name(): String => "uri/template/parse error: reserved operator"
 
   fun apply(h: TestHelper) =>
     _assert_parse_error(h, "{=var}", "reserved operator '='", 1)
@@ -29,7 +29,7 @@ class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
 
 class \nodoc\ iso _TestParseErrorUnclosed is UnitTest
   """Unclosed expression produces error at the opening brace."""
-  fun name(): String => "URITemplate/parse error: unclosed"
+  fun name(): String => "uri/template/parse error: unclosed"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("{var")
@@ -42,7 +42,7 @@ class \nodoc\ iso _TestParseErrorUnclosed is UnitTest
 
 class \nodoc\ iso _TestParseErrorEmptyExpression is UnitTest
   """Empty expression {} produces error."""
-  fun name(): String => "URITemplate/parse error: empty expression"
+  fun name(): String => "uri/template/parse error: empty expression"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("{}")
@@ -55,7 +55,7 @@ class \nodoc\ iso _TestParseErrorEmptyExpression is UnitTest
 
 class \nodoc\ iso _TestParseErrorEmptyVarname is UnitTest
   """Trailing comma with no varname produces error."""
-  fun name(): String => "URITemplate/parse error: empty varname"
+  fun name(): String => "uri/template/parse error: empty varname"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("{,}")
@@ -68,7 +68,7 @@ class \nodoc\ iso _TestParseErrorEmptyVarname is UnitTest
 
 class \nodoc\ iso _TestParseErrorPrefixBounds is UnitTest
   """Prefix values at boundaries: 0 too low, 10000 too high."""
-  fun name(): String => "URITemplate/parse error: prefix bounds"
+  fun name(): String => "uri/template/parse error: prefix bounds"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("{var:0}")
@@ -89,7 +89,7 @@ class \nodoc\ iso _TestParseErrorPrefixBounds is UnitTest
 
 class \nodoc\ iso _TestParseErrorDotInVarname is UnitTest
   """Leading and consecutive dots in varnames produce errors."""
-  fun name(): String => "URITemplate/parse error: dots in varname"
+  fun name(): String => "uri/template/parse error: dots in varname"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("{..var}")
@@ -109,7 +109,7 @@ class \nodoc\ iso _TestParseErrorDotInVarname is UnitTest
 
 class \nodoc\ iso _TestParseErrorUnexpectedCloseBrace is UnitTest
   """Stray } in literal text produces error."""
-  fun name(): String => "URITemplate/parse error: unexpected }"
+  fun name(): String => "uri/template/parse error: unexpected }"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("foo}bar")
@@ -122,7 +122,7 @@ class \nodoc\ iso _TestParseErrorUnexpectedCloseBrace is UnitTest
 
 class \nodoc\ iso _TestParseErrorInvalidLiteralChar is UnitTest
   """Invalid literal characters (space, <, >) produce errors."""
-  fun name(): String => "URITemplate/parse error: invalid literal char"
+  fun name(): String => "uri/template/parse error: invalid literal char"
 
   fun apply(h: TestHelper) =>
     match URITemplateParse("foo bar")
@@ -135,7 +135,7 @@ class \nodoc\ iso _TestParseErrorInvalidLiteralChar is UnitTest
 
 class \nodoc\ iso _TestParseValidTemplates is UnitTest
   """Valid templates with various operators parse successfully."""
-  fun name(): String => "URITemplate/parse valid templates"
+  fun name(): String => "uri/template/parse valid templates"
 
   fun apply(h: TestHelper) =>
     let valid: Array[String] val = [

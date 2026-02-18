@@ -3,7 +3,7 @@ use "pony_check"
 
 class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
   """Property: expansion output contains no raw braces."""
-  fun name(): String => "URITemplate/property: no braces in expansion"
+  fun name(): String => "uri/template/property: no braces in expansion"
 
   fun gen(): Generator[String] =>
     // Generate valid templates from building blocks
@@ -32,7 +32,7 @@ class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
 class \nodoc\ iso _TestPropertyUnreservedPassthrough is Property1[String]
   """Property: unreserved values in simple expansion pass through unchanged."""
   fun name(): String =>
-    "URITemplate/property: unreserved value passthrough"
+    "uri/template/property: unreserved value passthrough"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.unreserved_string(1, 30)
@@ -50,7 +50,7 @@ class \nodoc\ iso _TestPropertyUnreservedPassthrough is Property1[String]
 
 class \nodoc\ iso _TestPropertyValidTemplatesParse is Property1[String]
   """Property: valid generated templates always parse successfully."""
-  fun name(): String => "URITemplate/property: valid templates parse"
+  fun name(): String => "uri/template/property: valid templates parse"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.valid_template()
@@ -65,7 +65,7 @@ class \nodoc\ iso _TestPropertyValidTemplatesParse is Property1[String]
 
 class \nodoc\ iso _TestPropertyInvalidTemplatesFail is Property1[String]
   """Property: invalid generated templates always fail to parse."""
-  fun name(): String => "URITemplate/property: invalid templates fail"
+  fun name(): String => "uri/template/property: invalid templates fail"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.invalid_template()
@@ -81,7 +81,7 @@ class \nodoc\ iso _TestPropertyMixedTemplates is Property1[(String, Bool)]
   """
   Property: mixed valid/invalid templates succeed iff they're the valid variant.
   """
-  fun name(): String => "URITemplate/property: mixed valid/invalid boundary"
+  fun name(): String => "uri/template/property: mixed valid/invalid boundary"
 
   fun gen(): Generator[(String, Bool)] =>
     _TemplateGenerators.mixed_template()

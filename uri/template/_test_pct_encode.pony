@@ -3,7 +3,7 @@ use "pony_check"
 
 class \nodoc\ iso _TestPctEncodeUnreservedPassthrough is UnitTest
   """Unreserved characters are never pct-encoded in either mode."""
-  fun name(): String => "PctEncode/unreserved passthrough"
+  fun name(): String => "uri/template/pct_encode/unreserved passthrough"
 
   fun apply(h: TestHelper) =>
     let unreserved = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
@@ -15,7 +15,7 @@ class \nodoc\ iso _TestPctEncodeUnreservedPassthrough is UnitTest
 
 class \nodoc\ iso _TestPctEncodeSpecialChars is UnitTest
   """Special characters are pct-encoded in unreserved mode."""
-  fun name(): String => "PctEncode/special chars encoded"
+  fun name(): String => "uri/template/pct_encode/special chars encoded"
 
   fun apply(h: TestHelper) =>
     h.assert_eq[String val]("%20", _PctEncode.encode(" ", false))
@@ -28,7 +28,7 @@ class \nodoc\ iso _TestPctEncodeSpecialChars is UnitTest
 
 class \nodoc\ iso _TestPctEncodeReservedPassthrough is UnitTest
   """Reserved characters pass through in reserved mode."""
-  fun name(): String => "PctEncode/reserved passthrough"
+  fun name(): String => "uri/template/pct_encode/reserved passthrough"
 
   fun apply(h: TestHelper) =>
     let reserved = ":/?#[]@!$&'()*+,;="
@@ -37,7 +37,7 @@ class \nodoc\ iso _TestPctEncodeReservedPassthrough is UnitTest
 
 class \nodoc\ iso _TestPctEncodeMultibyteUtf8 is UnitTest
   """Multi-byte UTF-8 characters are pct-encoded byte by byte."""
-  fun name(): String => "PctEncode/multibyte UTF-8"
+  fun name(): String => "uri/template/pct_encode/multibyte UTF-8"
 
   fun apply(h: TestHelper) =>
     // é is U+00E9, encoded as C3 A9 in UTF-8
@@ -62,7 +62,7 @@ class \nodoc\ iso _TestPctEncodeMultibyteUtf8 is UnitTest
 
 class \nodoc\ iso _TestPctEncodeExistingTriplets is UnitTest
   """Existing %XX triplets pass through in reserved mode, re-encoded otherwise."""
-  fun name(): String => "PctEncode/existing triplets"
+  fun name(): String => "uri/template/pct_encode/existing triplets"
 
   fun apply(h: TestHelper) =>
     // Reserved mode: pass through existing triplets
@@ -74,7 +74,7 @@ class \nodoc\ iso _TestPctEncodeExistingTriplets is UnitTest
 
 class \nodoc\ iso _TestPctEncodeMixedContent is UnitTest
   """Mixed content with unreserved, reserved, and multi-byte chars."""
-  fun name(): String => "PctEncode/mixed content"
+  fun name(): String => "uri/template/pct_encode/mixed content"
 
   fun apply(h: TestHelper) =>
     // Space is encoded in both modes (not unreserved, not reserved)
@@ -85,7 +85,7 @@ class \nodoc\ iso _TestPctEncodeMixedContent is UnitTest
 
 class \nodoc\ iso _TestPctEncodePropertyUnreserved is Property1[String]
   """Property: unreserved-only strings pass through unchanged."""
-  fun name(): String => "PctEncode/property: unreserved passthrough"
+  fun name(): String => "uri/template/pct_encode/property: unreserved passthrough"
 
   fun gen(): Generator[String] =>
     // Generate strings from unreserved character set only
@@ -115,7 +115,7 @@ class \nodoc\ iso _TestPctEncodePropertyUnreserved is Property1[String]
 
 class \nodoc\ iso _TestPctEncodePropertyRoundtrip is Property1[String]
   """Property: decoding an unreserved-mode encoding yields the original."""
-  fun name(): String => "PctEncode/property: roundtrip"
+  fun name(): String => "uri/template/pct_encode/property: roundtrip"
 
   fun gen(): Generator[String] =>
     Generators.ascii_printable(0, 50)
@@ -158,7 +158,7 @@ class \nodoc\ iso _TestPctEncodePropertyRoundtrip is Property1[String]
 
 class \nodoc\ iso _TestPctEncodePropertyReservedSuperset is Property1[String]
   """Property: reserved encoding passes through everything unreserved does, plus more."""
-  fun name(): String => "PctEncode/property: reserved is superset"
+  fun name(): String => "uri/template/pct_encode/property: reserved is superset"
 
   fun gen(): Generator[String] =>
     Generators.ascii_printable(1, 50)
