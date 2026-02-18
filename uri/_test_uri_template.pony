@@ -1,11 +1,10 @@
 use "pony_test"
 use "pony_check"
 
-// ============================================================================
-// Helper to build the RFC 6570 standard variable set used across test groups
-// ============================================================================
-
-primitive _RFC6570Vars
+primitive \nodoc\ _RFC6570Vars
+  """
+  Build the RFC 6570 standard variable set used across test groups.
+  """
   fun apply(): UriTemplateVariables =>
     let vars = UriTemplateVariables
     vars.set("count", "one,two,three")
@@ -744,11 +743,10 @@ class \nodoc\ iso _TestPropertyMixedTemplates is Property1[(String, Bool)]
       end
     end
 
-// ============================================================================
-// Template generators for property tests
-// ============================================================================
-
-primitive _TemplateGenerators
+primitive \nodoc\ _TemplateGenerators
+  """
+  Generators for property-based URI template tests.
+  """
   fun unreserved_string(
     min: USize = 0,
     max: USize = 30)
