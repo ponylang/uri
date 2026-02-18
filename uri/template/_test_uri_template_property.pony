@@ -3,15 +3,15 @@ use "pony_check"
 
 class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
   """Property: expansion output contains no raw braces."""
-  fun name(): String => "UriTemplate/property: no braces in expansion"
+  fun name(): String => "uri/template/property: no braces in expansion"
 
   fun gen(): Generator[String] =>
     // Generate valid templates from building blocks
     _TemplateGenerators.valid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match UriTemplateParse(arg1)
-    | let tpl: UriTemplate =>
+    match URITemplateParse(arg1)
+    | let tpl: URITemplate =>
       let vars = _RFC6570Vars()
       let result: String val = tpl.expand(vars)
       for byte in result.values() do
@@ -24,7 +24,7 @@ class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
           return
         end
       end
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       h.fail("generated template should be valid: " + arg1
         + " error: " + err.string())
     end
@@ -32,16 +32,16 @@ class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
 class \nodoc\ iso _TestPropertyUnreservedPassthrough is Property1[String]
   """Property: unreserved values in simple expansion pass through unchanged."""
   fun name(): String =>
-    "UriTemplate/property: unreserved value passthrough"
+    "uri/template/property: unreserved value passthrough"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.unreserved_string(1, 30)
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set("x", arg1)
     try
-      let tpl = UriTemplate("{x}")?
+      let tpl = URITemplate("{x}")?
       let result: String val = tpl.expand(vars)
       h.assert_eq[String val](arg1, result)
     else
@@ -50,50 +50,50 @@ class \nodoc\ iso _TestPropertyUnreservedPassthrough is Property1[String]
 
 class \nodoc\ iso _TestPropertyValidTemplatesParse is Property1[String]
   """Property: valid generated templates always parse successfully."""
-  fun name(): String => "UriTemplate/property: valid templates parse"
+  fun name(): String => "uri/template/property: valid templates parse"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.valid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match UriTemplateParse(arg1)
-    | let _: UriTemplate => None
-    | let err: UriTemplateParseError =>
+    match URITemplateParse(arg1)
+    | let _: URITemplate => None
+    | let err: URITemplateParseError =>
       h.fail("valid template failed to parse: '" + arg1
         + "' error: " + err.string())
     end
 
 class \nodoc\ iso _TestPropertyInvalidTemplatesFail is Property1[String]
   """Property: invalid generated templates always fail to parse."""
-  fun name(): String => "UriTemplate/property: invalid templates fail"
+  fun name(): String => "uri/template/property: invalid templates fail"
 
   fun gen(): Generator[String] =>
     _TemplateGenerators.invalid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match UriTemplateParse(arg1)
-    | let _: UriTemplate =>
+    match URITemplateParse(arg1)
+    | let _: URITemplate =>
       h.fail("invalid template should not parse: '" + arg1 + "'")
-    | let _: UriTemplateParseError => None
+    | let _: URITemplateParseError => None
     end
 
 class \nodoc\ iso _TestPropertyMixedTemplates is Property1[(String, Bool)]
   """
   Property: mixed valid/invalid templates succeed iff they're the valid variant.
   """
-  fun name(): String => "UriTemplate/property: mixed valid/invalid boundary"
+  fun name(): String => "uri/template/property: mixed valid/invalid boundary"
 
   fun gen(): Generator[(String, Bool)] =>
     _TemplateGenerators.mixed_template()
 
   fun ref property(arg1: (String, Bool), h: PropertyHelper) =>
     (let template, let is_valid) = arg1
-    match UriTemplateParse(template)
-    | let _: UriTemplate =>
+    match URITemplateParse(template)
+    | let _: URITemplate =>
       if not is_valid then
         h.fail("invalid template should not parse: '" + template + "'")
       end
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       if is_valid then
         h.fail("valid template failed to parse: '" + template
           + "' error: " + err.string())

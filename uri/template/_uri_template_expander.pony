@@ -1,4 +1,4 @@
-primitive _UriTemplateExpander
+primitive _URITemplateExpander
   """
   Expands a parsed URI template against a set of variable bindings.
 
@@ -7,7 +7,7 @@ primitive _UriTemplateExpander
   """
   fun expand(
     parts: Array[_TemplatePart] val,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
     : String iso^
   =>
     let out = String
@@ -23,7 +23,7 @@ primitive _UriTemplateExpander
 
   fun _expand_expression(
     expr: _Expression,
-    vars: UriTemplateVariables box,
+    vars: URITemplateVariables box,
     out: String ref)
   =>
     let op = expr.operator

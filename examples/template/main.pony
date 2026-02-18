@@ -1,10 +1,10 @@
 // in your code this `use` statement would be:
-// use "uri"
-use "../../uri"
+// use "uri/template"
+use "../../uri/template"
 
 actor Main
   """
-  Demonstrates URI template expansion using the uri library.
+  Demonstrates URI template expansion (RFC 6570).
   """
   new create(env: Env) =>
     env.out.print("URI Template Expansion Examples")
@@ -12,7 +12,7 @@ actor Main
     env.out.print("")
 
     // Build variable bindings
-    let vars = UriTemplateVariables
+    let vars = URITemplateVariables
     vars.set("scheme", "https")
     vars.set("host", "example.com")
     vars.set("path", "/api/v1")
@@ -52,22 +52,22 @@ actor Main
 
     env.out.print("")
 
-    // Error handling with UriTemplateParse
+    // Error handling with URITemplateParse
     env.out.print("Error handling:")
-    match UriTemplateParse("{=invalid}")
-    | let tpl: UriTemplate =>
+    match URITemplateParse("{=invalid}")
+    | let tpl: URITemplate =>
       env.out.print("  (unexpected success)")
-    | let err: UriTemplateParseError =>
+    | let err: URITemplateParseError =>
       env.out.print("  " + err.string())
     end
 
   fun _expand(
     env: Env,
     template: String,
-    vars: UriTemplateVariables box)
+    vars: URITemplateVariables box)
   =>
     try
-      let tpl = UriTemplate(template)?
+      let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
       env.out.print("  " + template)
       env.out.print("  => " + result)

@@ -1,57 +1,51 @@
 use "pony_test"
 use "pony_check"
+use template = "./template"
 
 actor \nodoc\ Main is TestList
   new create(env: Env) =>
     PonyTest(env, this)
 
   fun tag tests(test: PonyTest) =>
-    // Percent encoding tests
-    test(_TestPctEncodeUnreservedPassthrough)
-    test(_TestPctEncodeSpecialChars)
-    test(_TestPctEncodeReservedPassthrough)
-    test(_TestPctEncodeMultibyteUtf8)
-    test(_TestPctEncodeExistingTriplets)
-    test(_TestPctEncodeMixedContent)
-    test(Property1UnitTest[String](_TestPctEncodePropertyUnreserved))
-    test(Property1UnitTest[String](_TestPctEncodePropertyRoundtrip))
-    test(Property1UnitTest[String](_TestPctEncodePropertyReservedSuperset))
+    // URI template expansion (uri/template subpackage)
+    template.Main.make().tests(test)
 
-    // URI template expansion — RFC 6570 test vectors
-    test(_TestSimpleExpansion)
-    test(_TestReservedExpansion)
-    test(_TestFragmentExpansion)
-    test(_TestLabelExpansion)
-    test(_TestPathSegmentExpansion)
-    test(_TestPathParameterExpansion)
-    test(_TestQueryExpansion)
-    test(_TestQueryContinuationExpansion)
+    // Percent-encoding tests
+    test(Property1UnitTest[String val](_PropertyPercentRoundtrip))
+    test(Property1UnitTest[String val](
+      _PropertyPercentEncodeOutputLegal))
+    test(Property1UnitTest[String val](
+      _PropertyInvalidPercentSequenceRejected))
+    test(Property1UnitTest[(String val, Bool)](
+      _PropertyPercentDecodeBoundary))
+    test(_TestPercentEncodeKnownGood)
 
-    // Parser error tests
-    test(_TestParseErrorReservedOp)
-    test(_TestParseErrorUnclosed)
-    test(_TestParseErrorEmptyExpression)
-    test(_TestParseErrorEmptyVarname)
-    test(_TestParseErrorPrefixBounds)
-    test(_TestParseErrorDotInVarname)
-    test(_TestParseErrorUnexpectedCloseBrace)
-    test(_TestParseErrorInvalidLiteralChar)
-    test(_TestParseValidTemplates)
-    test(_TestTemplateString)
+    // URI parsing tests
+    test(Property1UnitTest[_ValidURIInput](_PropertyURIRoundtrip))
+    test(Property1UnitTest[String val](_PropertyInvalidSchemeRejected))
+    test(_TestParseURIKnownGood)
 
-    // Composite expansion edge cases
-    test(_TestEmptyListUndefined)
-    test(_TestEmptyPairsUndefined)
-    test(_TestAllUndefined)
-    test(_TestExplodeListQuery)
-    test(_TestExplodePairsQuery)
-    test(_TestExplodeListSemicolon)
-    test(_TestPrefixUnicode)
+    // Authority parsing tests
+    test(Property1UnitTest[_ValidAuthorityInput](
+      _PropertyAuthorityRoundtrip))
+    test(Property1UnitTest[String val](_PropertyInvalidPortRejected))
+    test(Property1UnitTest[String val](_PropertyInvalidHostRejected))
+    test(_TestParseURIAuthorityKnownGood)
 
-    // Property-based tests
-    test(Property1UnitTest[String](_TestPropertyNoBracesInExpansion))
-    test(Property1UnitTest[String](_TestPropertyUnreservedPassthrough))
-    test(Property1UnitTest[String](_TestPropertyValidTemplatesParse))
-    test(Property1UnitTest[String](_TestPropertyInvalidTemplatesFail))
-    test(Property1UnitTest[(String, Bool)](
-      _TestPropertyMixedTemplates))
+    // Path segment tests
+    test(Property1UnitTest[String val](_PropertyPathSegmentCount))
+    test(Property1UnitTest[String val](_PropertyPathSegmentRoundtrip))
+    test(Property1UnitTest[String val](_PropertyPathSegmentInvalidRejected))
+    test(_TestPathSegmentsKnownGood)
+
+    // Query parameter tests
+    test(Property1UnitTest[Array[(String val, String val)] val](
+      _PropertyQueryParamsRoundtrip))
+    test(Property1UnitTest[String val](_PropertyQueryParamsPlusDecodes))
+    test(Property1UnitTest[String val](_PropertyQueryParamsInvalidRejected))
+    test(_TestQueryParametersKnownGood)
+    test(_TestURIQueryParams)
+    test(_TestQueryParamsGet)
+    test(_TestQueryParamsGetAll)
+    test(_TestQueryParamsContains)
+    test(_TestQueryParamsSize)
