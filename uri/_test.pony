@@ -96,3 +96,24 @@ actor \nodoc\ Main is TestList
       _PropertyNormalizeInvalidPercentRejected))
     test(_TestNormalizeURIKnownGood)
     test(_TestURIEquivalentKnownGood)
+
+    // IRI tests (RFC 3987)
+    test(Property1UnitTest[String val](_PropertyIRIToURINoNonASCII))
+    test(Property1UnitTest[String val](_PropertyURIToIRINoEncodedUcschar))
+    test(Property1UnitTest[String val](_PropertyIRIToURIIdempotent))
+    test(Property1UnitTest[String val](_PropertyURIToIRIIdempotent))
+    test(Property1UnitTest[String val](_PropertyIRIToURIRoundtrip))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeIRIIdempotent))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyIRIEquivalentReflexive))
+    test(Property1UnitTest[String val](
+      _PropertyIRIEquivalentCrossForms))
+    test(Property1UnitTest[String val](
+      _PropertyIRIPercentEncodePreservesUcschar))
+    test(Property1UnitTest[String val](
+      _PropertyIRIPercentEncodeEncodesNonAllowed))
+    test(_TestIRICharsBoundary)
+    test(_TestIRIToURIKnownGood)
+    test(_TestURIToIRIKnownGood)
+    test(_TestNormalizeIRIKnownGood)

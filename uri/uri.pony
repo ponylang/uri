@@ -75,6 +75,27 @@ and `RemoveDotSegments` for standalone path normalization.
 
 For URI template expansion (RFC 6570), use the `uri/template` subpackage.
 
+## IRI Support (RFC 3987)
+
+`ParseURI`, `ResolveURI`, `PercentDecode`, and `PercentEncode` handle IRIs
+natively — `ParseURI` only looks for ASCII structural delimiters, so
+non-ASCII bytes pass through correctly, and `URI` stores components as
+`String` (UTF-8).
+
+The IRI-specific primitives handle conversion between IRI and URI forms:
+
+Use `IRIToURI` to convert an IRI to a URI by percent-encoding all non-ASCII
+bytes. Use `URIToIRI` for the reverse — selectively decoding percent-encoded
+UTF-8 sequences that are valid `ucschar` (or `iprivate` in query).
+
+Use `IRIPercentEncode` instead of `PercentEncode` when constructing IRIs
+from unencoded text — it preserves `ucschar` codepoints as literal UTF-8
+while applying the same ASCII encoding rules.
+
+Use `NormalizeIRI` for IRI-aware normalization (applies `NormalizeURI` then
+decodes `ucschar` sequences back to literal UTF-8). Use `IRIEquivalent`
+to test equivalence across IRI and URI forms.
+
 ## Planned Features
 
 * **URI Building** - Construct URIs from components with proper encoding

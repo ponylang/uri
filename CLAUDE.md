@@ -20,6 +20,7 @@ make clean              # clean build artifacts + corral cache
 - URI parsing according to RFC 3986 (scheme, authority, path, query, fragment)
 - URI reference resolution according to RFC 3986 section 5
 - URI normalization per RFC 3986 section 6 (syntax-based and scheme-based)
+- IRI support per RFC 3987 (IRI/URI conversion, IRI-aware encoding, IRI normalization, IRI equivalence)
 - URI template expansion according to RFC 6570 (all 4 levels)
 
 **Planned features**:
@@ -31,8 +32,8 @@ Two packages: `uri` for RFC 3986 parsing, `uri/template` for RFC 6570 template e
 
 ### `uri` Package — RFC 3986 Parsing
 
-- **Public API**: `URI`, `URIAuthority`, `ParseURI`, `ParseURIAuthority`, `URIParseError` (`InvalidPort`, `InvalidHost`), `ResolveURI`, `ResolveURIError` (`BaseURINotAbsolute`), `NormalizeURI`, `URIEquivalent`, `RemoveDotSegments`, `PercentEncode`, `PercentDecode`, `InvalidPercentEncoding`, `URIPart` (+ 5 part primitives), `PathSegments`, `ParseQueryParameters`, `QueryParams`
-- **Internal**: `_Unreachable` for unreachable code paths, `_NormalizePercentEncoding` for percent-encoding normalization, `_SchemeDefaultPort` for default port lookup
+- **Public API**: `URI`, `URIAuthority`, `ParseURI`, `ParseURIAuthority`, `URIParseError` (`InvalidPort`, `InvalidHost`), `ResolveURI`, `ResolveURIError` (`BaseURINotAbsolute`), `NormalizeURI`, `URIEquivalent`, `RemoveDotSegments`, `PercentEncode`, `PercentDecode`, `InvalidPercentEncoding`, `URIPart` (+ 5 part primitives), `PathSegments`, `ParseQueryParameters`, `QueryParams`, `IRIToURI`, `URIToIRI`, `IRIPercentEncode`, `NormalizeIRI`, `IRIEquivalent`
+- **Internal**: `_Unreachable` for unreachable code paths, `_NormalizePercentEncoding` for percent-encoding normalization, `_SchemeDefaultPort` for default port lookup, `_IRIChars` for IRI codepoint classification
 
 ### `uri/template` Package — RFC 6570 Template Expansion
 
