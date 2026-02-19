@@ -121,6 +121,49 @@ actor Main
       env.out.print("Parse error: " + e.string())
     end
 
+    env.out.print("")
+
+    // URI normalization (RFC 3986 section 6)
+    env.out.print("URI Normalization (RFC 3986 Section 6)")
+    env.out.print("======================================")
+    env.out.print("")
+
+    let raw = "HTTP://Example.COM:80/%7Euser/a/../b?q=%6A"
+    match ParseURI(raw)
+    | let u: URI val =>
+      match NormalizeURI(u)
+      | let n: URI val =>
+        env.out.print("  Original:   " + raw)
+        env.out.print("  Normalized: " + n.string())
+      | let e: InvalidPercentEncoding val =>
+        env.out.print("  Normalization error: " + e.string())
+      end
+    | let e: URIParseError val =>
+      env.out.print("  Parse error: " + e.string())
+    end
+
+    env.out.print("")
+
+    // URI equivalence
+    env.out.print("URI Equivalence")
+    env.out.print("===============")
+    env.out.print("")
+
+    let eq_a = "http://EXAMPLE.COM:80/path"
+    let eq_b = "http://example.com/path"
+    match (ParseURI(eq_a), ParseURI(eq_b))
+    | (let a: URI val, let b: URI val) =>
+      match URIEquivalent(a, b)
+      | let result: Bool =>
+        env.out.print("  " + eq_a + " == " + eq_b + "? "
+          + result.string())
+      | let e: InvalidPercentEncoding val =>
+        env.out.print("  Equivalence error: " + e.string())
+      end
+    else
+      env.out.print("  Parse error")
+    end
+
   fun _resolve(env: Env, base: URI val, reference_str: String) =>
     match ParseURI(reference_str)
     | let reference: URI val =>
