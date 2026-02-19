@@ -49,3 +49,24 @@ actor \nodoc\ Main is TestList
     test(_TestQueryParamsGetAll)
     test(_TestQueryParamsContains)
     test(_TestQueryParamsSize)
+
+    // RemoveDotSegments tests
+    test(Property1UnitTest[String val](_PropertyDotSegmentsIdempotent))
+    test(Property1UnitTest[String val](_PropertyDotSegmentsNoDots))
+    test(Property1UnitTest[String val](
+      _PropertyDotSegmentsPreservesAbsolute))
+    test(_TestRemoveDotSegmentsKnownGood)
+
+    // ResolveURI tests
+    test(Property1UnitTest[_ResolveInput](
+      _PropertyResolveResultAbsolute))
+    test(Property1UnitTest[_AbsoluteURIInput](
+      _PropertyResolveEmptyRef))
+    test(Property1UnitTest[(_AbsoluteURIInput, _AbsoluteURIInput)](
+      _PropertyAbsoluteRefIgnoresBase))
+    test(Property1UnitTest[_ValidURIInput](
+      _PropertyNonAbsoluteBaseRejected))
+    test(Property1UnitTest[_ResolveInput](_PropertyResolveRoundtrip))
+    test(_TestResolveURIRFCNormal)
+    test(_TestResolveURIRFCAbnormal)
+    test(_TestResolveURIEdgeCases)

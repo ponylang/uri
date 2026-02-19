@@ -96,3 +96,41 @@ actor Main
     | let e: InvalidPercentEncoding val =>
       env.out.print("Decode error: " + e.string())
     end
+
+    env.out.print("")
+
+    // URI reference resolution (RFC 3986 section 5)
+    env.out.print("URI Reference Resolution")
+    env.out.print("========================")
+    env.out.print("")
+
+    match ParseURI("http://example.com/a/b/c")
+    | let base: URI val =>
+      env.out.print("Base: " + base.string())
+      env.out.print("")
+
+      // Relative path with dot segments
+      _resolve(env, base, "../d")
+
+      // Fragment-only reference
+      _resolve(env, base, "#section2")
+
+      // Absolute reference (ignores base entirely)
+      _resolve(env, base, "https://other.com/page")
+    | let e: URIParseError val =>
+      env.out.print("Parse error: " + e.string())
+    end
+
+  fun _resolve(env: Env, base: URI val, reference_str: String) =>
+    match ParseURI(reference_str)
+    | let reference: URI val =>
+      match ResolveURI(base, reference)
+      | let result: URI val =>
+        env.out.print("  resolve(\"" + reference_str + "\") = "
+          + result.string())
+      | let e: ResolveURIError val =>
+        env.out.print("  resolve error: " + e.string())
+      end
+    | let e: URIParseError val =>
+      env.out.print("  parse error: " + e.string())
+    end
