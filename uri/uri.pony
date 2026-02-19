@@ -65,6 +65,38 @@ match (ParseURI("HTTP://Example.COM:80/path"), ParseURI("http://example.com/path
 end
 ```
 
+Use `URIBuilder` to construct a URI from raw (unencoded) components with
+automatic percent-encoding, or to modify an existing URI:
+
+```pony
+match URIBuilder
+  .set_scheme("https")
+  .set_host("example.com")
+  .set_path("/api/users")
+  .add_query_param("name", "Jane Doe")
+  .build()
+| let u: URI val =>
+  // u.string() == "https://example.com/api/users?name=Jane%20Doe"
+| let e: URIBuildError val =>
+  // handle error
+end
+```
+
+To modify an existing URI, start from `URIBuilder.from(uri)` and change
+only the components you need:
+
+```pony
+match ParseURI("https://example.com/old?x=1")
+| let u: URI val =>
+  match URIBuilder.from(u)
+    .set_path("/new")
+    .add_query_param("y", "2")
+    .build()
+  | let modified: URI val => // "https://example.com/new?x=1&y=2"
+  end
+end
+```
+
 For query parameter access, `URI.query_params()` is the simplest path —
 it returns a `QueryParams` collection with `get()`, `get_all()`, and
 `contains()` methods for key-based lookup. Use `ParseQueryParameters`
@@ -98,8 +130,7 @@ to test equivalence across IRI and URI forms.
 
 ## Planned Features
 
-* **URI Building** - Construct URIs from components with proper encoding
-* **URI Manipulation** - Modify URI components
+* **URI Manipulation** - Higher-level URI manipulation beyond `URIBuilder`
 """
 
 class val URI is (Stringable & Equatable[URI])
