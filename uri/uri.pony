@@ -76,6 +76,13 @@ class val URI is (Stringable & Equatable[URI])
     query': (String | None),
     fragment': (String | None))
   =>
+    """
+    Build a URI from pre-encoded components.
+
+    All string values must already be percent-encoded as appropriate for
+    their component — no encoding is applied here. Most callers will obtain
+    a `URI` from `ParseURI` rather than constructing one directly.
+    """
     scheme = scheme'
     authority = authority'
     path = path'

@@ -13,6 +13,9 @@ primitive URIPartQuery
 primitive URIPartFragment
   """Encoding rules for the fragment component."""
 
+// Selects which URI component's encoding rules PercentEncode applies.
+// Each variant corresponds to a component whose allowed-character set
+// differs per RFC 3986.
 type URIPart is
   ( URIPartUserinfo | URIPartHost | URIPartPath
   | URIPartQuery | URIPartFragment )
