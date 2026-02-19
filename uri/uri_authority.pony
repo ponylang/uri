@@ -30,6 +30,9 @@ class val URIAuthority is (Stringable & Equatable[URIAuthority])
     port = port'
 
   fun string(): String iso^ =>
+    """
+    Reconstruct the authority string in `[userinfo@]host[:port]` format.
+    """
     let out = recover iso String end
     match userinfo
     | let u: String => out.append(u); out.push('@')
@@ -41,6 +44,7 @@ class val URIAuthority is (Stringable & Equatable[URIAuthority])
     out
 
   fun eq(that: URIAuthority box): Bool =>
+    """Structural equality on all authority components."""
     let userinfo_eq =
       match (userinfo, that.userinfo)
       | (None, None) => true

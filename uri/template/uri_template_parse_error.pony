@@ -9,6 +9,7 @@ class val URITemplateParseError
   let offset: USize
 
   new val create(message': String val, offset': USize) =>
+    """Create a parse error with the given message and byte offset."""
     message = message'
     offset = offset'
 
