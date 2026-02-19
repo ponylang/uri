@@ -1,10 +1,10 @@
 # uri
 
-A library for parsing, manipulating, and expanding URIs for [Pony](https://www.ponylang.io/). Provides URI parsing per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and URI template expansion per [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570).
+A URI library for [Pony](https://www.ponylang.io/). Provides URI parsing and normalization per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), IRI support per [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987), and URI template expansion per [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570).
 
 ## Status
 
-Early development. Not yet ready for use.
+Beta quality software that will change frequently. Expect breaking changes. That said, you should feel comfortable using it in your projects.
 
 ## Installation
 
