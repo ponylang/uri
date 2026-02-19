@@ -18,6 +18,13 @@ class val URIAuthority is (Stringable & Equatable[URIAuthority])
     host': String,
     port': (U16 | None))
   =>
+    """
+    Build an authority from pre-encoded components.
+
+    The `userinfo` and `host` strings must already be percent-encoded —
+    no encoding is applied here. Most callers will obtain a
+    `URIAuthority` from `ParseURI` or `ParseURIAuthority`.
+    """
     userinfo = userinfo'
     host = host'
     port = port'
