@@ -151,7 +151,9 @@ class val URI is (Stringable & Equatable[URI])
     fragment = fragment'
 
   fun string(): String iso^ =>
-    // RFC 3986 section 5.3
+    """
+    Reconstruct the full URI string per RFC 3986 section 5.3.
+    """
     let out = recover iso String end
     match scheme
     | let s: String => out.append(s); out.push(':')
@@ -190,6 +192,11 @@ class val URI is (Stringable & Equatable[URI])
     end
 
   fun eq(that: URI box): Bool =>
+    """
+    Structural equality on percent-encoded components without normalization.
+
+    Use `URIEquivalent` for normalization-aware comparison.
+    """
     let scheme_eq =
       match (scheme, that.scheme)
       | (None, None) => true
