@@ -1,6 +1,6 @@
 # uri
 
-A URI library for [Pony](https://www.ponylang.io/). Provides URI parsing and normalization per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), IRI support per [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987), and URI template expansion per [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570).
+URI library for Pony. Implements [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) parsing, reference resolution, and normalization; [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987) IRI/URI conversion and IRI-aware encoding; and [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570) URI template expansion at all four levels.
 
 ## Status
 
@@ -11,8 +11,7 @@ Beta quality software that will change frequently. Expect breaking changes. That
 * Install [corral](https://github.com/ponylang/corral)
 * `corral add github.com/ponylang/uri.git --version 0.1.0`
 * `corral fetch` to fetch your dependencies
-* Include any of the available packages...
-  * `use "uri"` for URI parsing
+* `use "uri"` to include this package
   * `use "uri/template"` for URI template expansion
 * `corral run -- ponyc` to compile your application
 
