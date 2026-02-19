@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - Add URI reference resolution per RFC 3986 section 5 ([PR #9](https://github.com/ponylang/uri/pull/9))
+- Add IRI support per RFC 3987 ([PR #13](https://github.com/ponylang/uri/pull/13))
 
 ### Changed
 
