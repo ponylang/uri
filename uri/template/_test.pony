@@ -57,3 +57,12 @@ actor \nodoc\ Main is TestList
     test(Property1UnitTest[String](_TestPropertyInvalidTemplatesFail))
     test(Property1UnitTest[(String, Bool)](
       _TestPropertyMixedTemplates))
+
+    // Builder tests
+    test(_TestBuilderSimpleExpansion)
+    test(_TestBuilderListAndPairs)
+    test(_TestBuilderInvalidTemplate)
+    test(_TestBuilderEmptyVars)
+    test(_TestBuilderChaining)
+    test(Property1UnitTest[String](_TestPropertyBuilderMatchesExpand))
+    test(Property1UnitTest[String](_TestPropertyBuilderInvalidFails))

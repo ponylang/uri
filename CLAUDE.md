@@ -37,7 +37,7 @@ Two packages: `uri` for RFC 3986 parsing, `uri/template` for RFC 6570 template e
 
 ### `uri/template` Package — RFC 6570 Template Expansion
 
-- **Public API**: `URITemplate`, `URITemplateParse`, `URITemplateVariables`, `URITemplateParseError`, `URITemplateValue`
+- **Public API**: `URITemplate`, `URITemplateParse`, `URITemplateBuilder`, `URITemplateVariables`, `URITemplateParseError`, `URITemplateValue`
 - **Internal**: Parser (`_URITemplateParser`) does single-pass left-to-right scanning into `_TemplatePart` AST nodes. Expander (`_URITemplateExpander`) walks the AST and produces output. `_PctEncode` handles percent-encoding in unreserved and reserved modes. `_OperatorProperties` encodes the RFC 6570 operator behavior table.
 
 ### Testing
