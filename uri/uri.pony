@@ -1,7 +1,8 @@
 """
-# URI Parsing (RFC 3986)
+# URI Parsing and Resolution (RFC 3986)
 
-This package parses URI-references into structured components per RFC 3986.
+This package parses URI-references into structured components and resolves
+relative references against base URIs per RFC 3986.
 
 ## Entry Points
 
@@ -13,6 +14,19 @@ request-targets):
 match ParseURI("/index.html?page=1")
 | let u: URI val => // u.path, u.query, etc.
 | let e: URIParseError val => // handle error
+end
+```
+
+Use `ResolveURI` to resolve a relative reference against a base URI
+(RFC 3986 section 5):
+
+```pony
+match (ParseURI("http://example.com/a/b"), ParseURI("../c"))
+| (let base: URI val, let ref': URI val) =>
+  match ResolveURI(base, ref')
+  | let target: URI val => // target.string() == "http://example.com/a/c"
+  | let e: ResolveURIError val => // base was not absolute
+  end
 end
 ```
 
@@ -31,8 +45,8 @@ it returns a `QueryParams` collection with `get()`, `get_all()`, and
 `contains()` methods for key-based lookup. Use `ParseQueryParameters`
 directly on the `query` field when you need to distinguish "no query"
 from "invalid percent-encoding." Use `PercentDecode`/`PercentEncode`
-for encoding operations, and `PathSegments` for decoded path segment
-access.
+for encoding operations, `PathSegments` for decoded path segment access,
+and `RemoveDotSegments` for standalone path normalization.
 
 For URI template expansion (RFC 6570), use the `uri/template` subpackage.
 
