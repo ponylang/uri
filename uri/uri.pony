@@ -40,6 +40,31 @@ match ParseURIAuthority("example.com:443")
 end
 ```
 
+Use `NormalizeURI` to apply RFC 3986 section 6 normalization (case,
+percent-encoding, dot segments, default port removal, empty path):
+
+```pony
+match ParseURI("HTTP://Example.COM:80/%7Euser/a/../b")
+| let u: URI val =>
+  match NormalizeURI(u)
+  | let n: URI val => // n.string() == "http://example.com/~user/b"
+  | let e: InvalidPercentEncoding val => // malformed percent-encoding
+  end
+end
+```
+
+Use `URIEquivalent` to test whether two URIs are equivalent under
+normalization:
+
+```pony
+match (ParseURI("HTTP://Example.COM:80/path"), ParseURI("http://example.com/path"))
+| (let a: URI val, let b: URI val) =>
+  match URIEquivalent(a, b)
+  | let eq: Bool => // eq == true
+  end
+end
+```
+
 For query parameter access, `URI.query_params()` is the simplest path —
 it returns a `QueryParams` collection with `get()`, `get_all()`, and
 `contains()` methods for key-based lookup. Use `ParseQueryParameters`
@@ -75,7 +100,8 @@ class val URI is (Stringable & Equatable[URI])
 
   Equality is structural: two URIs are equal when all their stored
   (percent-encoded) components are equal. No normalization is applied
-  before comparison.
+  before comparison. Use `URIEquivalent` for normalization-aware
+  comparison (RFC 3986 section 6).
   """
   let scheme: (String | None)
   let authority: (URIAuthority | None)

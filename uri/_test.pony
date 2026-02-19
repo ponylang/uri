@@ -70,3 +70,29 @@ actor \nodoc\ Main is TestList
     test(_TestResolveURIRFCNormal)
     test(_TestResolveURIRFCAbnormal)
     test(_TestResolveURIEdgeCases)
+
+    // NormalizeURI tests
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeIdempotent))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeSchemeLowercase))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeHostLowercase))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeNoEncodedUnreserved))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeUppercaseHex))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeNoDotSegments))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeParseRoundtrip))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeNoDefaultPort))
+    test(Property1UnitTest[_NormalizableURIInput](
+      _PropertyNormalizeNoEmptyPathWithAuthority))
+    test(Property1UnitTest[(_NormalizableURIInput, _NormalizableURIInput)](
+      _PropertyNormalizeEquivalentConsistent))
+    test(Property1UnitTest[String val](
+      _PropertyNormalizeInvalidPercentRejected))
+    test(_TestNormalizeURIKnownGood)
+    test(_TestURIEquivalentKnownGood)
