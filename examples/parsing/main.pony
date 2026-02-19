@@ -54,3 +54,45 @@ actor Main
     | let e: URIParseError val =>
       env.out.print("Parse error: " + e.string())
     end
+
+    env.out.print("")
+
+    // Standalone authority parsing (HTTP CONNECT authority-form)
+    env.out.print("Standalone authority parsing:")
+    match ParseURIAuthority("example.com:443")
+    | let a: URIAuthority val =>
+      env.out.print("  host: " + a.host)
+      match a.port
+      | let p: U16 => env.out.print("  port: " + p.string())
+      end
+    | let e: URIParseError val =>
+      env.out.print("Parse error: " + e.string())
+    end
+
+    env.out.print("")
+
+    // Path segments (split on / and percent-decode each segment)
+    env.out.print("Path segments:")
+    match PathSegments("/api/v1/hello%20world")
+    | let segments: Array[String val] val =>
+      for seg in segments.values() do
+        env.out.print("  \"" + seg + "\"")
+      end
+    | let e: InvalidPercentEncoding val =>
+      env.out.print("Decode error: " + e.string())
+    end
+
+    env.out.print("")
+
+    // Percent encoding and decoding
+    env.out.print("Percent encoding:")
+    env.out.print("  encode(\"hello world/foo\", Path): "
+      + PercentEncode("hello world/foo", URIPartPath))
+
+    env.out.print("Percent decoding:")
+    match PercentDecode("hello%20world")
+    | let decoded: String val =>
+      env.out.print("  decode(\"hello%20world\"): " + decoded)
+    | let e: InvalidPercentEncoding val =>
+      env.out.print("Decode error: " + e.string())
+    end
