@@ -197,7 +197,7 @@ class ref URIBuilder
       out.append(encoded_val)
       out
     end
-    _query = match _query
+    _query = match \exhaustive\ _query
     | None => param
     | let q: String if q.size() == 0 => param
     | let q: String =>
@@ -248,7 +248,7 @@ class ref URIBuilder
 
     // Build authority if host is present
     let authority: (URIAuthority | None) =
-      match _host
+      match \exhaustive\ _host
       | let h: String =>
         // Assemble authority string for validation via ParseURIAuthority
         let auth_str = recover val
@@ -262,7 +262,7 @@ class ref URIBuilder
           end
           out
         end
-        match ParseURIAuthority(auth_str)
+        match \exhaustive\ ParseURIAuthority(auth_str)
         | let a: URIAuthority val => a
         | let e: URIParseError val => return e
         end

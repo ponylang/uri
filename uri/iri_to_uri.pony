@@ -10,9 +10,9 @@ primitive IRIToURI
   Always succeeds — any byte sequence is valid input.
   """
   fun apply(iri: URI val): URI val =>
-    let uri_authority: (URIAuthority | None) = match iri.authority
+    let uri_authority: (URIAuthority | None) = match \exhaustive\ iri.authority
     | let a: URIAuthority =>
-      let uri_userinfo: (String | None) = match a.userinfo
+      let uri_userinfo: (String | None) = match \exhaustive\ a.userinfo
       | let u: String => _encode(u)
       | None => None
       end
@@ -20,12 +20,12 @@ primitive IRIToURI
     | None => None
     end
 
-    let uri_query: (String | None) = match iri.query
+    let uri_query: (String | None) = match \exhaustive\ iri.query
     | let q: String => _encode(q)
     | None => None
     end
 
-    let uri_fragment: (String | None) = match iri.fragment
+    let uri_fragment: (String | None) = match \exhaustive\ iri.fragment
     | let f: String => _encode(f)
     | None => None
     end

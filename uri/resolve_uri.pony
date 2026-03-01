@@ -18,7 +18,7 @@ primitive ResolveURI
     section 5.2.2. The base must have a scheme; the reference may be any
     URI-reference (absolute or relative).
     """
-    let base_scheme = match base.scheme
+    let base_scheme = match \exhaustive\ base.scheme
     | let s: String => s
     | None => return BaseURINotAbsolute
     end

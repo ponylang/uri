@@ -17,7 +17,7 @@ class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
     expected_msg: String,
     expected_offset: USize)
   =>
-    match URITemplateParse(template)
+    match \exhaustive\ URITemplateParse(template)
     | let _: URITemplate =>
       h.fail("expected parse error for: " + template)
     | let err: URITemplateParseError =>
@@ -32,7 +32,7 @@ class \nodoc\ iso _TestParseErrorUnclosed is UnitTest
   fun name(): String => "uri/template/parse error: unclosed"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("{var")
+    match \exhaustive\ URITemplateParse("{var")
     | let _: URITemplate =>
       h.fail("expected parse error")
     | let err: URITemplateParseError =>
@@ -45,7 +45,7 @@ class \nodoc\ iso _TestParseErrorEmptyExpression is UnitTest
   fun name(): String => "uri/template/parse error: empty expression"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("{}")
+    match \exhaustive\ URITemplateParse("{}")
     | let _: URITemplate =>
       h.fail("expected parse error")
     | let err: URITemplateParseError =>
@@ -58,7 +58,7 @@ class \nodoc\ iso _TestParseErrorEmptyVarname is UnitTest
   fun name(): String => "uri/template/parse error: empty varname"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("{,}")
+    match \exhaustive\ URITemplateParse("{,}")
     | let _: URITemplate =>
       h.fail("expected parse error")
     | let err: URITemplateParseError =>
@@ -71,7 +71,7 @@ class \nodoc\ iso _TestParseErrorPrefixBounds is UnitTest
   fun name(): String => "uri/template/parse error: prefix bounds"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("{var:0}")
+    match \exhaustive\ URITemplateParse("{var:0}")
     | let _: URITemplate =>
       h.fail("expected parse error for :0")
     | let err: URITemplateParseError =>
@@ -79,7 +79,7 @@ class \nodoc\ iso _TestParseErrorPrefixBounds is UnitTest
         "prefix length must be at least 1", err.message)
     end
 
-    match URITemplateParse("{var:10000}")
+    match \exhaustive\ URITemplateParse("{var:10000}")
     | let _: URITemplate =>
       h.fail("expected parse error for :10000")
     | let err: URITemplateParseError =>
@@ -92,14 +92,14 @@ class \nodoc\ iso _TestParseErrorDotInVarname is UnitTest
   fun name(): String => "uri/template/parse error: dots in varname"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("{..var}")
+    match \exhaustive\ URITemplateParse("{..var}")
     | let _: URITemplate =>
       h.fail("expected parse error for leading dot")
     | let err: URITemplateParseError =>
       h.assert_eq[String val]("leading dot in varname", err.message)
     end
 
-    match URITemplateParse("{var..x}")
+    match \exhaustive\ URITemplateParse("{var..x}")
     | let _: URITemplate =>
       h.fail("expected parse error for consecutive dots")
     | let err: URITemplateParseError =>
@@ -112,7 +112,7 @@ class \nodoc\ iso _TestParseErrorUnexpectedCloseBrace is UnitTest
   fun name(): String => "uri/template/parse error: unexpected }"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("foo}bar")
+    match \exhaustive\ URITemplateParse("foo}bar")
     | let _: URITemplate =>
       h.fail("expected parse error")
     | let err: URITemplateParseError =>
@@ -125,7 +125,7 @@ class \nodoc\ iso _TestParseErrorInvalidLiteralChar is UnitTest
   fun name(): String => "uri/template/parse error: invalid literal char"
 
   fun apply(h: TestHelper) =>
-    match URITemplateParse("foo bar")
+    match \exhaustive\ URITemplateParse("foo bar")
     | let _: URITemplate =>
       h.fail("expected parse error for space")
     | let err: URITemplateParseError =>
@@ -158,7 +158,7 @@ class \nodoc\ iso _TestParseValidTemplates is UnitTest
     ]
 
     for template in valid.values() do
-      match URITemplateParse(template)
+      match \exhaustive\ URITemplateParse(template)
       | let _: URITemplate => None
       | let err: URITemplateParseError =>
         h.fail("unexpected parse error for '" + template + "': "

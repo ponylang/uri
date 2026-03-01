@@ -15,9 +15,9 @@ class \nodoc\ iso _PropertyNormalizeIdempotent
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
     let uri = arg1.uri
-    match NormalizeURI(uri)
+    match \exhaustive\ NormalizeURI(uri)
     | let once: URI val =>
-      match NormalizeURI(once)
+      match \exhaustive\ NormalizeURI(once)
       | let twice: URI val =>
         ph.assert_true(once == twice,
           "not idempotent: once=" + once.string()
@@ -41,7 +41,7 @@ class \nodoc\ iso _PropertyNormalizeSchemeLowercase
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       match u.scheme
       | let s: String =>
@@ -65,7 +65,7 @@ class \nodoc\ iso _PropertyNormalizeHostLowercase
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       match u.authority
       | let a: URIAuthority =>
@@ -88,7 +88,7 @@ class \nodoc\ iso _PropertyNormalizeNoEncodedUnreserved
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       _check_no_encoded_unreserved(ph, u.path, "path")
       match u.authority
@@ -149,7 +149,7 @@ class \nodoc\ iso _PropertyNormalizeUppercaseHex
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       _check_uppercase_hex(ph, u.path, "path")
       match u.authority
@@ -210,7 +210,7 @@ class \nodoc\ iso _PropertyNormalizeNoDotSegments
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       let path = u.path
       ph.assert_eq[String val](
@@ -232,9 +232,9 @@ class \nodoc\ iso _PropertyNormalizeParseRoundtrip
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let normalized: URI val =>
-      match ParseURI(normalized.string())
+      match \exhaustive\ ParseURI(normalized.string())
       | let reparsed: URI val =>
         ph.assert_true(normalized == reparsed,
           "roundtrip failed: normalized=" + normalized.string()
@@ -259,7 +259,7 @@ class \nodoc\ iso _PropertyNormalizeNoDefaultPort
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       match u.scheme
       | let scheme: String =>
@@ -292,7 +292,7 @@ class \nodoc\ iso _PropertyNormalizeNoEmptyPathWithAuthority
     _NormalizableURIInputGenerator()
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
-    match NormalizeURI(arg1.uri)
+    match \exhaustive\ NormalizeURI(arg1.uri)
     | let u: URI val =>
       match u.scheme
       | let scheme: String =>
@@ -331,7 +331,7 @@ class \nodoc\ iso _PropertyNormalizeEquivalentConsistent
     match (NormalizeURI(a), NormalizeURI(b))
     | (let norm_a: URI val, let norm_b: URI val) =>
       let expected = norm_a == norm_b
-      match URIEquivalent(a, b)
+      match \exhaustive\ URIEquivalent(a, b)
       | let actual: Bool =>
         ph.assert_eq[Bool](expected, actual,
           "equivalent inconsistent: a=" + a.string()
@@ -367,9 +367,9 @@ class \nodoc\ iso _PropertyNormalizeInvalidPercentRejected
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let u: URI val =>
-      match NormalizeURI(u)
+      match \exhaustive\ NormalizeURI(u)
       | let _: URI val =>
         ph.fail("expected InvalidPercentEncoding for: " + arg1)
       | let _: InvalidPercentEncoding val =>
@@ -467,9 +467,9 @@ class \nodoc\ iso _TestNormalizeURIKnownGood is UnitTest
     input: String,
     expected: String)
   =>
-    match ParseURI(input)
+    match \exhaustive\ ParseURI(input)
     | let u: URI val =>
-      match NormalizeURI(u)
+      match \exhaustive\ NormalizeURI(u)
       | let normalized: URI val =>
         h.assert_eq[String val](expected, normalized.string(),
           "NormalizeURI(" + input + ")")
@@ -506,7 +506,7 @@ class \nodoc\ iso _TestURIEquivalentKnownGood is UnitTest
     b_str: String,
     expected: Bool)
   =>
-    match (ParseURI(a_str), ParseURI(b_str))
+    match \exhaustive\ (ParseURI(a_str), ParseURI(b_str))
     | (let a: URI val, let b: URI val) =>
       match URIEquivalent(a, b)
       | let result: Bool =>

@@ -10,7 +10,7 @@ class \nodoc\ iso _TestPropertyNoBracesInExpansion is Property1[String]
     _TemplateGenerators.valid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match URITemplateParse(arg1)
+    match \exhaustive\ URITemplateParse(arg1)
     | let tpl: URITemplate =>
       let vars = _RFC6570Vars()
       let result: String val = tpl.expand(vars)
@@ -56,7 +56,7 @@ class \nodoc\ iso _TestPropertyValidTemplatesParse is Property1[String]
     _TemplateGenerators.valid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match URITemplateParse(arg1)
+    match \exhaustive\ URITemplateParse(arg1)
     | let _: URITemplate => None
     | let err: URITemplateParseError =>
       h.fail("valid template failed to parse: '" + arg1
@@ -71,7 +71,7 @@ class \nodoc\ iso _TestPropertyInvalidTemplatesFail is Property1[String]
     _TemplateGenerators.invalid_template()
 
   fun ref property(arg1: String, h: PropertyHelper) =>
-    match URITemplateParse(arg1)
+    match \exhaustive\ URITemplateParse(arg1)
     | let _: URITemplate =>
       h.fail("invalid template should not parse: '" + arg1 + "'")
     | let _: URITemplateParseError => None
@@ -88,7 +88,7 @@ class \nodoc\ iso _TestPropertyMixedTemplates is Property1[(String, Bool)]
 
   fun ref property(arg1: (String, Bool), h: PropertyHelper) =>
     (let template, let is_valid) = arg1
-    match URITemplateParse(template)
+    match \exhaustive\ URITemplateParse(template)
     | let _: URITemplate =>
       if not is_valid then
         h.fail("invalid template should not parse: '" + template + "'")

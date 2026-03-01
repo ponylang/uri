@@ -8,7 +8,7 @@ primitive _OperatorProperties
   named values, and whether reserved characters are passed through.
   """
   fun first(op: _Operator): String =>
-    match op
+    match \exhaustive\ op
     | _OpNone      => ""
     | _OpPlus      => ""
     | _OpHash      => "#"
@@ -20,7 +20,7 @@ primitive _OperatorProperties
     end
 
   fun sep(op: _Operator): String =>
-    match op
+    match \exhaustive\ op
     | _OpNone      => ","
     | _OpPlus      => ","
     | _OpHash      => ","
@@ -32,7 +32,7 @@ primitive _OperatorProperties
     end
 
   fun named(op: _Operator): Bool =>
-    match op
+    match \exhaustive\ op
     | _OpNone      => false
     | _OpPlus      => false
     | _OpHash      => false
@@ -44,7 +44,7 @@ primitive _OperatorProperties
     end
 
   fun ifemp(op: _Operator): String =>
-    match op
+    match \exhaustive\ op
     | _OpNone      => ""
     | _OpPlus      => ""
     | _OpHash      => ""
@@ -56,7 +56,7 @@ primitive _OperatorProperties
     end
 
   fun allow_reserved(op: _Operator): Bool =>
-    match op
+    match \exhaustive\ op
     | _OpNone      => false
     | _OpPlus      => true
     | _OpHash      => true

@@ -14,7 +14,7 @@ actor Main
     // ParseURI handles IRIs natively — non-ASCII bytes pass through
     let iri_str = "http://example.com/r\xE9sum\xE9?q=caf\xE9#\xE9"
     env.out.print("Parsing an IRI:")
-    match ParseURI(iri_str)
+    match \exhaustive\ ParseURI(iri_str)
     | let u: URI val =>
       env.out.print("  Input:     " + iri_str)
       env.out.print("  Parsed:    " + u.string())
@@ -34,7 +34,7 @@ actor Main
     // Convert between IRI and URI forms
     env.out.print("IRI to URI Conversion")
     env.out.print("---------------------")
-    match ParseURI("http://example.com/caf\xE9")
+    match \exhaustive\ ParseURI("http://example.com/caf\xE9")
     | let iri: URI val =>
       let uri = IRIToURI(iri)
       env.out.print("  IRI: " + iri.string())
@@ -48,7 +48,7 @@ actor Main
     // Convert URI back to IRI
     env.out.print("URI to IRI Conversion")
     env.out.print("---------------------")
-    match ParseURI("http://example.com/r%C3%A9sum%C3%A9")
+    match \exhaustive\ ParseURI("http://example.com/r%C3%A9sum%C3%A9")
     | let uri: URI val =>
       let iri = URIToIRI(uri)
       env.out.print("  URI: " + uri.string())
@@ -73,9 +73,9 @@ actor Main
     env.out.print("IRI Normalization")
     env.out.print("-----------------")
     let unnormalized = "HTTP://Example.COM:80/r%C3%A9sum%C3%A9"
-    match ParseURI(unnormalized)
+    match \exhaustive\ ParseURI(unnormalized)
     | let u: URI val =>
-      match NormalizeIRI(u)
+      match \exhaustive\ NormalizeIRI(u)
       | let n: URI val =>
         env.out.print("  Original:   " + unnormalized)
         env.out.print("  Normalized: " + n.string())
@@ -95,7 +95,7 @@ actor Main
     let eq_b = "http://example.com/caf%C3%A9"
     match (ParseURI(eq_a), ParseURI(eq_b))
     | (let a: URI val, let b: URI val) =>
-      match IRIEquivalent(a, b)
+      match \exhaustive\ IRIEquivalent(a, b)
       | let result: Bool =>
         env.out.print("  " + eq_a + " == " + eq_b + "? "
           + result.string())

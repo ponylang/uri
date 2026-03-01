@@ -213,9 +213,9 @@ class val URI is (Stringable & Equatable[URI])
     (distinguishing "no query" from "decode failure"), use
     `ParseQueryParameters` directly on the `query` field.
     """
-    match query
+    match \exhaustive\ query
     | let q: String val =>
-      match ParseQueryParameters(q)
+      match \exhaustive\ ParseQueryParameters(q)
       | let params: QueryParams val => params
       | let _: InvalidPercentEncoding => None
       end

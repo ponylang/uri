@@ -37,7 +37,7 @@ primitive ParseQueryParameters
       if at_end or at_amp then
         let pair_str: String val =
           query.substring(start.isize(), i.isize())
-        match _parse_pair(pair_str)
+        match \exhaustive\ _parse_pair(pair_str)
         | (let k: String val, let v: String val) => pairs.push((k, v))
         | let err: InvalidPercentEncoding val => return err
         end
@@ -89,9 +89,9 @@ primitive ParseQueryParameters
     let key_plus: String val = _plus_to_space(raw_key)
     let value_plus: String val = _plus_to_space(raw_value)
 
-    match PercentDecode(key_plus)
+    match \exhaustive\ PercentDecode(key_plus)
     | let key: String val =>
-      match PercentDecode(value_plus)
+      match \exhaustive\ PercentDecode(value_plus)
       | let value: String val => (key, value)
       | let err: InvalidPercentEncoding val => err
       end

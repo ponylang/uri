@@ -132,7 +132,7 @@ primitive ParseURIAuthority
         raw.substring(host_start.isize(), colon_pos.isize())
       let port_str: String val =
         raw.substring((colon_pos + 1).isize(), end_pos.isize())
-      match _parse_port(port_str)
+      match \exhaustive\ _parse_port(port_str)
       | let p: U16 =>
         URIAuthority(userinfo, host_str, p)
       | None =>

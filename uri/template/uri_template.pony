@@ -29,7 +29,7 @@ class val URITemplate
     instead when you need a description of what went wrong.
     """
     _template = template
-    _parts = match _URITemplateParser.parse(template)
+    _parts = match \exhaustive\ _URITemplateParser.parse(template)
     | let p: Array[_TemplatePart] val => p
     | let _: URITemplateParseError => error
     end

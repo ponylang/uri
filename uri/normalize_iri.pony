@@ -13,7 +13,7 @@ primitive NormalizeIRI
   percent-encoded sequence.
   """
   fun apply(iri: URI val): (URI val | InvalidPercentEncoding val) =>
-    match NormalizeURI(iri)
+    match \exhaustive\ NormalizeURI(iri)
     | let normalized: URI val => URIToIRI(normalized)
     | let e: InvalidPercentEncoding val => e
     end

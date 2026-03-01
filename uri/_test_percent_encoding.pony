@@ -14,7 +14,7 @@ class \nodoc\ iso _PropertyPercentRoundtrip is Property1[String val]
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     let encoded = PercentEncode(arg1, URIPartPath)
-    match PercentDecode(encoded)
+    match \exhaustive\ PercentDecode(encoded)
     | let decoded: String val =>
       ph.assert_eq[String val](arg1, decoded)
     | let err: InvalidPercentEncoding val =>
@@ -123,7 +123,7 @@ class \nodoc\ iso _PropertyInvalidPercentSequenceRejected
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match PercentDecode(arg1)
+    match \exhaustive\ PercentDecode(arg1)
     | let s: String val =>
       ph.fail("should have rejected: " + arg1)
     | let err: InvalidPercentEncoding val =>
@@ -174,7 +174,7 @@ class \nodoc\ iso _PropertyPercentDecodeBoundary
         ph.fail("expected decode success for: " + input)
       end
     else
-      match result
+      match \exhaustive\ result
       | let s: String val =>
         ph.fail("expected decode failure for: " + input)
       | let err: InvalidPercentEncoding val =>
@@ -200,14 +200,14 @@ class \nodoc\ iso _TestPercentEncodeKnownGood is UnitTest
         URIPartPath))
 
     // RFC 3986 section 2.1 example: 'A' = %41
-    match PercentDecode("%41")
+    match \exhaustive\ PercentDecode("%41")
     | let s: String val => h.assert_eq[String val]("A", s)
     | let err: InvalidPercentEncoding val =>
       h.fail("should decode %41")
     end
 
     // Lowercase hex is accepted
-    match PercentDecode("%6a")
+    match \exhaustive\ PercentDecode("%6a")
     | let s: String val => h.assert_eq[String val]("j", s)
     | let err: InvalidPercentEncoding val =>
       h.fail("should decode %6a")
@@ -215,7 +215,7 @@ class \nodoc\ iso _TestPercentEncodeKnownGood is UnitTest
 
     // Empty string roundtrips
     h.assert_eq[String val]("", PercentEncode("", URIPartPath))
-    match PercentDecode("")
+    match \exhaustive\ PercentDecode("")
     | let s: String val => h.assert_eq[String val]("", s)
     | let err: InvalidPercentEncoding val =>
       h.fail("should decode empty string")

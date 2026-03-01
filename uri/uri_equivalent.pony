@@ -14,11 +14,11 @@ primitive URIEquivalent
   fun apply(a: URI val, b: URI val)
     : (Bool | InvalidPercentEncoding val)
   =>
-    let norm_a = match NormalizeURI(a)
+    let norm_a = match \exhaustive\ NormalizeURI(a)
     | let u: URI val => u
     | let e: InvalidPercentEncoding val => return e
     end
-    let norm_b = match NormalizeURI(b)
+    let norm_b = match \exhaustive\ NormalizeURI(b)
     | let u: URI val => u
     | let e: InvalidPercentEncoding val => return e
     end

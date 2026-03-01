@@ -15,7 +15,7 @@ class \nodoc\ iso _PropertyAuthorityRoundtrip
   fun ref property(arg1: _ValidAuthorityInput, ph: PropertyHelper) =>
     let original = URIAuthority(arg1.userinfo, arg1.host, arg1.port)
     let serialized = original.string()
-    match ParseURIAuthority(consume serialized)
+    match \exhaustive\ ParseURIAuthority(consume serialized)
     | let reparsed: URIAuthority val =>
       ph.assert_true(
         original == reparsed,
@@ -41,7 +41,7 @@ class \nodoc\ iso _PropertyInvalidPortRejected is Property1[String val]
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURIAuthority(arg1)
+    match \exhaustive\ ParseURIAuthority(arg1)
     | let a: URIAuthority val =>
       ph.fail("expected InvalidPort for: " + arg1)
     | let err: URIParseError val =>
@@ -67,7 +67,7 @@ class \nodoc\ iso _PropertyInvalidHostRejected is Property1[String val]
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURIAuthority(arg1)
+    match \exhaustive\ ParseURIAuthority(arg1)
     | let a: URIAuthority val =>
       ph.fail("expected InvalidHost for: " + arg1)
     | let err: URIParseError val =>
@@ -82,7 +82,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Simple host
-    match ParseURIAuthority("example.com")
+    match \exhaustive\ ParseURIAuthority("example.com")
     | let a: URIAuthority val =>
       h.assert_true(a.userinfo is None)
       h.assert_eq[String val]("example.com", a.host)
@@ -92,7 +92,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // Host with port
-    match ParseURIAuthority("example.com:8080")
+    match \exhaustive\ ParseURIAuthority("example.com:8080")
     | let a: URIAuthority val =>
       h.assert_true(a.userinfo is None)
       h.assert_eq[String val]("example.com", a.host)
@@ -105,7 +105,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // Userinfo
-    match ParseURIAuthority("user:pass@example.com:443")
+    match \exhaustive\ ParseURIAuthority("user:pass@example.com:443")
     | let a: URIAuthority val =>
       match a.userinfo
       | let u: String => h.assert_eq[String val]("user:pass", u)
@@ -121,7 +121,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // IPv6 host
-    match ParseURIAuthority("[::1]:8080")
+    match \exhaustive\ ParseURIAuthority("[::1]:8080")
     | let a: URIAuthority val =>
       h.assert_true(a.userinfo is None)
       h.assert_eq[String val]("[::1]", a.host)
@@ -134,7 +134,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // IPv6 without port
-    match ParseURIAuthority("[2001:db8::7]")
+    match \exhaustive\ ParseURIAuthority("[2001:db8::7]")
     | let a: URIAuthority val =>
       h.assert_eq[String val]("[2001:db8::7]", a.host)
       h.assert_true(a.port is None)
@@ -143,7 +143,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // Empty host (used in file:/// URIs)
-    match ParseURIAuthority("")
+    match \exhaustive\ ParseURIAuthority("")
     | let a: URIAuthority val =>
       h.assert_eq[String val]("", a.host)
       h.assert_true(a.port is None)
@@ -152,7 +152,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // Port at boundary values
-    match ParseURIAuthority("host:0")
+    match \exhaustive\ ParseURIAuthority("host:0")
     | let a: URIAuthority val =>
       match a.port
       | let p: U16 => h.assert_eq[U16](0, p)
@@ -162,7 +162,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
       h.fail("parse failed for port 0: " + e.string())
     end
 
-    match ParseURIAuthority("host:65535")
+    match \exhaustive\ ParseURIAuthority("host:65535")
     | let a: URIAuthority val =>
       match a.port
       | let p: U16 => h.assert_eq[U16](65535, p)
@@ -173,7 +173,7 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     end
 
     // Empty port (RFC 3986 allows port = *DIGIT, so empty is valid)
-    match ParseURIAuthority("host:")
+    match \exhaustive\ ParseURIAuthority("host:")
     | let a: URIAuthority val =>
       h.assert_eq[String val]("host", a.host)
       h.assert_true(a.port is None,
