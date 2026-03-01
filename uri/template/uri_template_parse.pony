@@ -7,7 +7,7 @@ primitive URITemplateParse
   about parse failures.
 
   ```pony
-  match \exhaustive\ URITemplateParse("{+path}/here")
+  match URITemplateParse("{+path}/here")
   | let tpl: URITemplate =>
     let result = tpl.expand(vars)
   | let err: URITemplateParseError =>

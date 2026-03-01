@@ -421,7 +421,7 @@ class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
 class \nodoc\ iso _PropertyBuildParseRoundtrip is Property1[_BuildInput]
   """
   For generated raw components, build a URI then parse it back —
-  components match \exhaustive\.
+  components match.
   """
   fun name(): String => "uri/builder/parse_roundtrip"
 

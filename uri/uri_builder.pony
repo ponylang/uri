@@ -7,7 +7,7 @@ class ref URIBuilder
   returns a `URI val`.
 
   ```pony
-  match \exhaustive\ URIBuilder
+  match URIBuilder
     .set_scheme("https")
     .set_host("example.com")
     .set_path("/api/users")
@@ -61,7 +61,7 @@ class ref URIBuilder
     """
     Set the URI scheme from raw text.
 
-    The scheme is validated on `build()` — it must match \exhaustive\
+    The scheme is validated on `build()` — it must match
     `[A-Za-z][A-Za-z0-9+-.]*` per RFC 3986 section 3.1. No encoding is
     needed for schemes (they are ASCII-only).
     """
@@ -234,7 +234,7 @@ class ref URIBuilder
     """
     Validate and assemble the URI from the current components.
 
-    Returns `InvalidScheme` if the scheme is set but does not match \exhaustive\
+    Returns `InvalidScheme` if the scheme is set but does not match
     `[A-Za-z][A-Za-z0-9+-.]*`. Returns `InvalidHost` if an IP-literal
     host is malformed. Returns the assembled `URI val` on success.
     """
