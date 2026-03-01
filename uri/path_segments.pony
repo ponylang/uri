@@ -29,7 +29,7 @@ primitive PathSegments
       try
         if path(i)? == '/' then
           let raw: String val = path.substring(start.isize(), i.isize())
-          match PercentDecode(raw)
+          match \exhaustive\ PercentDecode(raw)
           | let decoded: String val => segments.push(decoded)
           | let err: InvalidPercentEncoding val => return err
           end
@@ -43,7 +43,7 @@ primitive PathSegments
 
     // Final segment after last '/' (or entire path if no '/')
     let raw: String val = path.substring(start.isize(), path.size().isize())
-    match PercentDecode(raw)
+    match \exhaustive\ PercentDecode(raw)
     | let decoded: String val => segments.push(decoded)
     | let err: InvalidPercentEncoding val => return err
     end

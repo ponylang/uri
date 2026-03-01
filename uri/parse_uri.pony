@@ -61,7 +61,7 @@ primitive ParseURI
           end
           auth_end = auth_end + 1
         end
-        match ParseURIAuthority._parse(raw, pos, auth_end)
+        match \exhaustive\ ParseURIAuthority._parse(raw, pos, auth_end)
         | let a: URIAuthority val =>
           authority = a
         | let e: URIParseError val =>

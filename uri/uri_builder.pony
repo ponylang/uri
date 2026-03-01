@@ -7,7 +7,7 @@ class ref URIBuilder
   returns a `URI val`.
 
   ```pony
-  match URIBuilder
+  match \exhaustive\ URIBuilder
     .set_scheme("https")
     .set_host("example.com")
     .set_path("/api/users")
@@ -61,7 +61,7 @@ class ref URIBuilder
     """
     Set the URI scheme from raw text.
 
-    The scheme is validated on `build()` — it must match
+    The scheme is validated on `build()` — it must match \exhaustive\
     `[A-Za-z][A-Za-z0-9+-.]*` per RFC 3986 section 3.1. No encoding is
     needed for schemes (they are ASCII-only).
     """
@@ -197,7 +197,7 @@ class ref URIBuilder
       out.append(encoded_val)
       out
     end
-    _query = match _query
+    _query = match \exhaustive\ _query
     | None => param
     | let q: String if q.size() == 0 => param
     | let q: String =>
@@ -234,7 +234,7 @@ class ref URIBuilder
     """
     Validate and assemble the URI from the current components.
 
-    Returns `InvalidScheme` if the scheme is set but does not match
+    Returns `InvalidScheme` if the scheme is set but does not match \exhaustive\
     `[A-Za-z][A-Za-z0-9+-.]*`. Returns `InvalidHost` if an IP-literal
     host is malformed. Returns the assembled `URI val` on success.
     """
@@ -248,7 +248,7 @@ class ref URIBuilder
 
     // Build authority if host is present
     let authority: (URIAuthority | None) =
-      match _host
+      match \exhaustive\ _host
       | let h: String =>
         // Assemble authority string for validation via ParseURIAuthority
         let auth_str = recover val
@@ -262,7 +262,7 @@ class ref URIBuilder
           end
           out
         end
-        match ParseURIAuthority(auth_str)
+        match \exhaustive\ ParseURIAuthority(auth_str)
         | let a: URIAuthority val => a
         | let e: URIParseError val => return e
         end

@@ -18,7 +18,7 @@ primitive _URITemplateParser
     while i < template.size() do
       try
         if template(i)? == '{' then
-          match _parse_expression(template, i)
+          match \exhaustive\ _parse_expression(template, i)
           | (let expr: _Expression, let next: USize) =>
             parts.push(expr)
             i = next
@@ -26,7 +26,7 @@ primitive _URITemplateParser
             return err
           end
         else
-          match _parse_literal(template, i)
+          match \exhaustive\ _parse_literal(template, i)
           | (let lit: _Literal, let next: USize) =>
             parts.push(lit)
             i = next
@@ -177,7 +177,7 @@ primitive _URITemplateParser
           end
         end
 
-        match _parse_varspec(template, i)
+        match \exhaustive\ _parse_varspec(template, i)
         | (let vs: _VarSpec, let next: USize) =>
           varspecs.push(vs)
           i = next
@@ -197,7 +197,7 @@ primitive _URITemplateParser
     : ((_VarSpec, USize) | URITemplateParseError)
   =>
     // Parse varname
-    match _parse_varname(template, start)
+    match \exhaustive\ _parse_varname(template, start)
     | (let name: String val, let i: USize) =>
       // Check for modifier
       if i >= template.size() then
@@ -208,7 +208,7 @@ primitive _URITemplateParser
         match template(i)?
         | ':' =>
           // Prefix modifier
-          match _parse_prefix(template, i + 1)
+          match \exhaustive\ _parse_prefix(template, i + 1)
           | (let max_len: USize, let next: USize) =>
             (_VarSpec(name, _ModPrefix(max_len)), next)
           | let err: URITemplateParseError =>

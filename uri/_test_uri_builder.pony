@@ -8,7 +8,7 @@ class \nodoc\ iso _TestBuildSimple is UnitTest
   fun name(): String => "uri/builder/simple"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .set_path("/index.html")
@@ -24,7 +24,7 @@ class \nodoc\ iso _TestBuildAllComponents is UnitTest
   fun name(): String => "uri/builder/all_components"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_userinfo("user:pass")
       .set_host("example.com")
@@ -46,7 +46,7 @@ class \nodoc\ iso _TestBuildQueryParams is UnitTest
   fun name(): String => "uri/builder/query_params"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .add_query_param("a", "1")
@@ -64,7 +64,7 @@ class \nodoc\ iso _TestBuildQueryParamEncoding is UnitTest
   fun name(): String => "uri/builder/query_param_encoding"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .add_query_param("a=b", "c&d")
@@ -87,9 +87,9 @@ class \nodoc\ iso _TestBuildFromURI is UnitTest
   fun name(): String => "uri/builder/from_uri"
 
   fun ref apply(h: TestHelper) =>
-    match ParseURI("http://user@example.com:8080/path?query=1#frag")
+    match \exhaustive\ ParseURI("http://user@example.com:8080/path?query=1#frag")
     | let original: URI val =>
-      match URIBuilder.from(original).build()
+      match \exhaustive\ URIBuilder.from(original).build()
       | let rebuilt: URI val =>
         h.assert_eq[String val](original.string(), rebuilt.string())
       | let e: URIBuildError val =>
@@ -104,9 +104,9 @@ class \nodoc\ iso _TestBuildModifyFromURI is UnitTest
   fun name(): String => "uri/builder/modify_from_uri"
 
   fun ref apply(h: TestHelper) =>
-    match ParseURI("https://example.com/path?x=1")
+    match \exhaustive\ ParseURI("https://example.com/path?x=1")
     | let original: URI val =>
-      match URIBuilder.from(original)
+      match \exhaustive\ URIBuilder.from(original)
         .set_host("other.com")
         .add_query_param("y", "2")
         .build()
@@ -125,7 +125,7 @@ class \nodoc\ iso _TestBuildIPLiteralHost is UnitTest
   fun name(): String => "uri/builder/ip_literal_host"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_host("[::1]")
       .set_port(8080)
@@ -141,7 +141,7 @@ class \nodoc\ iso _TestBuildAutoEncode is UnitTest
   fun name(): String => "uri/builder/auto_encode"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .set_path("/hello world")
@@ -161,7 +161,7 @@ class \nodoc\ iso _TestBuildPathAutoSlash is UnitTest
   fun name(): String => "uri/builder/path_auto_slash"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_host("example.com")
       .set_path("relative")
@@ -178,7 +178,7 @@ class \nodoc\ iso _TestBuildAppendPathSegment is UnitTest
   fun name(): String => "uri/builder/append_path_segment"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .append_path_segment("api")
@@ -198,7 +198,7 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // starts with digit
-    match URIBuilder.set_scheme("1http").build()
+    match \exhaustive\ URIBuilder.set_scheme("1http").build()
     | let _: URI val => h.fail("expected error for digit-starting scheme")
     | let e: URIBuildError val =>
       h.assert_true(e is InvalidScheme,
@@ -206,7 +206,7 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
     end
 
     // contains space
-    match URIBuilder.set_scheme("ht tp").build()
+    match \exhaustive\ URIBuilder.set_scheme("ht tp").build()
     | let _: URI val => h.fail("expected error for space in scheme")
     | let e: URIBuildError val =>
       h.assert_true(e is InvalidScheme,
@@ -214,7 +214,7 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
     end
 
     // empty scheme
-    match URIBuilder.set_scheme("").build()
+    match \exhaustive\ URIBuilder.set_scheme("").build()
     | let _: URI val => h.fail("expected error for empty scheme")
     | let e: URIBuildError val =>
       h.assert_true(e is InvalidScheme,
@@ -226,7 +226,7 @@ class \nodoc\ iso _TestBuildInvalidIPLiteral is UnitTest
   fun name(): String => "uri/builder/invalid_ip_literal"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_host("[not valid")
       .build()
@@ -241,7 +241,7 @@ class \nodoc\ iso _TestBuildEmpty is UnitTest
   fun name(): String => "uri/builder/empty"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder.build()
+    match \exhaustive\ URIBuilder.build()
     | let u: URI val =>
       h.assert_eq[String val]("", u.string())
     | let e: URIBuildError val =>
@@ -254,7 +254,7 @@ class \nodoc\ iso _TestBuildQueryNoneVsEmpty is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // No query — no ? in output
-    match URIBuilder.set_path("/path").build()
+    match \exhaustive\ URIBuilder.set_path("/path").build()
     | let u: URI val =>
       h.assert_eq[String val]("/path", u.string())
     | let e: URIBuildError val =>
@@ -262,7 +262,7 @@ class \nodoc\ iso _TestBuildQueryNoneVsEmpty is UnitTest
     end
 
     // Empty query — trailing ?
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_path("/path")
       .set_query("")
       .build()
@@ -278,7 +278,7 @@ class \nodoc\ iso _TestBuildFragmentNoneVsEmpty is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // No fragment — no # in output
-    match URIBuilder.set_path("/path").build()
+    match \exhaustive\ URIBuilder.set_path("/path").build()
     | let u: URI val =>
       h.assert_eq[String val]("/path", u.string())
     | let e: URIBuildError val =>
@@ -286,7 +286,7 @@ class \nodoc\ iso _TestBuildFragmentNoneVsEmpty is UnitTest
     end
 
     // Empty fragment — trailing #
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_path("/path")
       .set_fragment("")
       .build()
@@ -317,7 +317,7 @@ class \nodoc\ iso _TestBuildClearMethods is UnitTest
       .clear_query()
       .clear_fragment()
 
-    match builder.build()
+    match \exhaustive\ builder.build()
     | let u: URI val =>
       h.assert_eq[String val]("", u.string())
     | let e: URIBuildError val =>
@@ -329,7 +329,7 @@ class \nodoc\ iso _TestBuildUserinfoAutoAuthority is UnitTest
   fun name(): String => "uri/builder/userinfo_auto_authority"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_userinfo("user")
       .build()
@@ -344,7 +344,7 @@ class \nodoc\ iso _TestBuildPortAutoAuthority is UnitTest
   fun name(): String => "uri/builder/port_auto_authority"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("http")
       .set_port(8080)
       .build()
@@ -359,7 +359,7 @@ class \nodoc\ iso _TestBuildQuerySetThenAdd is UnitTest
   fun name(): String => "uri/builder/query_set_then_add"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .set_query("a=1")
@@ -381,7 +381,7 @@ class \nodoc\ iso _TestBuildAuthorityNoScheme is UnitTest
   fun name(): String => "uri/builder/authority_no_scheme"
 
   fun ref apply(h: TestHelper) =>
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_host("example.com")
       .set_path("/path")
       .build()
@@ -408,7 +408,7 @@ class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
       arg1.scheme, arg1.authority, arg1.path,
       arg1.query, arg1.fragment)
     let original_str = original.string()
-    match URIBuilder.from(original).build()
+    match \exhaustive\ URIBuilder.from(original).build()
     | let rebuilt: URI val =>
       ph.assert_eq[String val](
         consume original_str, rebuilt.string(),
@@ -421,7 +421,7 @@ class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
 class \nodoc\ iso _PropertyBuildParseRoundtrip is Property1[_BuildInput]
   """
   For generated raw components, build a URI then parse it back —
-  components match.
+  components match \exhaustive\.
   """
   fun name(): String => "uri/builder/parse_roundtrip"
 
@@ -434,10 +434,10 @@ class \nodoc\ iso _PropertyBuildParseRoundtrip is Property1[_BuildInput]
       .set_host(arg1.host)
       .set_path(arg1.path)
 
-    match builder.build()
+    match \exhaustive\ builder.build()
     | let built: URI val =>
       let s = built.string()
-      match ParseURI(consume s)
+      match \exhaustive\ ParseURI(consume s)
       | let parsed: URI val =>
         match parsed.scheme
         | let s': String =>
@@ -472,7 +472,7 @@ class \nodoc\ iso _PropertyBuildInvalidSchemeFails
     _InvalidSchemeGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match URIBuilder.set_scheme(arg1).build()
+    match \exhaustive\ URIBuilder.set_scheme(arg1).build()
     | let _: URI val =>
       ph.fail("expected InvalidScheme for: " + arg1)
     | let e: URIBuildError val =>

@@ -54,7 +54,7 @@ actor Main
 
     // Error handling with URITemplateParse
     env.out.print("Error handling:")
-    match URITemplateParse("{=invalid}")
+    match \exhaustive\ URITemplateParse("{=invalid}")
     | let tpl: URITemplate =>
       env.out.print("  (unexpected success)")
     | let err: URITemplateParseError =>

@@ -13,7 +13,7 @@ actor Main
 
     // Build a URI from scratch
     env.out.print("Building from scratch:")
-    match URIBuilder
+    match \exhaustive\ URIBuilder
       .set_scheme("https")
       .set_host("example.com")
       .append_path_segment("api")
@@ -33,10 +33,10 @@ actor Main
 
     // Modify an existing URI
     env.out.print("Modifying an existing URI:")
-    match ParseURI("https://example.com/old/path?x=1")
+    match \exhaustive\ ParseURI("https://example.com/old/path?x=1")
     | let original: URI val =>
       env.out.print("  Original:  " + original.string())
-      match URIBuilder.from(original)
+      match \exhaustive\ URIBuilder.from(original)
         .set_path("/new/path")
         .add_query_param("y", "2")
         .set_fragment("top")
@@ -54,7 +54,7 @@ actor Main
 
     // Error handling for invalid scheme
     env.out.print("Error handling:")
-    match URIBuilder.set_scheme("1nvalid").set_host("example.com").build()
+    match \exhaustive\ URIBuilder.set_scheme("1nvalid").set_host("example.com").build()
     | let _: URI val =>
       env.out.print("  (unexpected success)")
     | let e: URIBuildError val =>

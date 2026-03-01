@@ -15,7 +15,7 @@ class \nodoc\ iso _PropertyURIRoundtrip is Property1[_ValidURIInput]
       arg1.scheme, arg1.authority, arg1.path,
       arg1.query, arg1.fragment)
     let serialized = original.string()
-    match ParseURI(consume serialized)
+    match \exhaustive\ ParseURI(consume serialized)
     | let reparsed: URI val =>
       ph.assert_true(
         original == reparsed,
@@ -46,7 +46,7 @@ class \nodoc\ iso _PropertyInvalidSchemeRejected is Property1[String val]
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     // These should either parse as relative references (no scheme)
     // or produce an error. They should NOT parse with a scheme.
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let u: URI val =>
       ph.assert_true(
         u.scheme is None,
@@ -100,10 +100,10 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
     _assert_uri(h, "", None, None, "", None, None)
 
     // query without value
-    match ParseURI("?key")
+    match \exhaustive\ ParseURI("?key")
     | let u: URI val =>
       h.assert_eq[String val]("", u.path)
-      match u.query
+      match \exhaustive\ u.query
       | let q: String => h.assert_eq[String val]("key", q)
       else h.fail("expected query for ?key")
       end
@@ -112,10 +112,10 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
     end
 
     // empty query present (/path?)
-    match ParseURI("/path?")
+    match \exhaustive\ ParseURI("/path?")
     | let u: URI val =>
       h.assert_eq[String val]("/path", u.path)
-      match u.query
+      match \exhaustive\ u.query
       | let q: String => h.assert_eq[String val]("", q)
       else h.fail("expected empty query for /path?")
       end
@@ -131,13 +131,13 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
       "http", "example.com", "/path", None, None)
 
     // empty authority (file:///etc/hosts)
-    match ParseURI("file:///etc/hosts")
+    match \exhaustive\ ParseURI("file:///etc/hosts")
     | let u: URI val =>
-      match u.scheme
+      match \exhaustive\ u.scheme
       | let s: String => h.assert_eq[String val]("file", s)
       else h.fail("expected scheme for file:///etc/hosts")
       end
-      match u.authority
+      match \exhaustive\ u.authority
       | let a: URIAuthority =>
         h.assert_eq[String val]("", a.host)
       else h.fail("expected authority for file:///etc/hosts")
@@ -148,10 +148,10 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
     end
 
     // Percent-encoded delimiters not treated as structural
-    match ParseURI("http://example.com/a%2Fb?c%3Fd")
+    match \exhaustive\ ParseURI("http://example.com/a%2Fb?c%3Fd")
     | let u: URI val =>
       h.assert_eq[String val]("/a%2Fb", u.path)
-      match u.query
+      match \exhaustive\ u.query
       | let q: String => h.assert_eq[String val]("c%3Fd", q)
       else h.fail("expected query for percent-encoded test")
       end
@@ -164,7 +164,7 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
       "http", "example.com:8080", "/path", None, None)
 
     // Authority with userinfo
-    match ParseURI("http://user:pass@example.com/path")
+    match \exhaustive\ ParseURI("http://user:pass@example.com/path")
     | let u: URI val =>
       match u.authority
       | let a: URIAuthority =>
@@ -180,7 +180,7 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
     end
 
     // Full URI with all components
-    match ParseURI("http://user@example.com:8080/path?query=1#frag")
+    match \exhaustive\ ParseURI("http://user@example.com:8080/path?query=1#frag")
     | let u: URI val =>
       match u.scheme
       | let s: String => h.assert_eq[String val]("http", s)
@@ -221,9 +221,9 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
     expected_query: (String | None),
     expected_fragment: (String | None))
   =>
-    match ParseURI(input)
+    match \exhaustive\ ParseURI(input)
     | let u: URI val =>
-      match (expected_scheme, u.scheme)
+      match \exhaustive\ (expected_scheme, u.scheme)
       | (None, None) => None
       | (let e: String, let a: String) =>
         h.assert_eq[String val](e, a, "scheme mismatch for: " + input)
@@ -231,7 +231,7 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
         h.fail("scheme mismatch for: " + input)
       end
 
-      match (expected_authority, u.authority)
+      match \exhaustive\ (expected_authority, u.authority)
       | (None, None) => None
       | (let e: String, let a: URIAuthority) =>
         h.assert_eq[String val](e, a.string(),
@@ -243,7 +243,7 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
       h.assert_eq[String val](expected_path, u.path,
         "path mismatch for: " + input)
 
-      match (expected_query, u.query)
+      match \exhaustive\ (expected_query, u.query)
       | (None, None) => None
       | (let e: String, let a: String) =>
         h.assert_eq[String val](e, a, "query mismatch for: " + input)
@@ -251,7 +251,7 @@ class \nodoc\ iso _TestParseURIKnownGood is UnitTest
         h.fail("query mismatch for: " + input)
       end
 
-      match (expected_fragment, u.fragment)
+      match \exhaustive\ (expected_fragment, u.fragment)
       | (None, None) => None
       | (let e: String, let a: String) =>
         h.assert_eq[String val](e, a, "fragment mismatch for: " + input)

@@ -14,11 +14,11 @@ primitive IRIEquivalent
   fun apply(a: URI val, b: URI val)
     : (Bool | InvalidPercentEncoding val)
   =>
-    let norm_a = match NormalizeIRI(a)
+    let norm_a = match \exhaustive\ NormalizeIRI(a)
     | let u: URI val => u
     | let e: InvalidPercentEncoding val => return e
     end
-    let norm_b = match NormalizeIRI(b)
+    let norm_b = match \exhaustive\ NormalizeIRI(b)
     | let u: URI val => u
     | let e: InvalidPercentEncoding val => return e
     end

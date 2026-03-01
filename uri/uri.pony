@@ -11,7 +11,7 @@ references — covers origin-form, absolute-form, and asterisk-form HTTP
 request-targets):
 
 ```pony
-match ParseURI("/index.html?page=1")
+match \exhaustive\ ParseURI("/index.html?page=1")
 | let u: URI val => // u.path, u.query, etc.
 | let e: URIParseError val => // handle error
 end
@@ -21,9 +21,9 @@ Use `ResolveURI` to resolve a relative reference against a base URI
 (RFC 3986 section 5):
 
 ```pony
-match (ParseURI("http://example.com/a/b"), ParseURI("../c"))
+match \exhaustive\ (ParseURI("http://example.com/a/b"), ParseURI("../c"))
 | (let base: URI val, let ref': URI val) =>
-  match ResolveURI(base, ref')
+  match \exhaustive\ ResolveURI(base, ref')
   | let target: URI val => // target.string() == "http://example.com/a/c"
   | let e: ResolveURIError val => // base was not absolute
   end
@@ -34,7 +34,7 @@ Use `ParseURIAuthority` for HTTP CONNECT authority-form targets
 (`host:port` without scheme or `//`):
 
 ```pony
-match ParseURIAuthority("example.com:443")
+match \exhaustive\ ParseURIAuthority("example.com:443")
 | let a: URIAuthority val => // a.host, a.port
 | let e: URIParseError val => // handle error
 end
@@ -44,9 +44,9 @@ Use `NormalizeURI` to apply RFC 3986 section 6 normalization (case,
 percent-encoding, dot segments, default port removal, empty path):
 
 ```pony
-match ParseURI("HTTP://Example.COM:80/%7Euser/a/../b")
+match \exhaustive\ ParseURI("HTTP://Example.COM:80/%7Euser/a/../b")
 | let u: URI val =>
-  match NormalizeURI(u)
+  match \exhaustive\ NormalizeURI(u)
   | let n: URI val => // n.string() == "http://example.com/~user/b"
   | let e: InvalidPercentEncoding val => // malformed percent-encoding
   end
@@ -57,9 +57,9 @@ Use `URIEquivalent` to test whether two URIs are equivalent under
 normalization:
 
 ```pony
-match (ParseURI("HTTP://Example.COM:80/path"), ParseURI("http://example.com/path"))
+match \exhaustive\ (ParseURI("HTTP://Example.COM:80/path"), ParseURI("http://example.com/path"))
 | (let a: URI val, let b: URI val) =>
-  match URIEquivalent(a, b)
+  match \exhaustive\ URIEquivalent(a, b)
   | let eq: Bool => // eq == true
   end
 end
@@ -69,7 +69,7 @@ Use `URIBuilder` to construct a URI from raw (unencoded) components with
 automatic percent-encoding, or to modify an existing URI:
 
 ```pony
-match URIBuilder
+match \exhaustive\ URIBuilder
   .set_scheme("https")
   .set_host("example.com")
   .set_path("/api/users")
@@ -86,9 +86,9 @@ To modify an existing URI, start from `URIBuilder.from(uri)` and change
 only the components you need:
 
 ```pony
-match ParseURI("https://example.com/old?x=1")
+match \exhaustive\ ParseURI("https://example.com/old?x=1")
 | let u: URI val =>
-  match URIBuilder.from(u)
+  match \exhaustive\ URIBuilder.from(u)
     .set_path("/new")
     .add_query_param("y", "2")
     .build()
@@ -213,9 +213,9 @@ class val URI is (Stringable & Equatable[URI])
     (distinguishing "no query" from "decode failure"), use
     `ParseQueryParameters` directly on the `query` field.
     """
-    match query
+    match \exhaustive\ query
     | let q: String val =>
-      match ParseQueryParameters(q)
+      match \exhaustive\ ParseQueryParameters(q)
       | let params: QueryParams val => params
       | let _: InvalidPercentEncoding => None
       end

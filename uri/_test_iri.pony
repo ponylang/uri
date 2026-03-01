@@ -16,7 +16,7 @@ class \nodoc\ iso _PropertyIRIToURINoNonASCII
     _IRIStringGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let iri: URI val =>
       let uri = IRIToURI(iri)
       let uri_str: String val = uri.string()
@@ -41,7 +41,7 @@ class \nodoc\ iso _PropertyURIToIRINoEncodedUcschar
     _URIWithEncodedNonASCIIGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let uri: URI val =>
       let iri = URIToIRI(uri)
       let iri_str: String val = iri.string()
@@ -137,7 +137,7 @@ class \nodoc\ iso _PropertyIRIToURIIdempotent
     _IRIStringGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let iri: URI val =>
       let once = IRIToURI(iri)
       let twice = IRIToURI(once)
@@ -159,7 +159,7 @@ class \nodoc\ iso _PropertyURIToIRIIdempotent
     _URIWithEncodedNonASCIIGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let uri: URI val =>
       let once = URIToIRI(uri)
       let twice = URIToIRI(once)
@@ -182,7 +182,7 @@ class \nodoc\ iso _PropertyIRIToURIRoundtrip
     _IRIUcscharOnlyGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let iri: URI val =>
       let uri_form = IRIToURI(iri)
       let back = URIToIRI(uri_form)
@@ -205,9 +205,9 @@ class \nodoc\ iso _PropertyNormalizeIRIIdempotent
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
     let uri = arg1.uri
-    match NormalizeIRI(uri)
+    match \exhaustive\ NormalizeIRI(uri)
     | let once: URI val =>
-      match NormalizeIRI(once)
+      match \exhaustive\ NormalizeIRI(once)
       | let twice: URI val =>
         ph.assert_true(once == twice,
           "not idempotent: once=" + once.string()
@@ -232,7 +232,7 @@ class \nodoc\ iso _PropertyIRIEquivalentReflexive
 
   fun ref property(arg1: _NormalizableURIInput, ph: PropertyHelper) =>
     let uri = arg1.uri
-    match IRIEquivalent(uri, uri)
+    match \exhaustive\ IRIEquivalent(uri, uri)
     | let result: Bool =>
       ph.assert_true(result,
         "not reflexive: " + uri.string())
@@ -251,10 +251,10 @@ class \nodoc\ iso _PropertyIRIEquivalentCrossForms
     _IRIUcscharOnlyGenerator()
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match ParseURI(arg1)
+    match \exhaustive\ ParseURI(arg1)
     | let iri: URI val =>
       let uri_form = IRIToURI(iri)
-      match IRIEquivalent(iri, uri_form)
+      match \exhaustive\ IRIEquivalent(iri, uri_form)
       | let result: Bool =>
         ph.assert_true(result,
           "IRI and URI form not equivalent: iri=" + iri.string()
@@ -527,7 +527,7 @@ class \nodoc\ iso _TestIRIToURIKnownGood is UnitTest
     input: String,
     expected: String)
   =>
-    match ParseURI(input)
+    match \exhaustive\ ParseURI(input)
     | let iri: URI val =>
       let uri = IRIToURI(iri)
       h.assert_eq[String val](expected, uri.string(),
@@ -619,7 +619,7 @@ class \nodoc\ iso _TestURIToIRIKnownGood is UnitTest
     input: String,
     expected: String)
   =>
-    match ParseURI(input)
+    match \exhaustive\ ParseURI(input)
     | let uri: URI val =>
       let iri = URIToIRI(uri)
       h.assert_eq[String val](expected, iri.string(),
@@ -678,9 +678,9 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
     input: String,
     expected: String)
   =>
-    match ParseURI(input)
+    match \exhaustive\ ParseURI(input)
     | let u: URI val =>
-      match NormalizeIRI(u)
+      match \exhaustive\ NormalizeIRI(u)
       | let normalized: URI val =>
         h.assert_eq[String val](expected, normalized.string(),
           "NormalizeIRI(" + input + ")")
@@ -697,7 +697,7 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
     b_str: String,
     expected: Bool)
   =>
-    match (ParseURI(a_str), ParseURI(b_str))
+    match \exhaustive\ (ParseURI(a_str), ParseURI(b_str))
     | (let a: URI val, let b: URI val) =>
       match IRIEquivalent(a, b)
       | let result: Bool =>

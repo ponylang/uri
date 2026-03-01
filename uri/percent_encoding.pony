@@ -114,7 +114,7 @@ primitive PercentEncode
     end
 
     // component-specific allowed characters
-    match part
+    match \exhaustive\ part
     | URIPartUserinfo => c == ':'
     | URIPartHost => false
     | URIPartPath => (c == ':') or (c == '@') or (c == '/')

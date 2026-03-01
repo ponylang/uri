@@ -17,7 +17,7 @@ class \nodoc\ iso _PropertyResolveResultAbsolute
       arg1.base.path, arg1.base.query, arg1.base.fragment)
     let reference = URI(arg1.reference.scheme, arg1.reference.authority,
       arg1.reference.path, arg1.reference.query, arg1.reference.fragment)
-    match ResolveURI(base, reference)
+    match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
       ph.assert_true(
         match result.scheme
@@ -46,7 +46,7 @@ class \nodoc\ iso _PropertyResolveEmptyRef
     let base = URI(arg1.scheme, arg1.authority,
       arg1.path, arg1.query, arg1.fragment)
     let empty_ref = URI(None, None, "", None, None)
-    match ResolveURI(base, empty_ref)
+    match \exhaustive\ ResolveURI(base, empty_ref)
     | let result: URI val =>
       let expected = URI(arg1.scheme, arg1.authority,
         arg1.path, arg1.query, None)
@@ -78,7 +78,7 @@ class \nodoc\ iso _PropertyAbsoluteRefIgnoresBase
       base_in.path, base_in.query, base_in.fragment)
     let reference = URI(ref_in.scheme, ref_in.authority,
       ref_in.path, ref_in.query, ref_in.fragment)
-    match ResolveURI(base, reference)
+    match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
       match result.scheme
       | let s: String =>
@@ -105,7 +105,7 @@ class \nodoc\ iso _PropertyNonAbsoluteBaseRejected
     let base = URI(None, None, "/some/path", "query", "frag")
     let reference = URI(arg1.scheme, arg1.authority, arg1.path,
       arg1.query, arg1.fragment)
-    match ResolveURI(base, reference)
+    match \exhaustive\ ResolveURI(base, reference)
     | let _: URI val =>
       ph.fail("expected BaseURINotAbsolute")
     | let _: BaseURINotAbsolute => ph.assert_true(true)
@@ -127,9 +127,9 @@ class \nodoc\ iso _PropertyResolveRoundtrip
       arg1.base.path, arg1.base.query, arg1.base.fragment)
     let reference = URI(arg1.reference.scheme, arg1.reference.authority,
       arg1.reference.path, arg1.reference.query, arg1.reference.fragment)
-    match ResolveURI(base, reference)
+    match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
-      match ParseURI(result.string())
+      match \exhaustive\ ParseURI(result.string())
       | let reparsed: URI val =>
         ph.assert_true(result == reparsed,
           "roundtrip failed for: " + result.string())
@@ -247,11 +247,11 @@ class \nodoc\ iso _TestResolveURIEdgeCases is UnitTest
       "http://user@example.com:8080/c")
 
     // Non-absolute base rejected
-    match ParseURI("/relative/path")
+    match \exhaustive\ ParseURI("/relative/path")
     | let base: URI val =>
-      match ParseURI("g")
+      match \exhaustive\ ParseURI("g")
       | let ref': URI val =>
-        match ResolveURI(base, ref')
+        match \exhaustive\ ResolveURI(base, ref')
         | let _: URI val =>
           h.fail("expected BaseURINotAbsolute for relative base")
         | let _: BaseURINotAbsolute => None
@@ -270,11 +270,11 @@ primitive _AssertResolve
     reference_str: String,
     expected: String)
   =>
-    match ParseURI(base_str)
+    match \exhaustive\ ParseURI(base_str)
     | let base: URI val =>
-      match ParseURI(reference_str)
+      match \exhaustive\ ParseURI(reference_str)
       | let reference: URI val =>
-        match ResolveURI(base, reference)
+        match \exhaustive\ ResolveURI(base, reference)
         | let result: URI val =>
           h.assert_eq[String val](expected, result.string(),
             "resolve(" + base_str + ", " + reference_str + ")")

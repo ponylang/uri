@@ -19,7 +19,7 @@ class \nodoc\ iso _PropertyPathSegmentCount is Property1[String val]
     for c in arg1.values() do
       if c == '/' then expected = expected + 1 end
     end
-    match PathSegments(arg1)
+    match \exhaustive\ PathSegments(arg1)
     | let segs: Array[String val] val =>
       ph.assert_eq[USize](expected, segs.size(),
         "segment count mismatch for: " + arg1)
@@ -41,7 +41,7 @@ class \nodoc\ iso _PropertyPathSegmentRoundtrip is Property1[String val]
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match PathSegments(arg1)
+    match \exhaustive\ PathSegments(arg1)
     | let segs: Array[String val] val =>
       // Re-encode and join
       let parts = Array[String val](segs.size())
@@ -49,7 +49,7 @@ class \nodoc\ iso _PropertyPathSegmentRoundtrip is Property1[String val]
         parts.push(PercentEncode(seg, URIPartPath))
       end
       let rejoined = "/".join(parts.values())
-      match PathSegments(consume rejoined)
+      match \exhaustive\ PathSegments(consume rejoined)
       | let segs2: Array[String val] val =>
         ph.assert_eq[USize](segs.size(), segs2.size(),
           "roundtrip segment count mismatch for: " + arg1)
@@ -79,7 +79,7 @@ class \nodoc\ iso _PropertyPathSegmentInvalidRejected
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match PathSegments(arg1)
+    match \exhaustive\ PathSegments(arg1)
     | let segs: Array[String val] val =>
       ph.fail("expected error for: " + arg1)
     | let err: InvalidPercentEncoding val =>
@@ -110,7 +110,7 @@ class \nodoc\ iso _TestPathSegmentsKnownGood is UnitTest
     _assert_segments(h, "/a/b/", [""; "a"; "b"; ""])
 
     // Percent-encoded slash preserved within segment
-    match PathSegments("/a%2Fb/c")
+    match \exhaustive\ PathSegments("/a%2Fb/c")
     | let segs: Array[String val] val =>
       h.assert_eq[USize](3, segs.size())
       try
@@ -124,7 +124,7 @@ class \nodoc\ iso _TestPathSegmentsKnownGood is UnitTest
     end
 
     // Percent-encoded space
-    match PathSegments("/hello%20world")
+    match \exhaustive\ PathSegments("/hello%20world")
     | let segs: Array[String val] val =>
       try
         h.assert_eq[String val]("hello world", segs(1)?)
@@ -138,7 +138,7 @@ class \nodoc\ iso _TestPathSegmentsKnownGood is UnitTest
     input: String val,
     expected: Array[String val] val)
   =>
-    match PathSegments(input)
+    match \exhaustive\ PathSegments(input)
     | let segs: Array[String val] val =>
       h.assert_eq[USize](expected.size(), segs.size(),
         "segment count mismatch for: " + input)

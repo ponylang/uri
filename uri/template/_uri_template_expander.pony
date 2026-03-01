@@ -12,7 +12,7 @@ primitive _URITemplateExpander
   =>
     let out = String
     for part in parts.values() do
-      match part
+      match \exhaustive\ part
       | let lit: _Literal =>
         out.append(lit.text)
       | let expr: _Expression =>

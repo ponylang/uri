@@ -12,7 +12,7 @@ actor Main
     env.out.print("")
 
     // Parse a full URI
-    match ParseURI("http://user@example.com:8080/path?query=1#frag")
+    match \exhaustive\ ParseURI("http://user@example.com:8080/path?query=1#frag")
     | let u: URI val =>
       env.out.print("Parsed: " + u.string())
       match u.scheme
@@ -40,7 +40,7 @@ actor Main
     env.out.print("")
 
     // Query parameter lookup
-    match ParseURI("https://example.com/search?q=pony&page=1&page=2")
+    match \exhaustive\ ParseURI("https://example.com/search?q=pony&page=1&page=2")
     | let u: URI val =>
       env.out.print("Query parameters for: " + u.string())
       match u.query_params()
@@ -59,7 +59,7 @@ actor Main
 
     // Standalone authority parsing (HTTP CONNECT authority-form)
     env.out.print("Standalone authority parsing:")
-    match ParseURIAuthority("example.com:443")
+    match \exhaustive\ ParseURIAuthority("example.com:443")
     | let a: URIAuthority val =>
       env.out.print("  host: " + a.host)
       match a.port
@@ -73,7 +73,7 @@ actor Main
 
     // Path segments (split on / and percent-decode each segment)
     env.out.print("Path segments:")
-    match PathSegments("/api/v1/hello%20world")
+    match \exhaustive\ PathSegments("/api/v1/hello%20world")
     | let segments: Array[String val] val =>
       for seg in segments.values() do
         env.out.print("  \"" + seg + "\"")
@@ -90,7 +90,7 @@ actor Main
       + PercentEncode("hello world/foo", URIPartPath))
 
     env.out.print("Percent decoding:")
-    match PercentDecode("hello%20world")
+    match \exhaustive\ PercentDecode("hello%20world")
     | let decoded: String val =>
       env.out.print("  decode(\"hello%20world\"): " + decoded)
     | let e: InvalidPercentEncoding val =>
@@ -104,7 +104,7 @@ actor Main
     env.out.print("========================")
     env.out.print("")
 
-    match ParseURI("http://example.com/a/b/c")
+    match \exhaustive\ ParseURI("http://example.com/a/b/c")
     | let base: URI val =>
       env.out.print("Base: " + base.string())
       env.out.print("")
@@ -129,9 +129,9 @@ actor Main
     env.out.print("")
 
     let raw = "HTTP://Example.COM:80/%7Euser/a/../b?q=%6A"
-    match ParseURI(raw)
+    match \exhaustive\ ParseURI(raw)
     | let u: URI val =>
-      match NormalizeURI(u)
+      match \exhaustive\ NormalizeURI(u)
       | let n: URI val =>
         env.out.print("  Original:   " + raw)
         env.out.print("  Normalized: " + n.string())
@@ -153,7 +153,7 @@ actor Main
     let eq_b = "http://example.com/path"
     match (ParseURI(eq_a), ParseURI(eq_b))
     | (let a: URI val, let b: URI val) =>
-      match URIEquivalent(a, b)
+      match \exhaustive\ URIEquivalent(a, b)
       | let result: Bool =>
         env.out.print("  " + eq_a + " == " + eq_b + "? "
           + result.string())
@@ -165,9 +165,9 @@ actor Main
     end
 
   fun _resolve(env: Env, base: URI val, reference_str: String) =>
-    match ParseURI(reference_str)
+    match \exhaustive\ ParseURI(reference_str)
     | let reference: URI val =>
-      match ResolveURI(base, reference)
+      match \exhaustive\ ResolveURI(base, reference)
       | let result: URI val =>
         env.out.print("  resolve(\"" + reference_str + "\") = "
           + result.string())

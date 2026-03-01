@@ -13,9 +13,9 @@ primitive URIToIRI
   the allowed ranges, remain percent-encoded. Always succeeds.
   """
   fun apply(uri: URI val): URI val =>
-    let iri_authority: (URIAuthority | None) = match uri.authority
+    let iri_authority: (URIAuthority | None) = match \exhaustive\ uri.authority
     | let a: URIAuthority =>
-      let iri_userinfo: (String | None) = match a.userinfo
+      let iri_userinfo: (String | None) = match \exhaustive\ a.userinfo
       | let u: String => _decode_iri(u, false)
       | None => None
       end
@@ -23,12 +23,12 @@ primitive URIToIRI
     | None => None
     end
 
-    let iri_query: (String | None) = match uri.query
+    let iri_query: (String | None) = match \exhaustive\ uri.query
     | let q: String => _decode_iri(q, true)
     | None => None
     end
 
-    let iri_fragment: (String | None) = match uri.fragment
+    let iri_fragment: (String | None) = match \exhaustive\ uri.fragment
     | let f: String => _decode_iri(f, false)
     | None => None
     end

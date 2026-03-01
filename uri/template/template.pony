@@ -33,7 +33,7 @@ For repeated expansion of the same template or detailed error reporting, use
     vars.set_list("path", ["api"; "v1"; "users"])
     vars.set_pairs("query", [("page", "1"); ("limit", "10")])
 
-    match URITemplateParse("https://{host}{/path*}{?query*}")
+    match \exhaustive\ URITemplateParse("https://{host}{/path*}{?query*}")
     | let tpl: URITemplate =>
       env.out.print(tpl.expand(vars))
       // => https://example.com/api/v1/users?page=1&limit=10

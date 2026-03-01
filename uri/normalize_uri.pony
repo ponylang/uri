@@ -23,18 +23,18 @@ primitive NormalizeURI
     // -- 6.2.2: Syntax-based normalization --
 
     // Lowercase scheme
-    let norm_scheme: (String | None) = match uri.scheme
+    let norm_scheme: (String | None) = match \exhaustive\ uri.scheme
     | let s: String => s.lower()
     | None => None
     end
 
     // Normalize authority
-    let norm_authority: (URIAuthority | None) = match uri.authority
+    let norm_authority: (URIAuthority | None) = match \exhaustive\ uri.authority
     | let a: URIAuthority =>
       // Normalize userinfo percent-encoding
-      let norm_userinfo: (String | None) = match a.userinfo
+      let norm_userinfo: (String | None) = match \exhaustive\ a.userinfo
       | let u: String =>
-        match _NormalizePercentEncoding(u)
+        match \exhaustive\ _NormalizePercentEncoding(u)
         | let s: String => s
         | let e: InvalidPercentEncoding val => return e
         end
@@ -43,7 +43,7 @@ primitive NormalizeURI
 
       // Lowercase host, then normalize percent-encoding
       let lower_host: String val = a.host.lower()
-      let norm_host = match _NormalizePercentEncoding(lower_host)
+      let norm_host = match \exhaustive\ _NormalizePercentEncoding(lower_host)
       | let s: String => s
       | let e: InvalidPercentEncoding val => return e
       end
@@ -53,16 +53,16 @@ primitive NormalizeURI
     end
 
     // Normalize path: percent-encoding first, then dot-segment removal
-    let pct_path = match _NormalizePercentEncoding(uri.path)
+    let pct_path = match \exhaustive\ _NormalizePercentEncoding(uri.path)
     | let s: String => s
     | let e: InvalidPercentEncoding val => return e
     end
     let norm_path = RemoveDotSegments(pct_path)
 
     // Normalize query percent-encoding
-    let norm_query: (String | None) = match uri.query
+    let norm_query: (String | None) = match \exhaustive\ uri.query
     | let q: String =>
-      match _NormalizePercentEncoding(q)
+      match \exhaustive\ _NormalizePercentEncoding(q)
       | let s: String => s
       | let e: InvalidPercentEncoding val => return e
       end
@@ -70,9 +70,9 @@ primitive NormalizeURI
     end
 
     // Normalize fragment percent-encoding
-    let norm_fragment: (String | None) = match uri.fragment
+    let norm_fragment: (String | None) = match \exhaustive\ uri.fragment
     | let f: String =>
-      match _NormalizePercentEncoding(f)
+      match \exhaustive\ _NormalizePercentEncoding(f)
       | let s: String => s
       | let e: InvalidPercentEncoding val => return e
       end
@@ -81,12 +81,12 @@ primitive NormalizeURI
 
     // -- 6.2.3: Scheme-based normalization --
     // Only applies when a scheme is present (not for relative references)
-    (let final_authority, let final_path) = match norm_scheme
+    (let final_authority, let final_path) = match \exhaustive\ norm_scheme
     | let scheme: String =>
       // Default port removal
       let scheme_authority = match norm_authority
       | let a: URIAuthority =>
-        match (a.port, _SchemeDefaultPort(scheme))
+        match \exhaustive\ (a.port, _SchemeDefaultPort(scheme))
         | (let port: U16, let default_port: U16) if port == default_port =>
           URIAuthority(a.userinfo, a.host, None)
         else
