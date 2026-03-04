@@ -8,7 +8,7 @@ URI parsing, manipulation, and template expansion library for Pony.
 make                    # build tests + examples (release)
 make test               # same as above
 make config=debug       # debug build
-make build-examples     # examples only
+make examples           # examples only
 make clean              # clean build artifacts + corral cache
 ```
 
