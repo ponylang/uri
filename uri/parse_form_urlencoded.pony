@@ -18,17 +18,17 @@ primitive ParseFormURLEncoded
   should not include a leading `?` (that delimiter is not part of the
   encoded data).
   """
-  fun apply(query: String val)
+  fun apply(input: String val)
     : (FormURLEncoded val | InvalidPercentEncoding val)
   =>
-    if query.size() == 0 then
+    if input.size() == 0 then
       return FormURLEncoded(
         recover val Array[(String val, String val)](0) end)
     end
 
     // Count pairs for pre-allocation
     var count: USize = 1
-    for c in query.values() do
+    for c in input.values() do
       if c == '&' then count = count + 1 end
     end
 
@@ -36,13 +36,13 @@ primitive ParseFormURLEncoded
     var start: USize = 0
     var i: USize = 0
 
-    while i <= query.size() do
-      let at_end = i == query.size()
-      let at_amp = try not at_end and (query(i)? == '&') else false end
+    while i <= input.size() do
+      let at_end = i == input.size()
+      let at_amp = try not at_end and (input(i)? == '&') else false end
 
       if at_end or at_amp then
         let pair_str: String val =
-          query.substring(start.isize(), i.isize())
+          input.substring(start.isize(), i.isize())
         match \exhaustive\ _parse_pair(pair_str)
         | (let k: String val, let v: String val) => pairs.push((k, v))
         | let err: InvalidPercentEncoding val => return err
