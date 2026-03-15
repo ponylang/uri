@@ -38,17 +38,18 @@ actor \nodoc\ Main is TestList
     test(Property1UnitTest[String val](_PropertyPathSegmentInvalidRejected))
     test(_TestPathSegmentsKnownGood)
 
-    // Query parameter tests
+    // Form URL-encoded tests
     test(Property1UnitTest[Array[(String val, String val)] val](
-      _PropertyQueryParamsRoundtrip))
-    test(Property1UnitTest[String val](_PropertyQueryParamsPlusDecodes))
-    test(Property1UnitTest[String val](_PropertyQueryParamsInvalidRejected))
-    test(_TestQueryParametersKnownGood)
+      _PropertyFormURLEncodedRoundtrip))
+    test(Property1UnitTest[String val](_PropertyFormURLEncodedPlusDecodes))
+    test(Property1UnitTest[String val](
+      _PropertyFormURLEncodedInvalidRejected))
+    test(_TestFormURLEncodedKnownGood)
     test(_TestURIQueryParams)
-    test(_TestQueryParamsGet)
-    test(_TestQueryParamsGetAll)
-    test(_TestQueryParamsContains)
-    test(_TestQueryParamsSize)
+    test(_TestFormURLEncodedGet)
+    test(_TestFormURLEncodedGetAll)
+    test(_TestFormURLEncodedContains)
+    test(_TestFormURLEncodedSize)
 
     // RemoveDotSegments tests
     test(Property1UnitTest[String val](_PropertyDotSegmentsIdempotent))

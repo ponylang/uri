@@ -33,8 +33,8 @@ Two packages: `uri` for RFC 3986 parsing, `uri/template` for RFC 6570 template e
 
 ### `uri` Package — RFC 3986 Parsing
 
-- **Public API**: `URI`, `URIAuthority`, `URIBuilder`, `URIBuildError`, `InvalidScheme`, `ParseURI`, `ParseURIAuthority`, `URIParseError` (`InvalidPort`, `InvalidHost`), `ResolveURI`, `ResolveURIError` (`BaseURINotAbsolute`), `NormalizeURI`, `URIEquivalent`, `RemoveDotSegments`, `PercentEncode`, `PercentDecode`, `InvalidPercentEncoding`, `URIPart` (+ 5 part primitives), `PathSegments`, `ParseQueryParameters`, `QueryParams`, `IRIToURI`, `URIToIRI`, `IRIPercentEncode`, `NormalizeIRI`, `IRIEquivalent`
-- **Internal**: `_Unreachable` for unreachable code paths, `_NormalizePercentEncoding` for percent-encoding normalization, `_SchemeDefaultPort` for default port lookup, `_IRIChars` for IRI codepoint classification, `_QueryParamEncode` and `_PathSegmentEncode` for builder encoding helpers
+- **Public API**: `URI`, `URIAuthority`, `URIBuilder`, `URIBuildError`, `InvalidScheme`, `ParseURI`, `ParseURIAuthority`, `URIParseError` (`InvalidPort`, `InvalidHost`), `ResolveURI`, `ResolveURIError` (`BaseURINotAbsolute`), `NormalizeURI`, `URIEquivalent`, `RemoveDotSegments`, `PercentEncode`, `PercentDecode`, `InvalidPercentEncoding`, `URIPart` (+ 5 part primitives), `PathSegments`, `ParseFormURLEncoded`, `FormURLEncoded`, `IRIToURI`, `URIToIRI`, `IRIPercentEncode`, `NormalizeIRI`, `IRIEquivalent`
+- **Internal**: `_Unreachable` for unreachable code paths, `_NormalizePercentEncoding` for percent-encoding normalization, `_SchemeDefaultPort` for default port lookup, `_IRIChars` for IRI codepoint classification, `_FormFieldEncode` and `_PathSegmentEncode` for builder encoding helpers
 
 ### `uri/template` Package — RFC 6570 Template Expansion
 

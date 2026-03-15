@@ -25,7 +25,7 @@ primitive PercentDecode
   Decode all percent-encoded sequences in the input.
 
   Does NOT decode `+` as space — that convention belongs to
-  `application/x-www-form-urlencoded` (handled by `ParseQueryParameters`),
+  `application/x-www-form-urlencoded` (handled by `ParseFormURLEncoded`),
   not RFC 3986 percent-encoding.
   """
   fun apply(input: String val): (String val | InvalidPercentEncoding val) =>

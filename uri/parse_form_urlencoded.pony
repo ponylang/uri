@@ -1,6 +1,7 @@
-primitive ParseQueryParameters
+primitive ParseFormURLEncoded
   """
-  Parse a query string into a `QueryParams` collection.
+  Parse an `application/x-www-form-urlencoded` string into a `FormURLEncoded`
+  collection.
 
   Splits on `&`, then on the first `=`. Decodes `+` as space and
   percent-decodes both keys and values.
@@ -11,18 +12,23 @@ primitive ParseQueryParameters
   The `;` separator (from an older HTML convention) is not supported —
   it was dropped from the WHATWG URL Standard and is rarely encountered
   in practice.
+
+  This works on any `application/x-www-form-urlencoded` string — URI query
+  components, HTTP POST request bodies, or any other source. The input
+  should not include a leading `?` (that delimiter is not part of the
+  encoded data).
   """
-  fun apply(query: String val)
-    : (QueryParams val | InvalidPercentEncoding val)
+  fun apply(input: String val)
+    : (FormURLEncoded val | InvalidPercentEncoding val)
   =>
-    if query.size() == 0 then
-      return QueryParams(
+    if input.size() == 0 then
+      return FormURLEncoded(
         recover val Array[(String val, String val)](0) end)
     end
 
     // Count pairs for pre-allocation
     var count: USize = 1
-    for c in query.values() do
+    for c in input.values() do
       if c == '&' then count = count + 1 end
     end
 
@@ -30,13 +36,13 @@ primitive ParseQueryParameters
     var start: USize = 0
     var i: USize = 0
 
-    while i <= query.size() do
-      let at_end = i == query.size()
-      let at_amp = try not at_end and (query(i)? == '&') else false end
+    while i <= input.size() do
+      let at_end = i == input.size()
+      let at_amp = try not at_end and (input(i)? == '&') else false end
 
       if at_end or at_amp then
         let pair_str: String val =
-          query.substring(start.isize(), i.isize())
+          input.substring(start.isize(), i.isize())
         match \exhaustive\ _parse_pair(pair_str)
         | (let k: String val, let v: String val) => pairs.push((k, v))
         | let err: InvalidPercentEncoding val => return err
@@ -52,7 +58,7 @@ primitive ParseQueryParameters
     for pair in pairs.values() do
       result.push(pair)
     end
-    QueryParams(consume result)
+    FormURLEncoded(consume result)
 
   fun _parse_pair(pair: String val)
     : ((String val, String val) | InvalidPercentEncoding val)

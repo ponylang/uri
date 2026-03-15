@@ -1,6 +1,6 @@
-primitive _QueryParamEncode
+primitive _FormFieldEncode
   """
-  Encode a query parameter key or value.
+  Encode a form-urlencoded field (key or value).
 
   Applies standard query encoding via `PercentEncode(input, URIPartQuery)`,
   then additionally encodes the structural delimiters `=`, `&`, and `+` which
