@@ -1,11 +1,16 @@
-class val QueryParams
+class val FormURLEncoded
   """
-  Parsed query parameters with key-based lookup.
+  Parsed `application/x-www-form-urlencoded` key-value pairs with lookup.
 
+  This format is used for both URI query strings and HTTP POST request bodies.
   Stores decoded key-value pairs in their original order. Duplicate keys
   are preserved — use `get()` for the first value or `get_all()` for every
   value associated with a key. Lookups are linear scans, which is
-  appropriate for the small parameter counts typical of query strings.
+  appropriate for the small pair counts typical of form-encoded data.
+
+  For URI query strings, `URI.query_params()` is a convenience wrapper
+  that calls `ParseFormURLEncoded` on the URI's query component. For HTTP
+  POST bodies, call `ParseFormURLEncoded` directly on the body string.
   """
   let _pairs: Array[(String val, String val)] val
 

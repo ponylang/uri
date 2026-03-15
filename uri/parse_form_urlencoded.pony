@@ -1,6 +1,7 @@
-primitive ParseQueryParameters
+primitive ParseFormURLEncoded
   """
-  Parse a query string into a `QueryParams` collection.
+  Parse an `application/x-www-form-urlencoded` string into a `FormURLEncoded`
+  collection.
 
   Splits on `&`, then on the first `=`. Decodes `+` as space and
   percent-decodes both keys and values.
@@ -11,12 +12,17 @@ primitive ParseQueryParameters
   The `;` separator (from an older HTML convention) is not supported —
   it was dropped from the WHATWG URL Standard and is rarely encountered
   in practice.
+
+  This works on any `application/x-www-form-urlencoded` string — URI query
+  components, HTTP POST request bodies, or any other source. The input
+  should not include a leading `?` (that delimiter is not part of the
+  encoded data).
   """
   fun apply(query: String val)
-    : (QueryParams val | InvalidPercentEncoding val)
+    : (FormURLEncoded val | InvalidPercentEncoding val)
   =>
     if query.size() == 0 then
-      return QueryParams(
+      return FormURLEncoded(
         recover val Array[(String val, String val)](0) end)
     end
 
@@ -52,7 +58,7 @@ primitive ParseQueryParameters
     for pair in pairs.values() do
       result.push(pair)
     end
-    QueryParams(consume result)
+    FormURLEncoded(consume result)
 
   fun _parse_pair(pair: String val)
     : ((String val, String val) | InvalidPercentEncoding val)

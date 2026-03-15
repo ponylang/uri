@@ -188,8 +188,8 @@ class ref URIBuilder
     (in addition to standard query encoding) so they are safe as individual
     parameter components. Parameters are appended with `&` as separator.
     """
-    let encoded_key = _QueryParamEncode(key)
-    let encoded_val = _QueryParamEncode(value)
+    let encoded_key = _FormFieldEncode(key)
+    let encoded_val = _FormFieldEncode(value)
     let param = recover val
       let out = String
       out.append(encoded_key)

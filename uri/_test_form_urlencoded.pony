@@ -1,13 +1,13 @@
 use "pony_test"
 use "pony_check"
 
-class \nodoc\ iso _PropertyQueryParamsRoundtrip
+class \nodoc\ iso _PropertyFormURLEncodedRoundtrip
   is Property1[Array[(String val, String val)] val]
   """
   Generated key-value pairs serialized as `k=v&k2=v2` parse back to
   matching pairs.
   """
-  fun name(): String => "uri/query_parameters/roundtrip"
+  fun name(): String => "uri/form_urlencoded/roundtrip"
 
   fun gen(): Generator[Array[(String val, String val)] val] =>
     let key_gen = Generators.one_of[String val](
@@ -41,8 +41,8 @@ class \nodoc\ iso _PropertyQueryParamsRoundtrip
     end
     let query = "&".join(parts.values())
 
-    match \exhaustive\ ParseQueryParameters(consume query)
-    | let parsed: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded(consume query)
+    | let parsed: FormURLEncoded val =>
       ph.assert_eq[USize](arg1.size(), parsed.size(),
         "pair count mismatch")
       var i: USize = 0
@@ -61,9 +61,9 @@ class \nodoc\ iso _PropertyQueryParamsRoundtrip
       ph.fail("roundtrip parse failed")
     end
 
-class \nodoc\ iso _PropertyQueryParamsPlusDecodes is Property1[String val]
+class \nodoc\ iso _PropertyFormURLEncodedPlusDecodes is Property1[String val]
   """`+` in query values decodes as space."""
-  fun name(): String => "uri/query_parameters/plus_decodes"
+  fun name(): String => "uri/form_urlencoded/plus_decodes"
 
   fun gen(): Generator[String val] =>
     Generators.one_of[String val](
@@ -71,8 +71,8 @@ class \nodoc\ iso _PropertyQueryParamsPlusDecodes is Property1[String val]
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     let query = "key=" + arg1
-    match \exhaustive\ ParseQueryParameters(consume query)
-    | let parsed: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded(consume query)
+    | let parsed: FormURLEncoded val =>
       try
         (_, let v) = parsed(0)?
         let exp = String(arg1.size())
@@ -86,10 +86,10 @@ class \nodoc\ iso _PropertyQueryParamsPlusDecodes is Property1[String val]
       ph.fail("unexpected error for: " + arg1)
     end
 
-class \nodoc\ iso _PropertyQueryParamsInvalidRejected
+class \nodoc\ iso _PropertyFormURLEncodedInvalidRejected
   is Property1[String val]
-  """Query strings with invalid percent-encoding produce errors."""
-  fun name(): String => "uri/query_parameters/invalid_rejected"
+  """Strings with invalid percent-encoding produce errors."""
+  fun name(): String => "uri/form_urlencoded/invalid_rejected"
 
   fun gen(): Generator[String val] =>
     Generators.one_of[String val]([
@@ -97,16 +97,16 @@ class \nodoc\ iso _PropertyQueryParamsInvalidRejected
     ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
-    match \exhaustive\ ParseQueryParameters(arg1)
-    | let parsed: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded(arg1)
+    | let parsed: FormURLEncoded val =>
       ph.fail("expected error for: " + arg1)
     | let err: InvalidPercentEncoding val =>
       ph.assert_true(true)
     end
 
-class \nodoc\ iso _TestQueryParametersKnownGood is UnitTest
-  """Known query parameter parsing cases."""
-  fun name(): String => "uri/query_parameters/known_good"
+class \nodoc\ iso _TestFormURLEncodedKnownGood is UnitTest
+  """Known form-urlencoded parsing cases."""
+  fun name(): String => "uri/form_urlencoded/known_good"
 
   fun ref apply(h: TestHelper) =>
     // Simple key-value pairs
@@ -121,7 +121,7 @@ class \nodoc\ iso _TestQueryParametersKnownGood is UnitTest
     _assert_params(h, "a=1&a=2",
       [("a", "1"); ("a", "2")])
 
-    // Empty string produces empty QueryParams
+    // Empty string produces empty FormURLEncoded
     _assert_params(h, "", Array[(String val, String val)](0))
 
     // Key without value (no =)
@@ -153,8 +153,8 @@ class \nodoc\ iso _TestQueryParametersKnownGood is UnitTest
     input: String val,
     expected: Array[(String val, String val)] val)
   =>
-    match \exhaustive\ ParseQueryParameters(input)
-    | let parsed: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded(input)
+    | let parsed: FormURLEncoded val =>
       h.assert_eq[USize](expected.size(), parsed.size(),
         "pair count mismatch for: " + input)
       var i: USize = 0
@@ -175,13 +175,13 @@ class \nodoc\ iso _TestQueryParametersKnownGood is UnitTest
 
 class \nodoc\ iso _TestURIQueryParams is UnitTest
   """URI.query_params() convenience method."""
-  fun name(): String => "uri/query_parameters/uri_query_params"
+  fun name(): String => "uri/form_urlencoded/uri_query_params"
 
   fun ref apply(h: TestHelper) =>
     // URI with query string returns parsed params
     let with_query = URI(None, None, "/path", "a=1&b=2", None)
     match \exhaustive\ with_query.query_params()
-    | let params: QueryParams val =>
+    | let params: FormURLEncoded val =>
       h.assert_eq[USize](2, params.size(), "should have 2 params")
       try
         h.assert_eq[String val]("a", params(0)?._1)
@@ -198,35 +198,35 @@ class \nodoc\ iso _TestURIQueryParams is UnitTest
     // URI without query string returns None
     let no_query = URI(None, None, "/path", None, None)
     match \exhaustive\ no_query.query_params()
-    | let _: QueryParams val =>
+    | let _: FormURLEncoded val =>
       h.fail("expected None for no query")
     | None => None // expected
     end
 
-    // URI with empty query string returns empty QueryParams
+    // URI with empty query string returns empty FormURLEncoded
     let empty_query = URI(None, None, "/path", "", None)
     match \exhaustive\ empty_query.query_params()
-    | let params: QueryParams val =>
+    | let params: FormURLEncoded val =>
       h.assert_eq[USize](0, params.size(), "empty query = 0 params")
     | None =>
-      h.fail("expected empty QueryParams, got None")
+      h.fail("expected empty FormURLEncoded, got None")
     end
 
     // URI with invalid percent-encoding in query returns None
     let bad_encoding = URI(None, None, "/path", "key=%GG", None)
     match \exhaustive\ bad_encoding.query_params()
-    | let _: QueryParams val =>
+    | let _: FormURLEncoded val =>
       h.fail("expected None for bad encoding")
     | None => None // expected
     end
 
-class \nodoc\ iso _TestQueryParamsGet is UnitTest
-  """QueryParams.get() returns first value for key."""
-  fun name(): String => "uri/query_parameters/query_params_get"
+class \nodoc\ iso _TestFormURLEncodedGet is UnitTest
+  """FormURLEncoded.get() returns first value for key."""
+  fun name(): String => "uri/form_urlencoded/get"
 
   fun ref apply(h: TestHelper) =>
-    match ParseQueryParameters("a=1&b=2&a=3")
-    | let params: QueryParams val =>
+    match ParseFormURLEncoded("a=1&b=2&a=3")
+    | let params: FormURLEncoded val =>
       // Key present — returns first value
       h.assert_eq[String val]("1",
         try params.get("a") as String else "" end,
@@ -244,13 +244,13 @@ class \nodoc\ iso _TestQueryParamsGet is UnitTest
       h.fail("unexpected parse error")
     end
 
-class \nodoc\ iso _TestQueryParamsGetAll is UnitTest
-  """QueryParams.get_all() returns all values for key."""
-  fun name(): String => "uri/query_parameters/query_params_get_all"
+class \nodoc\ iso _TestFormURLEncodedGetAll is UnitTest
+  """FormURLEncoded.get_all() returns all values for key."""
+  fun name(): String => "uri/form_urlencoded/get_all"
 
   fun ref apply(h: TestHelper) =>
-    match \exhaustive\ ParseQueryParameters("a=1&b=2&a=3")
-    | let params: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded("a=1&b=2&a=3")
+    | let params: FormURLEncoded val =>
       // Multiple values
       let a_vals = params.get_all("a")
       h.assert_eq[USize](2, a_vals.size(), "should have 2 values for a")
@@ -273,13 +273,13 @@ class \nodoc\ iso _TestQueryParamsGetAll is UnitTest
       h.fail("unexpected parse error")
     end
 
-class \nodoc\ iso _TestQueryParamsContains is UnitTest
-  """QueryParams.contains() checks key presence."""
-  fun name(): String => "uri/query_parameters/query_params_contains"
+class \nodoc\ iso _TestFormURLEncodedContains is UnitTest
+  """FormURLEncoded.contains() checks key presence."""
+  fun name(): String => "uri/form_urlencoded/contains"
 
   fun ref apply(h: TestHelper) =>
-    match \exhaustive\ ParseQueryParameters("a=1&b=2")
-    | let params: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded("a=1&b=2")
+    | let params: FormURLEncoded val =>
       h.assert_true(params.contains("a"), "should contain a")
       h.assert_true(params.contains("b"), "should contain b")
       h.assert_false(params.contains("c"), "should not contain c")
@@ -287,22 +287,22 @@ class \nodoc\ iso _TestQueryParamsContains is UnitTest
       h.fail("unexpected parse error")
     end
 
-class \nodoc\ iso _TestQueryParamsSize is UnitTest
-  """QueryParams.size() reflects pair count including duplicates."""
-  fun name(): String => "uri/query_parameters/query_params_size"
+class \nodoc\ iso _TestFormURLEncodedSize is UnitTest
+  """FormURLEncoded.size() reflects pair count including duplicates."""
+  fun name(): String => "uri/form_urlencoded/size"
 
   fun ref apply(h: TestHelper) =>
     // Empty
-    match \exhaustive\ ParseQueryParameters("")
-    | let params: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded("")
+    | let params: FormURLEncoded val =>
       h.assert_eq[USize](0, params.size(), "empty = 0")
     | let err: InvalidPercentEncoding val =>
       h.fail("unexpected parse error")
     end
 
     // With duplicates — counts each pair
-    match \exhaustive\ ParseQueryParameters("a=1&a=2&b=3")
-    | let params: QueryParams val =>
+    match \exhaustive\ ParseFormURLEncoded("a=1&a=2&b=3")
+    | let params: FormURLEncoded val =>
       h.assert_eq[USize](3, params.size(),
         "duplicates count separately")
     | let err: InvalidPercentEncoding val =>

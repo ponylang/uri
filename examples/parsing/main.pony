@@ -44,7 +44,7 @@ actor Main
     | let u: URI val =>
       env.out.print("Query parameters for: " + u.string())
       match u.query_params()
-      | let params: QueryParams val =>
+      | let params: FormURLEncoded val =>
         match params.get("q")
         | let v: String => env.out.print("  q:    " + v)
         end

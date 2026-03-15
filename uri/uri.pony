@@ -98,12 +98,14 @@ end
 ```
 
 For query parameter access, `URI.query_params()` is the simplest path —
-it returns a `QueryParams` collection with `get()`, `get_all()`, and
-`contains()` methods for key-based lookup. Use `ParseQueryParameters`
+it returns a `FormURLEncoded` collection with `get()`, `get_all()`, and
+`contains()` methods for key-based lookup. Use `ParseFormURLEncoded`
 directly on the `query` field when you need to distinguish "no query"
-from "invalid percent-encoding." Use `PercentDecode`/`PercentEncode`
-for encoding operations, `PathSegments` for decoded path segment access,
-and `RemoveDotSegments` for standalone path normalization.
+from "invalid percent-encoding." `ParseFormURLEncoded` also works on
+HTTP POST request bodies — it parses any `application/x-www-form-urlencoded`
+string. Use `PercentDecode`/`PercentEncode` for encoding operations,
+`PathSegments` for decoded path segment access, and `RemoveDotSegments`
+for standalone path normalization.
 
 For URI template expansion (RFC 6570), use the `uri/template` subpackage.
 
@@ -203,20 +205,20 @@ class val URI is (Stringable & Equatable[URI])
     end
     out
 
-  fun query_params(): (QueryParams val | None) =>
+  fun query_params(): (FormURLEncoded val | None) =>
     """
-    Parse the query string into a `QueryParams` collection.
+    Parse the query string into a `FormURLEncoded` collection.
 
     Returns the parsed parameters if the query is present and decodes
     successfully, or `None` if no query is present or if the query
     contains invalid percent-encoding. For fine-grained error handling
     (distinguishing "no query" from "decode failure"), use
-    `ParseQueryParameters` directly on the `query` field.
+    `ParseFormURLEncoded` directly on the `query` field.
     """
     match \exhaustive\ query
     | let q: String val =>
-      match \exhaustive\ ParseQueryParameters(q)
-      | let params: QueryParams val => params
+      match \exhaustive\ ParseFormURLEncoded(q)
+      | let params: FormURLEncoded val => params
       | let _: InvalidPercentEncoding => None
       end
     | None => None
