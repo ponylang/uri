@@ -18,6 +18,10 @@ Parses a URI containing non-ASCII characters and demonstrates IRI/URI round-trip
 
 Expands URI templates (RFC 6570) by parsing a template string with `URITemplate` and binding variables with `URITemplateVariables`. Demonstrates all variable types (strings, lists, pairs), multiple operator styles (simple, reserved `+`, fragment `#`, path `/`, query `?`), the explode modifier `*`, and the prefix modifier. Also shows error handling via `URITemplateParse`.
 
+## [form-urlencoded](form-urlencoded/)
+
+Parses `application/x-www-form-urlencoded` strings into key-value pairs using `ParseFormURLEncoded` and `FormURLEncoded`. Demonstrates single-value lookup with `get()`, multi-value lookup with `get_all()` for duplicate keys, presence checking with `contains()`, iterating all pairs, plus-as-space and percent-encoding decoding, and error handling for invalid percent-encoding. Also shows the `URI.query_params()` convenience wrapper for extracting query parameters from a parsed URI.
+
 ## [template-builder](template-builder/)
 
 Performs one-shot URI template expansion using `URITemplateBuilder`'s fluent API, which combines template parsing and variable binding into a single chain. Demonstrates all three variable types (`set()`, `set_list()`, `set_pairs()`) and error handling for invalid templates.
