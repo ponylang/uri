@@ -12,7 +12,8 @@ actor Main
     env.out.print("")
 
     // Parse a full URI
-    match \exhaustive\ ParseURI("http://user@example.com:8080/path?query=1#frag")
+    match \exhaustive\ ParseURI(
+      "http://user@example.com:8080/path?query=1#frag")
     | let u: URI val =>
       env.out.print("Parsed: " + u.string())
       match u.scheme

@@ -10,6 +10,9 @@ primitive PathSegments
   fun apply(path: String val)
     : (Array[String val] val | InvalidPercentEncoding val)
   =>
+    """
+    Split `path` on `/` and percent-decode each segment.
+    """
     // Empty path produces a single empty segment
     if path.size() == 0 then
       return recover val Array[String val](1) .> push("") end
@@ -48,9 +51,10 @@ primitive PathSegments
     | let err: InvalidPercentEncoding val => return err
     end
 
-    let result: Array[String val] iso = recover iso
-      Array[String val](segments.size())
-    end
+    let result: Array[String val] iso =
+      recover iso
+        Array[String val](segments.size())
+      end
     for seg in segments.values() do
       result.push(seg)
     end

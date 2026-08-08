@@ -44,7 +44,9 @@ class val URIAuthority is (Stringable & Equatable[URIAuthority])
     out
 
   fun eq(that: URIAuthority box): Bool =>
-    """Structural equality on all authority components."""
+    """
+    Structural equality on all authority components.
+    """
     let userinfo_eq =
       match (userinfo, that.userinfo)
       | (None, None) => true

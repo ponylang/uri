@@ -106,21 +106,22 @@ class \nodoc\ iso _PropertyInvalidPercentSequenceRejected
   fun name(): String => "uri/percent_encoding/invalid_rejected"
 
   fun gen(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      // trailing percent with no hex digits
-      (1, Generators.ascii(0, 10)
-        .map[String val]({(s) => s + "%" }))
-      // trailing percent with only one hex digit
-      (1, Generators.ascii(0, 10)
-        .map[String val]({(s) => s + "%A" }))
-      // non-hex after percent
-      (1, Generators.ascii(0, 10)
-        .map[String val]({(s) => s + "%GG" }))
-      // non-hex in second position
-      (1, Generators.ascii(0, 10)
-        .map[String val]({(s) => s + "%AZ" }))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        // trailing percent with no hex digits
+        (1, Generators.ascii(0, 10)
+          .map[String val]({(s) => s + "%" }))
+        // trailing percent with only one hex digit
+        (1, Generators.ascii(0, 10)
+          .map[String val]({(s) => s + "%A" }))
+        // non-hex after percent
+        (1, Generators.ascii(0, 10)
+          .map[String val]({(s) => s + "%GG" }))
+        // non-hex in second position
+        (1, Generators.ascii(0, 10)
+          .map[String val]({(s) => s + "%AZ" }))
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ PercentDecode(arg1)
@@ -145,29 +146,31 @@ class \nodoc\ iso _PropertyPercentDecodeBoundary
         .map[(String val, Bool)]({(s) => (s, true) })
 
     let invalid_gen: Generator[(String val, Bool)] =
-      Generators.frequency[String val]([
-        as WeightedGenerator[String val]:
-        (1, Generators.ascii(0, 10)
-          .map[String val]({(s) => s + "%" }))
-        (1, Generators.ascii(0, 10)
-          .map[String val]({(s) => s + "%A" }))
-        (1, Generators.ascii(0, 10)
-          .map[String val]({(s) => s + "%GG" }))
-        (1, Generators.ascii(0, 10)
-          .map[String val]({(s) => s + "%AZ" }))
-      ]).map[(String val, Bool)]({(s) => (s, false) })
+      Generators.frequency[String val](
+        [
+          as WeightedGenerator[String val]:
+          (1, Generators.ascii(0, 10)
+            .map[String val]({(s) => s + "%" }))
+          (1, Generators.ascii(0, 10)
+            .map[String val]({(s) => s + "%A" }))
+          (1, Generators.ascii(0, 10)
+            .map[String val]({(s) => s + "%GG" }))
+          (1, Generators.ascii(0, 10)
+            .map[String val]({(s) => s + "%AZ" }))
+        ]).map[(String val, Bool)]({(s) => (s, false) })
 
-    Generators.frequency[(String val, Bool)]([
-      as WeightedGenerator[(String val, Bool)]:
-      (1, valid_gen)
-      (1, invalid_gen)
-    ])
+    Generators.frequency[(String val, Bool)](
+      [
+        as WeightedGenerator[(String val, Bool)]:
+        (1, valid_gen)
+        (1, invalid_gen)
+      ])
 
   fun ref property(arg1: (String val, Bool), ph: PropertyHelper) =>
     (let input, let should_succeed) = arg1
     let result = PercentDecode(input)
     if should_succeed then
-      match result
+      match \exhaustive\ result
       | let s: String val =>
         ph.assert_true(true)
       | let err: InvalidPercentEncoding val =>

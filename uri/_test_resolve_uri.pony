@@ -13,10 +13,20 @@ class \nodoc\ iso _PropertyResolveResultAbsolute
     _ResolveInputGenerator()
 
   fun ref property(arg1: _ResolveInput, ph: PropertyHelper) =>
-    let base = URI(arg1.base.scheme, arg1.base.authority,
-      arg1.base.path, arg1.base.query, arg1.base.fragment)
-    let reference = URI(arg1.reference.scheme, arg1.reference.authority,
-      arg1.reference.path, arg1.reference.query, arg1.reference.fragment)
+    let base =
+      URI(
+        arg1.base.scheme,
+        arg1.base.authority,
+        arg1.base.path,
+        arg1.base.query,
+        arg1.base.fragment)
+    let reference =
+      URI(
+        arg1.reference.scheme,
+        arg1.reference.authority,
+        arg1.reference.path,
+        arg1.reference.query,
+        arg1.reference.fragment)
     match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
       ph.assert_true(
@@ -43,14 +53,25 @@ class \nodoc\ iso _PropertyResolveEmptyRef
     _AbsoluteURIInputGenerator()
 
   fun ref property(arg1: _AbsoluteURIInput, ph: PropertyHelper) =>
-    let base = URI(arg1.scheme, arg1.authority,
-      arg1.path, arg1.query, arg1.fragment)
+    let base =
+      URI(
+        arg1.scheme,
+        arg1.authority,
+        arg1.path,
+        arg1.query,
+        arg1.fragment)
     let empty_ref = URI(None, None, "", None, None)
     match \exhaustive\ ResolveURI(base, empty_ref)
     | let result: URI val =>
-      let expected = URI(arg1.scheme, arg1.authority,
-        arg1.path, arg1.query, None)
-      ph.assert_true(result == expected,
+      let expected =
+        URI(
+          arg1.scheme,
+          arg1.authority,
+          arg1.path,
+          arg1.query,
+          None)
+      ph.assert_true(
+        result == expected,
         "expected " + expected.string() + " got " + result.string())
     | let e: ResolveURIError val =>
       ph.fail("unexpected error: " + e.string())
@@ -74,10 +95,20 @@ class \nodoc\ iso _PropertyAbsoluteRefIgnoresBase
     ph: PropertyHelper)
   =>
     (let base_in, let ref_in) = arg1
-    let base = URI(base_in.scheme, base_in.authority,
-      base_in.path, base_in.query, base_in.fragment)
-    let reference = URI(ref_in.scheme, ref_in.authority,
-      ref_in.path, ref_in.query, ref_in.fragment)
+    let base =
+      URI(
+        base_in.scheme,
+        base_in.authority,
+        base_in.path,
+        base_in.query,
+        base_in.fragment)
+    let reference =
+      URI(
+        ref_in.scheme,
+        ref_in.authority,
+        ref_in.path,
+        ref_in.query,
+        ref_in.fragment)
     match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
       match result.scheme
@@ -103,8 +134,13 @@ class \nodoc\ iso _PropertyNonAbsoluteBaseRejected
 
   fun ref property(arg1: _ValidURIInput, ph: PropertyHelper) =>
     let base = URI(None, None, "/some/path", "query", "frag")
-    let reference = URI(arg1.scheme, arg1.authority, arg1.path,
-      arg1.query, arg1.fragment)
+    let reference =
+      URI(
+        arg1.scheme,
+        arg1.authority,
+        arg1.path,
+        arg1.query,
+        arg1.fragment)
     match \exhaustive\ ResolveURI(base, reference)
     | let _: URI val =>
       ph.fail("expected BaseURINotAbsolute")
@@ -123,15 +159,26 @@ class \nodoc\ iso _PropertyResolveRoundtrip
     _ResolveInputGenerator()
 
   fun ref property(arg1: _ResolveInput, ph: PropertyHelper) =>
-    let base = URI(arg1.base.scheme, arg1.base.authority,
-      arg1.base.path, arg1.base.query, arg1.base.fragment)
-    let reference = URI(arg1.reference.scheme, arg1.reference.authority,
-      arg1.reference.path, arg1.reference.query, arg1.reference.fragment)
+    let base =
+      URI(
+        arg1.base.scheme,
+        arg1.base.authority,
+        arg1.base.path,
+        arg1.base.query,
+        arg1.base.fragment)
+    let reference =
+      URI(
+        arg1.reference.scheme,
+        arg1.reference.authority,
+        arg1.reference.path,
+        arg1.reference.query,
+        arg1.reference.fragment)
     match \exhaustive\ ResolveURI(base, reference)
     | let result: URI val =>
       match \exhaustive\ ParseURI(result.string())
       | let reparsed: URI val =>
-        ph.assert_true(result == reparsed,
+        ph.assert_true(
+          result == reparsed,
           "roundtrip failed for: " + result.string())
       | let e: URIParseError val =>
         ph.fail("reparse failed for: " + result.string()
@@ -222,28 +269,36 @@ class \nodoc\ iso _TestResolveURIEdgeCases is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Base with empty path + authority
-    _AssertResolve(h,
-      "http://example.com", "g", "http://example.com/g")
+    _AssertResolve(
+      h, "http://example.com", "g", "http://example.com/g")
 
     // Reference with authority
-    _AssertResolve(h,
-      "http://base.com/path", "//other.com/path",
+    _AssertResolve(
+      h,
+      "http://base.com/path",
+      "//other.com/path",
       "http://other.com/path")
 
     // Fragment-only reference
-    _AssertResolve(h,
-      "http://example.com/path?q", "#frag",
+    _AssertResolve(
+      h,
+      "http://example.com/path?q",
+      "#frag",
       "http://example.com/path?q#frag")
 
     // Query-only reference
-    _AssertResolve(h,
-      "http://example.com/path?old", "?new",
+    _AssertResolve(
+      h,
+      "http://example.com/path?old",
+      "?new",
       "http://example.com/path?new")
 
     // Base with userinfo and port preserved through resolution.
     // From /a/b, "../c" goes up from directory /a/ to /, then to /c.
-    _AssertResolve(h,
-      "http://user@example.com:8080/a/b", "../c",
+    _AssertResolve(
+      h,
+      "http://user@example.com:8080/a/b",
+      "../c",
       "http://user@example.com:8080/c")
 
     // Non-absolute base rejected
@@ -276,7 +331,9 @@ primitive _AssertResolve
       | let reference: URI val =>
         match \exhaustive\ ResolveURI(base, reference)
         | let result: URI val =>
-          h.assert_eq[String val](expected, result.string(),
+          h.assert_eq[String val](
+            expected,
+            result.string(),
             "resolve(" + base_str + ", " + reference_str + ")")
         | let e: ResolveURIError val =>
           h.fail("resolve error for (" + base_str + ", " + reference_str
@@ -291,7 +348,6 @@ primitive _AssertResolve
     end
 
 // -- Generators --
-
 class \nodoc\ val _AbsoluteURIInput
   let scheme: String
   let authority: (URIAuthority | None)
@@ -345,48 +401,52 @@ primitive _AbsoluteURIInputGenerator
       ["http"; "https"; "ftp"; "ssh"])
 
   fun _authority_gen(): Generator[(URIAuthority val | None)] =>
-    Generators.frequency[(URIAuthority val | None)]([
-      as WeightedGenerator[(URIAuthority val | None)]:
-      (1, Generators.unit[(URIAuthority val | None)](None))
-      (1, Generators.one_of[String val](
-        ["example.com"; "localhost"; "192.168.1.1"; "example.com:8080"
-         "example.com:443"])
-        .map[(URIAuthority val | None)]({(host) =>
-          match ParseURIAuthority(host)
-          | let a: URIAuthority val => a
-          else
-            URIAuthority(None, "localhost", None)
-          end
-        }))
-    ])
+    Generators.frequency[(URIAuthority val | None)](
+      [
+        as WeightedGenerator[(URIAuthority val | None)]:
+        (1, Generators.unit[(URIAuthority val | None)](None))
+        (1, Generators.one_of[String val](
+          [ "example.com"; "localhost"; "192.168.1.1"; "example.com:8080"
+            "example.com:443"])
+          .map[(URIAuthority val | None)]({(host) =>
+            match ParseURIAuthority(host)
+            | let a: URIAuthority val => a
+            else
+              URIAuthority(None, "localhost", None)
+            end
+          }))
+      ])
 
   fun _path_gen(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      (1, Generators.unit[String val](""))
-      (1, Generators.unit[String val]("/"))
-      (2, Generators.one_of[String val](
-        ["/path"; "/a/b/c"; "/index.html"; "/foo/bar/baz"
-         "/path/to/resource"]))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        (1, Generators.unit[String val](""))
+        (1, Generators.unit[String val]("/"))
+        (2, Generators.one_of[String val](
+          [ "/path"; "/a/b/c"; "/index.html"; "/foo/bar/baz"
+            "/path/to/resource"]))
+      ])
 
   fun _query_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (2, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["key=value"; "a=1&b=2"; "q=hello+world"; ""; "page=1"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (2, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["key=value"; "a=1&b=2"; "q=hello+world"; ""; "page=1"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
   fun _fragment_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (2, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["top"; "section1"; ""; "frag"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (2, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["top"; "section1"; ""; "frag"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
 class \nodoc\ val _ResolveInput
   let base: _AbsoluteURIInput

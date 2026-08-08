@@ -6,22 +6,23 @@ primitive \nodoc\ _RFC6570Vars
   """
   fun apply(): URITemplateVariables =>
     let vars = URITemplateVariables
-    vars.set("count", "one,two,three")
-    vars.set("dom", "example.com")
-    vars.set("dub", "me/too")
-    vars.set("hello", "Hello World!")
-    vars.set("half", "50%")
-    vars.set("var", "value")
-    vars.set("who", "fred")
-    vars.set("base", "http://example.com/home/")
-    vars.set("path", "/foo/bar")
-    vars.set("v", "6")
-    vars.set("x", "1024")
-    vars.set("y", "768")
-    vars.set("empty", "")
-    vars.set_list("list", recover val ["red"; "green"; "blue"] end)
-    vars.set_pairs("keys",
-      recover val [("semi", ";"); ("dot", "."); ("comma", ",")] end)
+    vars .> set("count", "one,two,three")
+      .> set("dom", "example.com")
+      .> set("dub", "me/too")
+      .> set("hello", "Hello World!")
+      .> set("half", "50%")
+      .> set("var", "value")
+      .> set("who", "fred")
+      .> set("base", "http://example.com/home/")
+      .> set("path", "/foo/bar")
+      .> set("v", "6")
+      .> set("x", "1024")
+      .> set("y", "768")
+      .> set("empty", "")
+      .> set_list("list", recover val ["red"; "green"; "blue"] end)
+      .> set_pairs(
+        "keys",
+        recover val [("semi", ";"); ("dot", "."); ("comma", ",")] end)
     vars
 
 class \nodoc\ iso _TestSimpleExpansion is UnitTest
@@ -57,8 +58,8 @@ class \nodoc\ iso _TestSimpleExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -73,15 +74,21 @@ class \nodoc\ iso _TestReservedExpansion is UnitTest
     _assert_expand(h, "{+var}", "value", vars)
     _assert_expand(h, "{+hello}", "Hello%20World!", vars)
     _assert_expand(h, "{+half}", "50%25", vars)
-    _assert_expand(h, "{base}index", "http%3A%2F%2Fexample.com%2Fhome%2Findex",
+    _assert_expand(
+      h,
+      "{base}index",
+      "http%3A%2F%2Fexample.com%2Fhome%2Findex",
       vars)
     _assert_expand(h, "{+base}index", "http://example.com/home/index", vars)
     _assert_expand(h, "O{+empty}X", "OX", vars)
     _assert_expand(h, "O{+undef}X", "OX", vars)
     _assert_expand(h, "{+path}/here", "/foo/bar/here", vars)
     _assert_expand(h, "here?ref={+path}", "here?ref=/foo/bar", vars)
-    _assert_expand(h, "up{+path}{var}/here",
-      "up/foo/barvalue/here", vars)
+    _assert_expand(
+      h,
+      "up{+path}{var}/here",
+      "up/foo/barvalue/here",
+      vars)
     _assert_expand(h, "{+x,hello,y}", "1024,Hello%20World!,768", vars)
     _assert_expand(h, "{+path,x}/here", "/foo/bar,1024/here", vars)
     _assert_expand(h, "{+path:6}/here", "/foo/b/here", vars)
@@ -99,8 +106,8 @@ class \nodoc\ iso _TestReservedExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -134,8 +141,8 @@ class \nodoc\ iso _TestFragmentExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -169,8 +176,8 @@ class \nodoc\ iso _TestLabelExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -206,8 +213,8 @@ class \nodoc\ iso _TestPathSegmentExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -242,8 +249,8 @@ class \nodoc\ iso _TestPathParameterExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -275,8 +282,8 @@ class \nodoc\ iso _TestQueryExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -308,8 +315,8 @@ class \nodoc\ iso _TestQueryContinuationExpansion is UnitTest
     try
       let tpl = URITemplate(template)?
       let result: String val = tpl.expand(vars)
-      h.assert_eq[String val](expected, result
-        where msg = "template: " + template)
+      h.assert_eq[String val](
+        expected, result where msg = "template: " + template)
     else
       h.fail("failed to parse template: " + template)
     end
@@ -320,7 +327,8 @@ class \nodoc\ iso _TestEmptyListUndefined is UnitTest
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
-    vars.set_list("empty_list", recover val Array[String val] end)
+    vars.set_list(
+      "empty_list", recover val Array[String val] end)
     vars.set("x", "1024")
 
     try
@@ -337,7 +345,8 @@ class \nodoc\ iso _TestEmptyPairsUndefined is UnitTest
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
-    vars.set_pairs("empty_pairs",
+    vars.set_pairs(
+      "empty_pairs",
       recover val Array[(String val, String val)] end)
     vars.set("x", "1024")
 
@@ -370,8 +379,8 @@ class \nodoc\ iso _TestExplodeListQuery is UnitTest
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
-    vars.set_list("colors",
-      recover val ["red"; "green"; "blue"] end)
+    vars.set_list(
+      "colors", recover val ["red"; "green"; "blue"] end)
 
     try
       let tpl = URITemplate("{?colors*}")?
@@ -387,7 +396,8 @@ class \nodoc\ iso _TestExplodePairsQuery is UnitTest
 
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
-    vars.set_pairs("opts",
+    vars.set_pairs(
+      "opts",
       recover val [("page", "1"); ("size", "10")] end)
 
     try
@@ -420,16 +430,16 @@ class \nodoc\ iso _TestPrefixUnicode is UnitTest
   fun apply(h: TestHelper) =>
     let vars = URITemplateVariables
     // Build "cafés" manually: c a f é(0xC3 0xA9) s
-    let word = recover val
-      let s = String
-      s.push('c')
-      s.push('a')
-      s.push('f')
-      s.push(0xC3)
-      s.push(0xA9)
-      s.push('s')
-      s
-    end
+    let word =
+      recover val
+        String
+          .> push('c')
+          .> push('a')
+          .> push('f')
+          .> push(0xC3)
+          .> push(0xA9)
+          .> push('s')
+      end
     vars.set("word", word)
 
     try
@@ -446,12 +456,13 @@ class \nodoc\ iso _TestTemplateString is UnitTest
   fun name(): String => "uri/template/string roundtrip"
 
   fun apply(h: TestHelper) =>
-    let templates: Array[String] val = [
-      ""
-      "literal"
-      "{var}"
-      "{+path}/here{?x,y}"
-    ]
+    let templates: Array[String] val =
+      [
+        ""
+        "literal"
+        "{var}"
+        "{+path}/here{?x,y}"
+      ]
 
     for template in templates.values() do
       try

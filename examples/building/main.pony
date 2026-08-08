@@ -54,7 +54,8 @@ actor Main
 
     // Error handling for invalid scheme
     env.out.print("Error handling:")
-    match \exhaustive\ URIBuilder.set_scheme("1nvalid").set_host("example.com").build()
+    match \exhaustive\ URIBuilder
+      .set_scheme("1nvalid").set_host("example.com").build()
     | let _: URI val =>
       env.out.print("  (unexpected success)")
     | let e: URIBuildError val =>

@@ -57,7 +57,8 @@ Use `URIEquivalent` to test whether two URIs are equivalent under
 normalization:
 
 ```pony
-match (ParseURI("HTTP://Example.COM:80/path"), ParseURI("http://example.com/path"))
+match (ParseURI("HTTP://Example.COM:80/path"),
+  ParseURI("http://example.com/path"))
 | (let a: URI val, let b: URI val) =>
   match URIEquivalent(a, b)
   | let eq: Bool => // eq == true

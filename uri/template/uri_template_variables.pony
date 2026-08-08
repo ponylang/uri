@@ -22,18 +22,24 @@ class URITemplateVariables
     _vars = Map[String val, URITemplateValue]
 
   fun ref set(name: String, value: String) =>
-    """Bind a string variable."""
+    """
+    Bind a string variable.
+    """
     _vars(name) = value
 
   fun ref set_list(name: String, values: Array[String val] val) =>
-    """Bind a list variable."""
+    """
+    Bind a list variable.
+    """
     _vars(name) = values
 
   fun ref set_pairs(
     name: String,
     pairs: Array[(String val, String val)] val)
   =>
-    """Bind an associative array variable."""
+    """
+    Bind an associative array variable.
+    """
     _vars(name) = pairs
 
   fun box _get(name: String): (URITemplateValue | None) =>

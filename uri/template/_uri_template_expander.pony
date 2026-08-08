@@ -76,12 +76,13 @@ primitive _URITemplateExpander
     let props = _OperatorProperties
     let allow_reserved = props.allow_reserved(op)
 
-    let actual_value = match varspec.modifier
-    | let prefix: _ModPrefix =>
-      _prefix_codepoints(value, prefix.max_length)
-    else
-      value
-    end
+    let actual_value =
+      match varspec.modifier
+      | let prefix: _ModPrefix =>
+        _prefix_codepoints(value, prefix.max_length)
+      else
+        value
+      end
 
     if props.named(op) then
       out.append(_PctEncode.encode(varspec.name, false))

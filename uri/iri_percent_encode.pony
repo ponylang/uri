@@ -11,10 +11,15 @@ primitive IRIPercentEncode
   parameter selects the same component-specific allowed characters.
   """
   fun apply(input: String val, part: URIPart): String val =>
-    let allow_iprivate = match part
-    | URIPartQuery => true
-    else false
-    end
+    """
+    Percent-encode `input` for the given URI component, preserving
+    IRI-legal non-ASCII codepoints.
+    """
+    let allow_iprivate =
+      match part
+      | URIPartQuery => true
+      else false
+      end
 
     let out = String(input.size())
     var i: USize = 0

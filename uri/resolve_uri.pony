@@ -18,51 +18,68 @@ primitive ResolveURI
     section 5.2.2. The base must have a scheme; the reference may be any
     URI-reference (absolute or relative).
     """
-    let base_scheme = match \exhaustive\ base.scheme
-    | let s: String => s
-    | None => return BaseURINotAbsolute
-    end
+    let base_scheme =
+      match \exhaustive\ base.scheme
+      | let s: String => s
+      | None => return BaseURINotAbsolute
+      end
 
     match reference.scheme
     | let r_scheme: String =>
       // Reference has scheme — use it entirely (with dot-segment removal)
-      URI(r_scheme, reference.authority,
+      URI(
+        r_scheme,
+        reference.authority,
         RemoveDotSegments(reference.path),
-        reference.query, reference.fragment)
+        reference.query,
+        reference.fragment)
     else
       match reference.authority
       | let r_auth: URIAuthority =>
         // Reference has authority — inherit base scheme only
-        URI(base_scheme, r_auth,
+        URI(
+          base_scheme,
+          r_auth,
           RemoveDotSegments(reference.path),
-          reference.query, reference.fragment)
+          reference.query,
+          reference.fragment)
       else
         if reference.path == "" then
           // Empty path — inherit base path; inherit base query only when
           // the reference has no query at all
-          let q: (String | None) = match reference.query
-          | let rq: String => rq
-          else
-            base.query
-          end
-          URI(base_scheme, base.authority, base.path,
-            q, reference.fragment)
+          let q: (String | None) =
+            match reference.query
+            | let rq: String => rq
+            else
+              base.query
+            end
+          URI(
+            base_scheme,
+            base.authority,
+            base.path,
+            q,
+            reference.fragment)
         else
           // Non-empty relative path
-          let resolved_path = try
-            if reference.path(0)? == '/' then
-              // Absolute path — use directly with dot-segment removal
-              RemoveDotSegments(reference.path)
+          let resolved_path =
+            try
+              if reference.path(0)? == '/' then
+                // Absolute path — use directly with dot-segment removal
+                RemoveDotSegments(reference.path)
+              else
+                // Relative path — merge with base then remove dot segments
+                RemoveDotSegments(_merge(base, reference.path))
+              end
             else
-              // Relative path — merge with base then remove dot segments
-              RemoveDotSegments(_merge(base, reference.path))
+              _Unreachable()
+              ""
             end
-          else
-            _Unreachable()
-            ""
-          end
-          URI(base_scheme, base.authority, resolved_path,
-            reference.query, reference.fragment)
+          URI(
+            base_scheme,
+            base.authority,
+            resolved_path,
+            reference.query,
+            reference.fragment)
         end
       end
     end

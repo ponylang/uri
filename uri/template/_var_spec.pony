@@ -12,17 +12,23 @@ class val _VarSpec
     modifier = modifier'
 
 primitive _ModNone
-  """No modifier."""
+  """
+  No modifier.
+  """
 
 class val _ModPrefix
-  """Prefix modifier (:N) — take first N codepoints."""
+  """
+  Prefix modifier (:N) — take first N codepoints.
+  """
   let max_length: USize
 
   new val create(max_length': USize) =>
     max_length = max_length'
 
 primitive _ModExplode
-  """Explode modifier (*) — expand composite values."""
+  """
+  Explode modifier (*) — expand composite values.
+  """
 
 // A variable modifier: none, prefix (:N), or explode (*).
 type _Modifier is (_ModNone | _ModPrefix | _ModExplode)

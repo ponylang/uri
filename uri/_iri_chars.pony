@@ -9,12 +9,12 @@ primitive _IRIChars
   """
   fun is_ucschar(cp: U32): Bool =>
     // RFC 3987 section 2.2:
-    //   ucschar = %xA0-D7FF / %xF900-FDCF / %xFDF0-FFEF
-    //           / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
-    //           / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
-    //           / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
-    //           / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
-    //           / %xD0000-DFFFD / %xE1000-EFFFD
+    // ucschar = %xA0-D7FF / %xF900-FDCF / %xFDF0-FFEF
+    // / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
+    // / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
+    // / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
+    // / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
+    // / %xD0000-DFFFD / %xE1000-EFFFD
 
     // BMP ranges
     if (cp >= 0xA0) and (cp <= 0xD7FF) then
@@ -41,7 +41,7 @@ primitive _IRIChars
 
   fun is_iprivate(cp: U32): Bool =>
     // RFC 3987 section 2.2:
-    //   iprivate = %xE000-F8FF / %xF0000-FFFFD / %x100000-10FFFD
+    // iprivate = %xE000-F8FF / %xF0000-FFFFD / %x100000-10FFFD
     if (cp >= 0xE000) and (cp <= 0xF8FF) then
       return true
     end
@@ -55,7 +55,7 @@ primitive _IRIChars
 
   fun is_bidi_format(cp: U32): Bool =>
     // RFC 3987 section 4.1 prohibits these from appearing literally in IRIs:
-    //   U+200E (LRM), U+200F (RLM), U+202A-202E (LRE, RLE, PDF, LRO, RLO)
+    // U+200E (LRM), U+200F (RLM), U+202A-202E (LRE, RLE, PDF, LRO, RLO)
     if (cp == 0x200E) or (cp == 0x200F) then
       return true
     end

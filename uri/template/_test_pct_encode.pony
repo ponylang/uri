@@ -41,27 +41,30 @@ class \nodoc\ iso _TestPctEncodeMultibyteUtf8 is UnitTest
 
   fun apply(h: TestHelper) =>
     // é is U+00E9, encoded as C3 A9 in UTF-8
-    let e_acute = recover val
-      let s = String(2)
-      s.push(0xC3)
-      s.push(0xA9)
-      s
-    end
+    let e_acute =
+      recover val
+        String(2)
+          .> push(0xC3)
+          .> push(0xA9)
+      end
     h.assert_eq[String val]("%C3%A9", _PctEncode.encode(e_acute, false))
 
     // € is U+20AC, encoded as E2 82 AC in UTF-8
-    let euro = recover val
-      let s = String(3)
-      s.push(0xE2)
-      s.push(0x82)
-      s.push(0xAC)
-      s
-    end
+    let euro =
+      recover val
+        String(3)
+          .> push(0xE2)
+          .> push(0x82)
+          .> push(0xAC)
+      end
     h.assert_eq[String val](
       "%E2%82%AC", _PctEncode.encode(euro, false))
 
 class \nodoc\ iso _TestPctEncodeExistingTriplets is UnitTest
-  """Existing %XX triplets pass through in reserved mode, re-encoded otherwise."""
+  """
+  Existing %XX triplets pass through in reserved mode, re-encoded
+  otherwise.
+  """
   fun name(): String => "uri/template/pct_encode/existing triplets"
 
   fun apply(h: TestHelper) =>
@@ -85,17 +88,19 @@ class \nodoc\ iso _TestPctEncodeMixedContent is UnitTest
 
 class \nodoc\ iso _TestPctEncodePropertyUnreserved is Property1[String]
   """Property: unreserved-only strings pass through unchanged."""
-  fun name(): String => "uri/template/pct_encode/property: unreserved passthrough"
+  fun name(): String =>
+    "uri/template/pct_encode/property: unreserved passthrough"
 
   fun gen(): Generator[String] =>
     // Generate strings from unreserved character set only
-    let unreserved_bytes: Array[U8] val = recover val
-      let arr = Array[U8]
-      for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".values() do
-        arr.push(ch)
+    let unreserved_bytes: Array[U8] val =
+      recover val
+        let arr = Array[U8]
+        for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".values() do
+          arr.push(ch)
+        end
+        arr
       end
-      arr
-    end
     Generators.usize(0, unreserved_bytes.size() - 1)
       .map[U8]({(idx) =>
         try unreserved_bytes(idx)? else 'a' end
@@ -106,7 +111,8 @@ class \nodoc\ iso _TestPctEncodePropertyUnreserved is Property1[String]
             .map[U8]({(idx) =>
               try unreserved_bytes(idx)? else 'a' end
             }),
-          0, 50)
+          0,
+          50)
       })
 
   fun ref property(arg1: String, h: PropertyHelper) =>
@@ -157,7 +163,10 @@ class \nodoc\ iso _TestPctEncodePropertyRoundtrip is Property1[String]
     end
 
 class \nodoc\ iso _TestPctEncodePropertyReservedSuperset is Property1[String]
-  """Property: reserved encoding passes through everything unreserved does, plus more."""
+  """
+  Property: reserved encoding passes through everything unreserved does,
+  plus more.
+  """
   fun name(): String => "uri/template/pct_encode/property: reserved is superset"
 
   fun gen(): Generator[String] =>

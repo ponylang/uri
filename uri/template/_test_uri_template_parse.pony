@@ -21,9 +21,11 @@ class \nodoc\ iso _TestParseErrorReservedOp is UnitTest
     | let _: URITemplate =>
       h.fail("expected parse error for: " + template)
     | let err: URITemplateParseError =>
-      h.assert_eq[String val](expected_msg, err.message
+      h.assert_eq[String val](
+        expected_msg, err.message
         where msg = "template: " + template)
-      h.assert_eq[USize](expected_offset, err.offset
+      h.assert_eq[USize](
+        expected_offset, err.offset
         where msg = "template: " + template + " offset")
     end
 
@@ -138,24 +140,25 @@ class \nodoc\ iso _TestParseValidTemplates is UnitTest
   fun name(): String => "uri/template/parse valid templates"
 
   fun apply(h: TestHelper) =>
-    let valid: Array[String] val = [
-      ""                          // empty template
-      "literal"                   // pure literal
-      "{var}"                     // simple
-      "{+var}"                    // reserved
-      "{#var}"                    // fragment
-      "{.var}"                    // label
-      "{/var}"                    // path
-      "{;var}"                    // parameter
-      "{?var}"                    // query
-      "{&var}"                    // continuation
-      "{var:3}"                   // prefix
-      "{var*}"                    // explode
-      "{x,y}"                     // multiple vars
-      "{?x,y,z}"                  // query with multiple
-      "http://example.com/{var}"  // full URL pattern
-      "{var.name}"                // dot-separated varname
-    ]
+    let valid: Array[String] val =
+      [
+        ""                          // empty template
+        "literal"                   // pure literal
+        "{var}"                     // simple
+        "{+var}"                    // reserved
+        "{#var}"                    // fragment
+        "{.var}"                    // label
+        "{/var}"                    // path
+        "{;var}"                    // parameter
+        "{?var}"                    // query
+        "{&var}"                    // continuation
+        "{var:3}"                   // prefix
+        "{var*}"                    // explode
+        "{x,y}"                     // multiple vars
+        "{?x,y,z}"                  // query with multiple
+        "http://example.com/{var}"  // full URL pattern
+        "{var.name}"                // dot-separated varname
+      ]
 
     for template in valid.values() do
       match \exhaustive\ URITemplateParse(template)

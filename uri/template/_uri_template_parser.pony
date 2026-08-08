@@ -94,7 +94,7 @@ primitive _URITemplateParser
     elseif byte == 0x21 then true // !
     elseif (byte >= 0x23) and (byte <= 0x24) then true // # $
     elseif byte == 0x26 then true // &
-    elseif (byte >= 0x28) and (byte <= 0x3B) then true // ( ) * + , - . / 0-9 : ;
+    elseif (byte >= 0x28) and (byte <= 0x3B) then true // ()*+,-./ 0-9:;
     elseif byte == 0x3D then true // =
     elseif (byte >= 0x3F) and (byte <= 0x5B) then true // ? @ A-Z [
     elseif byte == 0x5D then true // ]
@@ -201,7 +201,8 @@ primitive _URITemplateParser
     | (let name: String val, let i: USize) =>
       // Check for modifier
       if i >= template.size() then
-        return URITemplateParseError("unclosed expression",
+        return URITemplateParseError(
+          "unclosed expression",
           _find_open_brace(template, start))
       end
       try
@@ -339,7 +340,8 @@ primitive _URITemplateParser
     end
 
     if value == 0 then
-      return URITemplateParseError("prefix length must be at least 1",
+      return URITemplateParseError(
+        "prefix length must be at least 1",
         start)
     end
 
@@ -350,7 +352,9 @@ primitive _URITemplateParser
     (value, i)
 
   fun _find_open_brace(template: String, near: USize): USize =>
-    """Find the nearest preceding '{' for error reporting."""
+    """
+    Find the nearest preceding '{' for error reporting.
+    """
     var i = near
     while i > 0 do
       i = i - 1

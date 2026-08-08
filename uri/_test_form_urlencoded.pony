@@ -10,10 +10,12 @@ class \nodoc\ iso _PropertyFormURLEncodedRoundtrip
   fun name(): String => "uri/form_urlencoded/roundtrip"
 
   fun gen(): Generator[Array[(String val, String val)] val] =>
-    let key_gen = Generators.one_of[String val](
-      ["key"; "name"; "q"; "page"; "id"; "foo"; "bar"])
-    let val_gen = Generators.one_of[String val](
-      ["value"; "1"; "hello"; ""; "test"; "42"; "abc"])
+    let key_gen =
+      Generators.one_of[String val](
+        ["key"; "name"; "q"; "page"; "id"; "foo"; "bar"])
+    let val_gen =
+      Generators.one_of[String val](
+        ["value"; "1"; "hello"; ""; "test"; "42"; "abc"])
     let pair_gen = Generators.zip2[String val, String val](key_gen, val_gen)
     Generators.array_of[
       (String val, String val)](pair_gen where min = 0, max = 5)
@@ -21,8 +23,8 @@ class \nodoc\ iso _PropertyFormURLEncodedRoundtrip
         {(arr: Array[(String val, String val)] ref)
           : Array[(String val, String val)] val
         =>
-          let out = recover iso
-            Array[(String val, String val)](arr.size())
+          let out =
+            recover iso Array[(String val, String val)](arr.size())
           end
           for pair in arr.values() do
             out.push(pair)
@@ -43,17 +45,19 @@ class \nodoc\ iso _PropertyFormURLEncodedRoundtrip
 
     match \exhaustive\ ParseFormURLEncoded(consume query)
     | let parsed: FormURLEncoded val =>
-      ph.assert_eq[USize](arg1.size(), parsed.size(),
+      ph.assert_eq[USize](
+        arg1.size(),
+        parsed.size(),
         "pair count mismatch")
       var i: USize = 0
       while i < arg1.size() do
         try
           (let ek, let ev) = arg1(i)?
           (let pk, let pv) = parsed(i)?
-          ph.assert_eq[String val](ek, pk,
-            "key mismatch at " + i.string())
-          ph.assert_eq[String val](ev, pv,
-            "value mismatch at " + i.string())
+          ph.assert_eq[String val](
+            ek, pk, "key mismatch at " + i.string())
+          ph.assert_eq[String val](
+            ev, pv, "value mismatch at " + i.string())
         end
         i = i + 1
       end
@@ -79,8 +83,8 @@ class \nodoc\ iso _PropertyFormURLEncodedPlusDecodes is Property1[String val]
         for c in arg1.values() do
           if c == '+' then exp.push(' ') else exp.push(c) end
         end
-        ph.assert_eq[String val](exp.clone(), v,
-          "+ should decode as space in: " + arg1)
+        ph.assert_eq[String val](
+          exp.clone(), v, "+ should decode as space in: " + arg1)
       end
     | let err: InvalidPercentEncoding val =>
       ph.fail("unexpected error for: " + arg1)
@@ -92,9 +96,10 @@ class \nodoc\ iso _PropertyFormURLEncodedInvalidRejected
   fun name(): String => "uri/form_urlencoded/invalid_rejected"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "key=%GG"; "k=%2"; "a=b&c=%"; "bad=%XX&good=1"; "%ZZ=val"
-    ])
+    Generators.one_of[String val](
+      [
+        "key=%GG"; "k=%2"; "a=b&c=%"; "bad=%XX&good=1"; "%ZZ=val"
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ ParseFormURLEncoded(arg1)
@@ -110,43 +115,43 @@ class \nodoc\ iso _TestFormURLEncodedKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Simple key-value pairs
-    _assert_params(h, "a=1&b=2",
-      [("a", "1"); ("b", "2")])
+    _assert_params(
+      h, "a=1&b=2", [("a", "1"); ("b", "2")])
 
     // Plus as space
-    _assert_params(h, "key=hello+world",
-      [("key", "hello world")])
+    _assert_params(
+      h, "key=hello+world", [("key", "hello world")])
 
     // Duplicate keys preserved in order
-    _assert_params(h, "a=1&a=2",
-      [("a", "1"); ("a", "2")])
+    _assert_params(
+      h, "a=1&a=2", [("a", "1"); ("a", "2")])
 
     // Empty string produces empty FormURLEncoded
     _assert_params(h, "", Array[(String val, String val)](0))
 
     // Key without value (no =)
-    _assert_params(h, "key",
-      [("key", "")])
+    _assert_params(
+      h, "key", [("key", "")])
 
     // Key with empty value
-    _assert_params(h, "key=",
-      [("key", "")])
+    _assert_params(
+      h, "key=", [("key", "")])
 
     // Multiple keys without values
-    _assert_params(h, "a&b&c",
-      [("a", ""); ("b", ""); ("c", "")])
+    _assert_params(
+      h, "a&b&c", [("a", ""); ("b", ""); ("c", "")])
 
     // Percent-encoded key and value
-    _assert_params(h, "hello%20world=foo%26bar",
-      [("hello world", "foo&bar")])
+    _assert_params(
+      h, "hello%20world=foo%26bar", [("hello world", "foo&bar")])
 
     // Value with multiple = signs (only first splits)
-    _assert_params(h, "key=a=b=c",
-      [("key", "a=b=c")])
+    _assert_params(
+      h, "key=a=b=c", [("key", "a=b=c")])
 
     // Mixed forms
-    _assert_params(h, "a=1&b&c=3",
-      [("a", "1"); ("b", ""); ("c", "3")])
+    _assert_params(
+      h, "a=1&b&c=3", [("a", "1"); ("b", ""); ("c", "3")])
 
   fun _assert_params(
     h: TestHelper,
@@ -155,16 +160,22 @@ class \nodoc\ iso _TestFormURLEncodedKnownGood is UnitTest
   =>
     match \exhaustive\ ParseFormURLEncoded(input)
     | let parsed: FormURLEncoded val =>
-      h.assert_eq[USize](expected.size(), parsed.size(),
+      h.assert_eq[USize](
+        expected.size(),
+        parsed.size(),
         "pair count mismatch for: " + input)
       var i: USize = 0
       while i < expected.size() do
         try
           (let ek, let ev) = expected(i)?
           (let pk, let pv) = parsed(i)?
-          h.assert_eq[String val](ek, pk,
+          h.assert_eq[String val](
+            ek,
+            pk,
             "key mismatch at " + i.string() + " for: " + input)
-          h.assert_eq[String val](ev, pv,
+          h.assert_eq[String val](
+            ev,
+            pv,
             "value mismatch at " + i.string() + " for: " + input)
         end
         i = i + 1
@@ -225,13 +236,15 @@ class \nodoc\ iso _TestFormURLEncodedGet is UnitTest
   fun name(): String => "uri/form_urlencoded/get"
 
   fun ref apply(h: TestHelper) =>
-    match ParseFormURLEncoded("a=1&b=2&a=3")
+    match \exhaustive\ ParseFormURLEncoded("a=1&b=2&a=3")
     | let params: FormURLEncoded val =>
       // Key present — returns first value
-      h.assert_eq[String val]("1",
+      h.assert_eq[String val](
+        "1",
         try params.get("a") as String else "" end,
         "get should return first value for duplicate key")
-      h.assert_eq[String val]("2",
+      h.assert_eq[String val](
+        "2",
         try params.get("b") as String else "" end,
         "get should return value for unique key")
 
@@ -267,8 +280,8 @@ class \nodoc\ iso _TestFormURLEncodedGetAll is UnitTest
 
       // Absent key
       let missing = params.get_all("missing")
-      h.assert_eq[USize](0, missing.size(),
-        "absent key should return empty array")
+      h.assert_eq[USize](
+        0, missing.size(), "absent key should return empty array")
     | let err: InvalidPercentEncoding val =>
       h.fail("unexpected parse error")
     end
@@ -303,8 +316,8 @@ class \nodoc\ iso _TestFormURLEncodedSize is UnitTest
     // With duplicates — counts each pair
     match \exhaustive\ ParseFormURLEncoded("a=1&a=2&b=3")
     | let params: FormURLEncoded val =>
-      h.assert_eq[USize](3, params.size(),
-        "duplicates count separately")
+      h.assert_eq[USize](
+        3, params.size(), "duplicates count separately")
     | let err: InvalidPercentEncoding val =>
       h.fail("unexpected parse error")
     end

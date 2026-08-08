@@ -109,34 +109,38 @@ primitive \nodoc\ _TemplateGenerators
     max: USize = 30)
     : Generator[String]
   =>
-    let unreserved_bytes: Array[U8] val = recover val
-      let arr = Array[U8]
-      for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".values() do
-        arr.push(ch)
+    let unreserved_bytes: Array[U8] val =
+      recover val
+        let arr = Array[U8]
+        for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".values() do
+          arr.push(ch)
+        end
+        arr
       end
-      arr
-    end
     Generators.byte_string(
       Generators.usize(0, unreserved_bytes.size() - 1)
         .map[U8]({(idx) =>
           try unreserved_bytes(idx)? else 'a' end
         }),
-      min, max)
+      min,
+      max)
 
   fun valid_varname(): Generator[String] =>
-    let name_bytes: Array[U8] val = recover val
-      let arr = Array[U8]
-      for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_".values() do
-        arr.push(ch)
+    let name_bytes: Array[U8] val =
+      recover val
+        let arr = Array[U8]
+        for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_".values() do
+          arr.push(ch)
+        end
+        arr
       end
-      arr
-    end
     Generators.byte_string(
       Generators.usize(0, name_bytes.size() - 1)
         .map[U8]({(idx) =>
           try name_bytes(idx)? else 'a' end
         }),
-      1, 10)
+      1,
+      10)
 
   fun valid_expression(): Generator[String] =>
     let ops: Array[String val] val = [""; "+"; "#"; "."; "/"; ";"; "?"; "&"]
@@ -146,10 +150,10 @@ primitive \nodoc\ _TemplateGenerators
           .map[String]({(name)(op_idx, ops) =>
             let op = try ops(op_idx)? else "" end
             recover val
-              String.>append("{")
-                .>append(op)
-                .>append(name)
-                .>append("}")
+              String .> append("{")
+                .> append(op)
+                .> append(name)
+                .> append("}")
             end
           })
       })
@@ -163,8 +167,8 @@ primitive \nodoc\ _TemplateGenerators
           .map[String]({(expr)(num_parts) =>
             if num_parts > 1 then
               recover val
-                String.>append("http://example.com/")
-                  .>append(expr)
+                String .> append("http://example.com/")
+                  .> append(expr)
               end
             else
               expr
@@ -174,26 +178,27 @@ primitive \nodoc\ _TemplateGenerators
 
   fun invalid_template(): Generator[String] =>
     // Generate various kinds of invalid templates
-    Generators.frequency[String]([
-      // Unclosed expression
-      (1, _TemplateGenerators.valid_varname()
-        .map[String]({(name) =>
-          recover val String.>append("{").>append(name) end
-        }))
-      // Reserved operator
-      (1, _TemplateGenerators.valid_varname()
-        .map[String]({(name) =>
-          recover val
-            String.>append("{=").>append(name).>append("}")
-          end
-        }))
-      // Empty expression
-      (1, Generators.unit[String]("{}"))
-      // Stray close brace
-      (1, Generators.unit[String]("foo}bar"))
-      // Space in literal
-      (1, Generators.unit[String]("foo bar"))
-    ])
+    Generators.frequency[String](
+      [
+          // Unclosed expression
+        (1, _TemplateGenerators.valid_varname()
+          .map[String]({(name) =>
+            recover val String .> append("{") .> append(name) end
+          }))
+        // Reserved operator
+        (1, _TemplateGenerators.valid_varname()
+          .map[String]({(name) =>
+            recover val
+              String .> append("{=") .> append(name) .> append("}")
+            end
+          }))
+        // Empty expression
+        (1, Generators.unit[String]("{}"))
+        // Stray close brace
+        (1, Generators.unit[String]("foo}bar"))
+        // Space in literal
+        (1, Generators.unit[String]("foo bar"))
+      ])
 
   fun mixed_template(): Generator[(String, Bool)] =>
     Generators.bool()

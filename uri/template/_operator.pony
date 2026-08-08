@@ -1,26 +1,42 @@
 primitive _OpNone
-  """Simple string expansion (no operator)."""
+  """
+  Simple string expansion (no operator).
+  """
 
 primitive _OpPlus
-  """Reserved expansion (+)."""
+  """
+  Reserved expansion (+).
+  """
 
 primitive _OpHash
-  """Fragment expansion (#)."""
+  """
+  Fragment expansion (#).
+  """
 
 primitive _OpDot
-  """Label expansion (.)."""
+  """
+  Label expansion (.).
+  """
 
 primitive _OpSlash
-  """Path segments (/)."""
+  """
+  Path segments (/).
+  """
 
 primitive _OpSemicolon
-  """Path-style parameters (;)."""
+  """
+  Path-style parameters (;).
+  """
 
 primitive _OpQuestion
-  """Form-style query (?)."""
+  """
+  Form-style query (?).
+  """
 
 primitive _OpAmpersand
-  """Form-style query continuation (&)."""
+  """
+  Form-style query continuation (&).
+  """
 
 // The set of RFC 6570 expression operators.
 type _Operator is

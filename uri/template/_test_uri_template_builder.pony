@@ -25,9 +25,11 @@ class \nodoc\ iso _TestBuilderListAndPairs is UnitTest
   fun apply(h: TestHelper) =>
     try
       let result = URITemplateBuilder("https://example.com{/path*}{?query*}")
-        .set_list("path",
+        .set_list(
+          "path",
           recover val ["api"; "v1"; "users"] end)
-        .set_pairs("query",
+        .set_pairs(
+          "query",
           recover val [("page", "1"); ("limit", "10")] end)
         .build()?
       h.assert_eq[String val](
@@ -69,9 +71,11 @@ class \nodoc\ iso _TestBuilderChaining is UnitTest
       let result = URITemplateBuilder("{scheme}://{host}{/path*}{?query*}")
         .set("scheme", "https")
         .set("host", "example.com")
-        .set_list("path",
+        .set_list(
+          "path",
           recover val ["api"; "v1"; "users"] end)
-        .set_pairs("query",
+        .set_pairs(
+          "query",
           recover val [("page", "1"); ("limit", "10")] end)
         .build()?
       h.assert_eq[String val](
@@ -95,24 +99,26 @@ class \nodoc\ iso _TestPropertyBuilderMatchesExpand is Property1[String]
     // Direct path: parse + expand
     let vars = URITemplateVariables
     vars.set("x", arg1)
-    let direct: String val = try
-      let r: String val = URITemplate("{x}")?.expand(vars)
-      r
-    else
-      h.fail("failed to parse {x}")
-      return
-    end
+    let direct: String val =
+      try
+        let r: String val = URITemplate("{x}")?.expand(vars)
+        r
+      else
+        h.fail("failed to parse {x}")
+        return
+      end
 
     // Builder path
-    let built: String val = try
-      let r: String val = URITemplateBuilder("{x}")
-        .set("x", arg1)
-        .build()?
-      r
-    else
-      h.fail("builder should not fail for valid template")
-      return
-    end
+    let built: String val =
+      try
+        let r: String val = URITemplateBuilder("{x}")
+          .set("x", arg1)
+          .build()?
+        r
+      else
+        h.fail("builder should not fail for valid template")
+        return
+      end
 
     h.assert_eq[String val](direct, built)
 

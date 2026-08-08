@@ -15,11 +15,15 @@ class val FormURLEncoded
   let _pairs: Array[(String val, String val)] val
 
   new val create(p: Array[(String val, String val)] val) =>
-    """Create from an array of decoded key-value pairs."""
+    """
+    Create from an array of decoded key-value pairs.
+    """
     _pairs = p
 
   fun apply(i: USize): (String val, String val) ? =>
-    """The pair at index `i`. Raises an error if out of bounds."""
+    """
+    The pair at index `i`. Raises an error if out of bounds.
+    """
     _pairs(i)?
 
   fun get(key: String): (String val | None) =>
@@ -35,7 +39,9 @@ class val FormURLEncoded
     None
 
   fun get_all(key: String): Array[String val] val =>
-    """All values for `key`, in order. Empty array if absent."""
+    """
+    All values for `key`, in order. Empty array if absent.
+    """
     let result = recover iso Array[String val] end
     for (k, v) in _pairs.values() do
       if k == key then result.push(v) end
@@ -43,7 +49,9 @@ class val FormURLEncoded
     consume result
 
   fun contains(key: String): Bool =>
-    """Whether `key` is present."""
+    """
+    Whether `key` is present.
+    """
     for (k, _) in _pairs.values() do
       if k == key then return true end
     end
@@ -52,9 +60,13 @@ class val FormURLEncoded
   fun pairs(): ArrayValues[(String val, String val),
     Array[(String val, String val)] val]^
   =>
-    """All pairs in their original order."""
+    """
+    All pairs in their original order.
+    """
     _pairs.values()
 
   fun size(): USize =>
-    """Number of pairs, including duplicates."""
+    """
+    Number of pairs, including duplicates.
+    """
     _pairs.size()
