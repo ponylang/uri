@@ -29,13 +29,16 @@ class val URITemplate
     instead when you need a description of what went wrong.
     """
     _template = template
-    _parts = match \exhaustive\ _URITemplateParser.parse(template)
-    | let p: Array[_TemplatePart] val => p
-    | let _: URITemplateParseError => error
-    end
+    _parts =
+      match \exhaustive\ _URITemplateParser.parse(template)
+      | let p: Array[_TemplatePart] val => p
+      | let _: URITemplateParseError => error
+      end
 
   new val _from_parts(template: String, parts: Array[_TemplatePart] val) =>
-    """Internal constructor used by URITemplateParse."""
+    """
+    Internal constructor used by URITemplateParse.
+    """
     _template = template
     _parts = parts
 
@@ -48,5 +51,7 @@ class val URITemplate
     _URITemplateExpander.expand(_parts, vars)
 
   fun string(): String iso^ =>
-    """Return the original template string."""
+    """
+    Return the original template string.
+    """
     _template.clone()

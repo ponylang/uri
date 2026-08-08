@@ -9,18 +9,23 @@ class val URITemplateParseError
   let offset: USize
 
   new val create(message': String val, offset': USize) =>
-    """Create a parse error with the given message and byte offset."""
+    """
+    Create a parse error with the given message and byte offset.
+    """
     message = message'
     offset = offset'
 
   fun string(): String iso^ =>
-    """Format as "offset N: message"."""
+    """
+    Format as "offset N: message".
+    """
     let num: String val = offset.string()
-    let out = recover iso
-      String(7 + num.size() + 2 + message.size())
-    end
-    out.>append("offset ")
-      .>append(num)
-      .>append(": ")
-      .>append(message)
+    let out =
+      recover iso
+        String(7 + num.size() + 2 + message.size())
+      end
+    out .> append("offset ")
+      .> append(num)
+      .> append(": ")
+      .> append(message)
     consume out

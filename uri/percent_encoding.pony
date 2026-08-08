@@ -1,17 +1,33 @@
 primitive InvalidPercentEncoding is Stringable
-  """Percent-encoded sequence is truncated or contains non-hex digits."""
+  """
+  Percent-encoded sequence is truncated or contains non-hex digits.
+  """
   fun string(): String iso^ => "InvalidPercentEncoding".clone()
 
 primitive URIPartUserinfo
-  """Encoding rules for the userinfo component."""
+  """
+  Encoding rules for the userinfo component.
+  """
+
 primitive URIPartHost
-  """Encoding rules for the host component (reg-name only)."""
+  """
+  Encoding rules for the host component (reg-name only).
+  """
+
 primitive URIPartPath
-  """Encoding rules for the path component."""
+  """
+  Encoding rules for the path component.
+  """
+
 primitive URIPartQuery
-  """Encoding rules for the query component."""
+  """
+  Encoding rules for the query component.
+  """
+
 primitive URIPartFragment
-  """Encoding rules for the fragment component."""
+  """
+  Encoding rules for the fragment component.
+  """
 
 // Selects which URI component's encoding rules PercentEncode applies.
 // Each variant corresponds to a component whose allowed-character set
@@ -29,6 +45,9 @@ primitive PercentDecode
   not RFC 3986 percent-encoding.
   """
   fun apply(input: String val): (String val | InvalidPercentEncoding val) =>
+    """
+    Decode percent-encoded sequences in `input`.
+    """
     // Fast path: no percent signs means nothing to decode
     if not input.contains("%") then
       return input

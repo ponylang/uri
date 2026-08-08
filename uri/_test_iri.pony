@@ -141,7 +141,8 @@ class \nodoc\ iso _PropertyIRIToURIIdempotent
     | let iri: URI val =>
       let once = IRIToURI(iri)
       let twice = IRIToURI(once)
-      ph.assert_true(once == twice,
+      ph.assert_true(
+        once == twice,
         "not idempotent: once=" + once.string()
           + " twice=" + twice.string()
           + " input=" + arg1)
@@ -163,7 +164,8 @@ class \nodoc\ iso _PropertyURIToIRIIdempotent
     | let uri: URI val =>
       let once = URIToIRI(uri)
       let twice = URIToIRI(once)
-      ph.assert_true(once == twice,
+      ph.assert_true(
+        once == twice,
         "not idempotent: once=" + once.string()
           + " twice=" + twice.string()
           + " input=" + arg1)
@@ -186,7 +188,8 @@ class \nodoc\ iso _PropertyIRIToURIRoundtrip
     | let iri: URI val =>
       let uri_form = IRIToURI(iri)
       let back = URIToIRI(uri_form)
-      ph.assert_true(iri == back,
+      ph.assert_true(
+        iri == back,
         "roundtrip failed: original=" + iri.string()
           + " uri=" + uri_form.string()
           + " back=" + back.string())
@@ -209,7 +212,8 @@ class \nodoc\ iso _PropertyNormalizeIRIIdempotent
     | let once: URI val =>
       match \exhaustive\ NormalizeIRI(once)
       | let twice: URI val =>
-        ph.assert_true(once == twice,
+        ph.assert_true(
+          once == twice,
           "not idempotent: once=" + once.string()
             + " twice=" + twice.string()
             + " original=" + uri.string())
@@ -234,8 +238,8 @@ class \nodoc\ iso _PropertyIRIEquivalentReflexive
     let uri = arg1.uri
     match \exhaustive\ IRIEquivalent(uri, uri)
     | let result: Bool =>
-      ph.assert_true(result,
-        "not reflexive: " + uri.string())
+      ph.assert_true(
+        result, "not reflexive: " + uri.string())
     | let e: InvalidPercentEncoding val =>
       ph.fail("equivalence failed for: " + uri.string())
     end
@@ -256,7 +260,8 @@ class \nodoc\ iso _PropertyIRIEquivalentCrossForms
       let uri_form = IRIToURI(iri)
       match \exhaustive\ IRIEquivalent(iri, uri_form)
       | let result: Bool =>
-        ph.assert_true(result,
+        ph.assert_true(
+          result,
           "IRI and URI form not equivalent: iri=" + iri.string()
             + " uri=" + uri_form.string())
       | let e: InvalidPercentEncoding val =>
@@ -281,7 +286,9 @@ class \nodoc\ iso _PropertyIRIPercentEncodePreservesUcschar
     // survive as literal UTF-8, so the count must match.
     let input_ucschar = _count_non_ascii_codepoints(arg1)
     let output_ucschar = _count_non_ascii_codepoints(encoded)
-    ph.assert_eq[USize](input_ucschar, output_ucschar,
+    ph.assert_eq[USize](
+      input_ucschar,
+      output_ucschar,
       "ucschar count mismatch: input has " + input_ucschar.string()
         + " non-ASCII codepoints but output has "
         + output_ucschar.string()
@@ -317,12 +324,13 @@ class \nodoc\ iso _PropertyIRIPercentEncodeEncodesNonAllowed
     // Characters that should NOT appear literally in IRIs:
     // U+0080-009F (between ASCII and ucschar start at U+00A0)
     // U+200E-200F, U+202A-202E (bidi formatting — ucschar but prohibited)
-    Generators.one_of[String val]([
-      "\x80"    // U+0080 (control char)
-      "\x9F"    // U+009F (last control before ucschar)
-      "\u200E"  // U+200E (LRM — bidi formatting)
-      "\u200F"  // U+200F (RLM — bidi formatting)
-    ])
+    Generators.one_of[String val](
+      [
+        "\x80"    // U+0080 (control char)
+        "\x9F"    // U+009F (last control before ucschar)
+        "\u200E"  // U+200E (LRM — bidi formatting)
+        "\u200F"  // U+200F (RLM — bidi formatting)
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     let encoded = IRIPercentEncode(arg1, URIPartPath)
@@ -338,7 +346,6 @@ class \nodoc\ iso _PropertyIRIPercentEncodeEncodesNonAllowed
 // ============================================================================
 // Example-based tests
 // ============================================================================
-
 class \nodoc\ iso _TestIRICharsBoundary is UnitTest
   """
   Boundary tests for _IRIChars codepoint classification.
@@ -348,132 +355,136 @@ class \nodoc\ iso _TestIRICharsBoundary is UnitTest
   fun ref apply(h: TestHelper) =>
     // -- ucschar boundaries --
     // U+009F just below range
-    h.assert_false(_IRIChars.is_ucschar(0x9F),
-      "U+009F should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0x9F), "U+009F should not be ucschar")
     // U+00A0 start of range
-    h.assert_true(_IRIChars.is_ucschar(0xA0),
-      "U+00A0 should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xA0), "U+00A0 should be ucschar")
     // U+D7FF end of first BMP range
-    h.assert_true(_IRIChars.is_ucschar(0xD7FF),
-      "U+D7FF should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xD7FF), "U+D7FF should be ucschar")
     // U+D800 just past first BMP range (surrogate)
-    h.assert_false(_IRIChars.is_ucschar(0xD800),
-      "U+D800 should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xD800), "U+D800 should not be ucschar")
 
     // U+F8FF just below second BMP range (private use)
-    h.assert_false(_IRIChars.is_ucschar(0xF8FF),
-      "U+F8FF should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xF8FF), "U+F8FF should not be ucschar")
     // U+F900 start of second BMP range
-    h.assert_true(_IRIChars.is_ucschar(0xF900),
-      "U+F900 should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xF900), "U+F900 should be ucschar")
     // U+FDCF end of second BMP range
-    h.assert_true(_IRIChars.is_ucschar(0xFDCF),
-      "U+FDCF should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xFDCF), "U+FDCF should be ucschar")
     // U+FDD0 just past second BMP range (noncharacter)
-    h.assert_false(_IRIChars.is_ucschar(0xFDD0),
-      "U+FDD0 should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xFDD0), "U+FDD0 should not be ucschar")
 
     // U+FDEF just below third BMP range
-    h.assert_false(_IRIChars.is_ucschar(0xFDEF),
-      "U+FDEF should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xFDEF), "U+FDEF should not be ucschar")
     // U+FDF0 start of third BMP range
-    h.assert_true(_IRIChars.is_ucschar(0xFDF0),
-      "U+FDF0 should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xFDF0), "U+FDF0 should be ucschar")
     // U+FFEF end of third BMP range
-    h.assert_true(_IRIChars.is_ucschar(0xFFEF),
-      "U+FFEF should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xFFEF), "U+FFEF should be ucschar")
     // U+FFF0 just past third BMP range
-    h.assert_false(_IRIChars.is_ucschar(0xFFF0),
-      "U+FFF0 should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xFFF0), "U+FFF0 should not be ucschar")
 
     // Planes 1-13 boundaries
     // U+10000 start of plane 1
-    h.assert_true(_IRIChars.is_ucschar(0x10000),
-      "U+10000 should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0x10000), "U+10000 should be ucschar")
     // U+1FFFD end of plane 1
-    h.assert_true(_IRIChars.is_ucschar(0x1FFFD),
-      "U+1FFFD should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0x1FFFD), "U+1FFFD should be ucschar")
     // U+1FFFE noncharacter in plane 1
-    h.assert_false(_IRIChars.is_ucschar(0x1FFFE),
-      "U+1FFFE should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0x1FFFE), "U+1FFFE should not be ucschar")
     // U+1FFFF noncharacter in plane 1
-    h.assert_false(_IRIChars.is_ucschar(0x1FFFF),
-      "U+1FFFF should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0x1FFFF), "U+1FFFF should not be ucschar")
     // U+DFFFD end of plane 13
-    h.assert_true(_IRIChars.is_ucschar(0xDFFFD),
-      "U+DFFFD should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xDFFFD), "U+DFFFD should be ucschar")
     // U+DFFFE noncharacter in plane 13
-    h.assert_false(_IRIChars.is_ucschar(0xDFFFE),
-      "U+DFFFE should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xDFFFE), "U+DFFFE should not be ucschar")
 
     // Plane 14 partial range
     // U+E0FFF just below E1000
-    h.assert_false(_IRIChars.is_ucschar(0xE0FFF),
-      "U+E0FFF should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xE0FFF), "U+E0FFF should not be ucschar")
     // U+E1000 start
-    h.assert_true(_IRIChars.is_ucschar(0xE1000),
-      "U+E1000 should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xE1000), "U+E1000 should be ucschar")
     // U+EFFFD end
-    h.assert_true(_IRIChars.is_ucschar(0xEFFFD),
-      "U+EFFFD should be ucschar")
+    h.assert_true(
+      _IRIChars.is_ucschar(0xEFFFD), "U+EFFFD should be ucschar")
     // U+EFFFE just past
-    h.assert_false(_IRIChars.is_ucschar(0xEFFFE),
-      "U+EFFFE should not be ucschar")
+    h.assert_false(
+      _IRIChars.is_ucschar(0xEFFFE), "U+EFFFE should not be ucschar")
 
     // -- iprivate boundaries --
     // U+DFFF just below private use
-    h.assert_false(_IRIChars.is_iprivate(0xDFFF),
-      "U+DFFF should not be iprivate")
+    h.assert_false(
+      _IRIChars.is_iprivate(0xDFFF), "U+DFFF should not be iprivate")
     // U+E000 start of BMP private use
-    h.assert_true(_IRIChars.is_iprivate(0xE000),
-      "U+E000 should be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0xE000), "U+E000 should be iprivate")
     // U+F8FF end of BMP private use
-    h.assert_true(_IRIChars.is_iprivate(0xF8FF),
-      "U+F8FF should be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0xF8FF), "U+F8FF should be iprivate")
     // U+F900 just past BMP private use
-    h.assert_false(_IRIChars.is_iprivate(0xF900),
-      "U+F900 should not be iprivate")
+    h.assert_false(
+      _IRIChars.is_iprivate(0xF900), "U+F900 should not be iprivate")
 
     // Plane 15
-    h.assert_true(_IRIChars.is_iprivate(0xF0000),
-      "U+F0000 should be iprivate")
-    h.assert_true(_IRIChars.is_iprivate(0xFFFFD),
-      "U+FFFFD should be iprivate")
-    h.assert_false(_IRIChars.is_iprivate(0xFFFFE),
-      "U+FFFFE should not be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0xF0000), "U+F0000 should be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0xFFFFD), "U+FFFFD should be iprivate")
+    h.assert_false(
+      _IRIChars.is_iprivate(0xFFFFE), "U+FFFFE should not be iprivate")
 
     // Plane 16
-    h.assert_true(_IRIChars.is_iprivate(0x100000),
-      "U+100000 should be iprivate")
-    h.assert_true(_IRIChars.is_iprivate(0x10FFFD),
-      "U+10FFFD should be iprivate")
-    h.assert_false(_IRIChars.is_iprivate(0x10FFFE),
-      "U+10FFFE should not be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0x100000), "U+100000 should be iprivate")
+    h.assert_true(
+      _IRIChars.is_iprivate(0x10FFFD), "U+10FFFD should be iprivate")
+    h.assert_false(
+      _IRIChars.is_iprivate(0x10FFFE), "U+10FFFE should not be iprivate")
 
     // -- bidi format characters --
-    h.assert_true(_IRIChars.is_bidi_format(0x200E),
-      "U+200E should be bidi format")
-    h.assert_true(_IRIChars.is_bidi_format(0x200F),
-      "U+200F should be bidi format")
-    h.assert_true(_IRIChars.is_bidi_format(0x202A),
-      "U+202A should be bidi format")
-    h.assert_true(_IRIChars.is_bidi_format(0x202E),
-      "U+202E should be bidi format")
+    h.assert_true(
+      _IRIChars.is_bidi_format(0x200E), "U+200E should be bidi format")
+    h.assert_true(
+      _IRIChars.is_bidi_format(0x200F), "U+200F should be bidi format")
+    h.assert_true(
+      _IRIChars.is_bidi_format(0x202A), "U+202A should be bidi format")
+    h.assert_true(
+      _IRIChars.is_bidi_format(0x202E), "U+202E should be bidi format")
     // Neighbors are not bidi format
-    h.assert_false(_IRIChars.is_bidi_format(0x200D),
+    h.assert_false(
+      _IRIChars.is_bidi_format(0x200D),
       "U+200D should not be bidi format")
-    h.assert_false(_IRIChars.is_bidi_format(0x2010),
+    h.assert_false(
+      _IRIChars.is_bidi_format(0x2010),
       "U+2010 should not be bidi format")
-    h.assert_false(_IRIChars.is_bidi_format(0x2029),
+    h.assert_false(
+      _IRIChars.is_bidi_format(0x2029),
       "U+2029 should not be bidi format")
-    h.assert_false(_IRIChars.is_bidi_format(0x202F),
+    h.assert_false(
+      _IRIChars.is_bidi_format(0x202F),
       "U+202F should not be bidi format")
 
     // -- bidi chars are ucschar but should not be decoded --
-    h.assert_true(_IRIChars.is_ucschar(0x200E),
-      "U+200E is in ucschar range")
-    h.assert_true(_IRIChars.is_ucschar(0x200F),
-      "U+200F is in ucschar range")
+    h.assert_true(
+      _IRIChars.is_ucschar(0x200E), "U+200E is in ucschar range")
+    h.assert_true(
+      _IRIChars.is_ucschar(0x200F), "U+200F is in ucschar range")
 
 class \nodoc\ iso _TestIRIToURIKnownGood is UnitTest
   """
@@ -483,42 +494,50 @@ class \nodoc\ iso _TestIRIToURIKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Pure ASCII unchanged
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/path?q=1#frag",
       "http://example.com/path?q=1#frag")
 
     // BMP ucschar encoded: é = U+00E9, UTF-8 bytes C3 A9
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/r\xE9sum\xE9",
       "http://example.com/r%C3%A9sum%C3%A9")
 
     // Supplementary plane character: U+1F600, UTF-8 bytes F0 9F 98 80
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/\U01F600",
       "http://example.com/%F0%9F%98%80")
 
     // Existing %XX triplets preserved
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/%20path",
       "http://example.com/%20path")
 
     // Mixed: literal non-ASCII + existing percent-encoding
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/caf\xE9/%20menu",
       "http://example.com/caf%C3%A9/%20menu")
 
     // Non-ASCII in host
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://\xE9xample.com/",
       "http://%C3%A9xample.com/")
 
     // Non-ASCII in query
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/?q=\xE9",
       "http://example.com/?q=%C3%A9")
 
     // Non-ASCII in fragment
-    _assert_iri_to_uri(h,
+    _assert_iri_to_uri(
+      h,
       "http://example.com/#\xE9",
       "http://example.com/#%C3%A9")
 
@@ -530,8 +549,8 @@ class \nodoc\ iso _TestIRIToURIKnownGood is UnitTest
     match \exhaustive\ ParseURI(input)
     | let iri: URI val =>
       let uri = IRIToURI(iri)
-      h.assert_eq[String val](expected, uri.string(),
-        "IRIToURI(" + input + ")")
+      h.assert_eq[String val](
+        expected, uri.string(), "IRIToURI(" + input + ")")
     | let e: URIParseError val =>
       h.fail("parse failed for " + input + ": " + e.string())
     end
@@ -544,73 +563,87 @@ class \nodoc\ iso _TestURIToIRIKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // ucschar decoded: é = U+00E9 = %C3%A9
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/r%C3%A9sum%C3%A9",
       "http://example.com/r\xE9sum\xE9")
 
     // iprivate decoded in query only: U+E000 = %EE%80%80
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/path?q=%EE%80%80",
       "http://example.com/path?q=\uE000")
 
     // iprivate NOT decoded in path
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%EE%80%80",
       "http://example.com/%EE%80%80")
 
     // iprivate NOT decoded in fragment
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/#%EE%80%80",
       "http://example.com/#%EE%80%80")
 
     // Bidi chars stay encoded: U+200E = %E2%80%8E
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%E2%80%8E",
       "http://example.com/%E2%80%8E")
 
     // Bidi chars stay encoded even in query: U+200F = %E2%80%8F
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/?q=%E2%80%8F",
       "http://example.com/?q=%E2%80%8F")
 
     // Invalid UTF-8 stays encoded (0xFF is not a valid leading byte)
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%FF",
       "http://example.com/%FF")
 
     // Incomplete UTF-8 sequence stays encoded (C3 without continuation)
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%C3",
       "http://example.com/%C3")
 
     // ASCII percent-encoding stays as-is
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%20path",
       "http://example.com/%20path")
 
     // Pure ASCII unchanged
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/path",
       "http://example.com/path")
 
     // Supplementary plane ucschar decoded: U+10000 = %F0%90%80%80
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%F0%90%80%80",
       "http://example.com/\U010000")
 
     // Lowercase hex digits handled
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/r%c3%a9sum%c3%a9",
       "http://example.com/r\xE9sum\xE9")
 
     // Non-ucschar, non-iprivate non-ASCII stays encoded
     // U+009F = C2 9F — below ucschar range
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%C2%9F",
       "http://example.com/%C2%9F")
 
     // Malformed percent-encoding (%GG) passes through unchanged
-    _assert_uri_to_iri(h,
+    _assert_uri_to_iri(
+      h,
       "http://example.com/%GG",
       "http://example.com/%GG")
 
@@ -622,8 +655,8 @@ class \nodoc\ iso _TestURIToIRIKnownGood is UnitTest
     match \exhaustive\ ParseURI(input)
     | let uri: URI val =>
       let iri = URIToIRI(uri)
-      h.assert_eq[String val](expected, iri.string(),
-        "URIToIRI(" + input + ")")
+      h.assert_eq[String val](
+        expected, iri.string(), "URIToIRI(" + input + ")")
     | let e: URIParseError val =>
       h.fail("parse failed for " + input + ": " + e.string())
     end
@@ -636,39 +669,46 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Mixed-case scheme + encoded ucschar normalized
-    _assert_normalize_iri(h,
+    _assert_normalize_iri(
+      h,
       "HTTP://Example.COM/r%C3%A9sum%C3%A9",
       "http://example.com/r\xE9sum\xE9")
 
     // Default port removal + ucschar decoding
-    _assert_normalize_iri(h,
+    _assert_normalize_iri(
+      h,
       "http://example.com:80/caf%C3%A9",
       "http://example.com/caf\xE9")
 
     // Dot segment removal + ucschar decoding
-    _assert_normalize_iri(h,
+    _assert_normalize_iri(
+      h,
       "http://example.com/a/../%C3%A9",
       "http://example.com/\xE9")
 
     // Encoded unreserved decoded + ucschar decoded
-    _assert_normalize_iri(h,
+    _assert_normalize_iri(
+      h,
       "http://example.com/%7E%C3%A9",
       "http://example.com/~\xE9")
 
     // IRI/URI cross-equivalence
-    _assert_iri_equivalent(h,
+    _assert_iri_equivalent(
+      h,
       "http://example.com/r\xE9sum\xE9",
       "http://example.com/r%C3%A9sum%C3%A9",
       true)
 
     // IRI with case difference
-    _assert_iri_equivalent(h,
+    _assert_iri_equivalent(
+      h,
       "HTTP://Example.COM/caf\xE9",
       "http://example.com/caf%c3%a9",
       true)
 
     // Different paths are not equivalent: è (U+00E8) vs é (U+00E9)
-    _assert_iri_equivalent(h,
+    _assert_iri_equivalent(
+      h,
       "http://example.com/\xE9",
       "http://example.com/\xE8",
       false)
@@ -682,7 +722,9 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
     | let u: URI val =>
       match \exhaustive\ NormalizeIRI(u)
       | let normalized: URI val =>
-        h.assert_eq[String val](expected, normalized.string(),
+        h.assert_eq[String val](
+          expected,
+          normalized.string(),
           "NormalizeIRI(" + input + ")")
       | let e: InvalidPercentEncoding val =>
         h.fail("normalization failed for " + input + ": " + e.string())
@@ -699,9 +741,11 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
   =>
     match \exhaustive\ (ParseURI(a_str), ParseURI(b_str))
     | (let a: URI val, let b: URI val) =>
-      match IRIEquivalent(a, b)
+      match \exhaustive\ IRIEquivalent(a, b)
       | let result: Bool =>
-        h.assert_eq[Bool](expected, result,
+        h.assert_eq[Bool](
+          expected,
+          result,
           "IRIEquivalent(" + a_str + ", " + b_str + ")")
       | let e: InvalidPercentEncoding val =>
         h.fail("equivalence failed for (" + a_str + ", " + b_str
@@ -714,54 +758,55 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
 // ============================================================================
 // Generators
 // ============================================================================
-
 primitive _IRIStringGenerator
   """
   Generate URI strings with mixed ASCII and Unicode content.
   """
   fun apply(): Generator[String val] =>
-    Generators.one_of[String val]([
-      // Pure ASCII
-      "http://example.com/path?q=1#frag"
-      // BMP ucschar: é (U+00E9)
-      "http://example.com/caf\xE9"
-      // Supplementary plane: U+1F600
-      "http://example.com/\U01F600"
-      // Mixed ASCII and ucschar
-      "http://example.com/r\xE9sum\xE9?q=\xE9"
-      // Non-ASCII in host: ü (U+00FC)
-      "http://b\xFCcher.example.com/"
-      // ucschar in fragment
-      "http://example.com/path#\xE9"
-      // Multiple non-ASCII chars: àèì
-      "http://example.com/\xE0/\xE8/\xEC"
-      // CJK character: 世 (U+4E16)
-      "http://example.com/\u4E16"
-    ])
+    Generators.one_of[String val](
+      [
+        // Pure ASCII
+        "http://example.com/path?q=1#frag"
+        // BMP ucschar: é (U+00E9)
+        "http://example.com/caf\xE9"
+        // Supplementary plane: U+1F600
+        "http://example.com/\U01F600"
+        // Mixed ASCII and ucschar
+        "http://example.com/r\xE9sum\xE9?q=\xE9"
+        // Non-ASCII in host: ü (U+00FC)
+        "http://b\xFCcher.example.com/"
+        // ucschar in fragment
+        "http://example.com/path#\xE9"
+        // Multiple non-ASCII chars: àèì
+        "http://example.com/\xE0/\xE8/\xEC"
+        // CJK character: 世 (U+4E16)
+        "http://example.com/\u4E16"
+      ])
 
 primitive _URIWithEncodedNonASCIIGenerator
   """
   Generate URI strings with percent-encoded non-ASCII bytes.
   """
   fun apply(): Generator[String val] =>
-    Generators.one_of[String val]([
-      // Encoded ucschar: é = C3 A9
-      "http://example.com/r%C3%A9sum%C3%A9"
-      // Encoded supplementary: U+10000 = F0 90 80 80
-      "http://example.com/%F0%90%80%80"
-      // Encoded iprivate in query: U+E000 = EE 80 80
-      "http://example.com/?q=%EE%80%80"
-      // Mixed ucschar and ASCII encoding
-      "http://example.com/%C3%A9/%20"
-      // Non-ucschar stays encoded: U+009F = C2 9F
-      "http://example.com/%C2%9F"
-      // Bidi format char: U+200E = E2 80 8E
-      "http://example.com/%E2%80%8E"
-      // Encoded CJK: U+4E16 = E4 B8 96
-      "http://example.com/%E4%B8%96"
-      // Lowercase hex
-      "http://example.com/%c3%a9"
-    ])
+    Generators.one_of[String val](
+      [
+        // Encoded ucschar: é = C3 A9
+        "http://example.com/r%C3%A9sum%C3%A9"
+        // Encoded supplementary: U+10000 = F0 90 80 80
+        "http://example.com/%F0%90%80%80"
+        // Encoded iprivate in query: U+E000 = EE 80 80
+        "http://example.com/?q=%EE%80%80"
+        // Mixed ucschar and ASCII encoding
+        "http://example.com/%C3%A9/%20"
+        // Non-ucschar stays encoded: U+009F = C2 9F
+        "http://example.com/%C2%9F"
+        // Bidi format char: U+200E = E2 80 8E
+        "http://example.com/%E2%80%8E"
+        // Encoded CJK: U+4E16 = E4 B8 96
+        "http://example.com/%E4%B8%96"
+        // Lowercase hex
+        "http://example.com/%c3%a9"
+      ])
 
 primitive _IRIUcscharOnlyGenerator
   """
@@ -769,33 +814,35 @@ primitive _IRIUcscharOnlyGenerator
   (no iprivate), suitable for roundtrip testing.
   """
   fun apply(): Generator[String val] =>
-    Generators.one_of[String val]([
-      // é in path
-      "http://example.com/caf\xE9"
-      // Multiple BMP ucschar: àè
-      "http://example.com/\xE0/\xE8"
-      // CJK in path: 世界
-      "http://example.com/\u4E16\u754C"
-      // ucschar in query
-      "http://example.com/?q=\xE9"
-      // ucschar in fragment
-      "http://example.com/#\xE9"
-      // Supplementary plane: U+10000
-      "http://example.com/\U010000"
-      // Pure ASCII (trivial case)
-      "http://example.com/path"
-    ])
+    Generators.one_of[String val](
+      [
+        // é in path
+        "http://example.com/caf\xE9"
+        // Multiple BMP ucschar: àè
+        "http://example.com/\xE0/\xE8"
+        // CJK in path: 世界
+        "http://example.com/\u4E16\u754C"
+        // ucschar in query
+        "http://example.com/?q=\xE9"
+        // ucschar in fragment
+        "http://example.com/#\xE9"
+        // Supplementary plane: U+10000
+        "http://example.com/\U010000"
+        // Pure ASCII (trivial case)
+        "http://example.com/path"
+      ])
 
 primitive _UcscharStringGenerator
   """
   Generate raw strings containing ucschar codepoints.
   """
   fun apply(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "caf\xE9"           // é
-      "\xE0\xE8\xEC"      // àèì
-      "\u4E16\u754C"       // 世界
-      "\U010000"         // U+10000
-      "r\xE9sum\xE9"      // résumé
-      "hello"              // pure ASCII
-    ])
+    Generators.one_of[String val](
+      [
+        "caf\xE9"           // é
+        "\xE0\xE8\xEC"      // àèì
+        "\u4E16\u754C"       // 世界
+        "\U010000"         // U+10000
+        "r\xE9sum\xE9"      // résumé
+        "hello"              // pure ASCII
+      ])

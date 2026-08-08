@@ -20,6 +20,9 @@ primitive ParseURI
   other components.
   """
   fun apply(raw: String val): (URI val | URIParseError val) =>
+    """
+    Parse `raw` into a `URI`, or return a `URIParseError` on failure.
+    """
     var pos: USize = 0
     let len = raw.size()
 

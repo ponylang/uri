@@ -33,7 +33,9 @@ class URITemplateBuilder
     _vars = URITemplateVariables
 
   fun ref set(name: String, value: String): URITemplateBuilder ref =>
-    """Bind a string variable. Returns this builder for chaining."""
+    """
+    Bind a string variable. Returns this builder for chaining.
+    """
     _vars.set(name, value)
     this
 
@@ -42,7 +44,9 @@ class URITemplateBuilder
     values: Array[String val] val)
     : URITemplateBuilder ref
   =>
-    """Bind a list variable. Returns this builder for chaining."""
+    """
+    Bind a list variable. Returns this builder for chaining.
+    """
     _vars.set_list(name, values)
     this
 
@@ -51,7 +55,9 @@ class URITemplateBuilder
     pairs: Array[(String val, String val)] val)
     : URITemplateBuilder ref
   =>
-    """Bind an associative array variable. Returns this builder for chaining."""
+    """
+    Bind an associative array variable. Returns this builder for chaining.
+    """
     _vars.set_pairs(name, pairs)
     this
 

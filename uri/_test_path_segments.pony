@@ -8,10 +8,11 @@ class \nodoc\ iso _PropertyPathSegmentCount is Property1[String val]
   fun name(): String => "uri/path_segments/segment_count"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      ""; "/"; "/a"; "/a/b"; "/a/b/c"; "a"; "a/b"; "/a/b/c/d/e"
-      "/index.html"; "/path/to/resource"
-    ])
+    Generators.one_of[String val](
+      [
+        ""; "/"; "/a"; "/a/b"; "/a/b/c"; "a"; "a/b"; "/a/b/c/d/e"
+        "/index.html"; "/path/to/resource"
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     // Count expected segments: split on '/'
@@ -21,8 +22,8 @@ class \nodoc\ iso _PropertyPathSegmentCount is Property1[String val]
     end
     match \exhaustive\ PathSegments(arg1)
     | let segs: Array[String val] val =>
-      ph.assert_eq[USize](expected, segs.size(),
-        "segment count mismatch for: " + arg1)
+      ph.assert_eq[USize](
+        expected, segs.size(), "segment count mismatch for: " + arg1)
     | let err: InvalidPercentEncoding val =>
       ph.fail("unexpected error for: " + arg1)
     end
@@ -35,10 +36,11 @@ class \nodoc\ iso _PropertyPathSegmentRoundtrip is Property1[String val]
   fun name(): String => "uri/path_segments/roundtrip"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      ""; "/"; "/a"; "/a/b"; "/a/b/c"; "relative"; "a/b"
-      "/path/to/resource"; "/index.html"
-    ])
+    Generators.one_of[String val](
+      [
+        ""; "/"; "/a"; "/a/b"; "/a/b/c"; "relative"; "a/b"
+        "/path/to/resource"; "/index.html"
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ PathSegments(arg1)
@@ -51,13 +53,18 @@ class \nodoc\ iso _PropertyPathSegmentRoundtrip is Property1[String val]
       let rejoined = "/".join(parts.values())
       match \exhaustive\ PathSegments(consume rejoined)
       | let segs2: Array[String val] val =>
-        ph.assert_eq[USize](segs.size(), segs2.size(),
+        ph.assert_eq[USize](
+          segs.size(),
+          segs2.size(),
           "roundtrip segment count mismatch for: " + arg1)
         var i: USize = 0
         while i < segs.size() do
           try
-            ph.assert_eq[String val](segs(i)?, segs2(i)?,
-              "roundtrip segment " + i.string() + " mismatch for: " + arg1)
+            ph.assert_eq[String val](
+              segs(i)?,
+              segs2(i)?,
+              "roundtrip segment " + i.string()
+                + " mismatch for: " + arg1)
           end
           i = i + 1
         end
@@ -74,9 +81,10 @@ class \nodoc\ iso _PropertyPathSegmentInvalidRejected
   fun name(): String => "uri/path_segments/invalid_rejected"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "/a%2"; "/a%GG/b"; "/path/%"; "/%XX"; "/a/b%2"
-    ])
+    Generators.one_of[String val](
+      [
+        "/a%2"; "/a%GG/b"; "/path/%"; "/%XX"; "/a/b%2"
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ PathSegments(arg1)
@@ -115,7 +123,9 @@ class \nodoc\ iso _TestPathSegmentsKnownGood is UnitTest
       h.assert_eq[USize](3, segs.size())
       try
         h.assert_eq[String val]("", segs(0)?)
-        h.assert_eq[String val]("a/b", segs(1)?,
+        h.assert_eq[String val](
+          "a/b",
+          segs(1)?,
           "%2F should decode to / within segment")
         h.assert_eq[String val]("c", segs(2)?)
       end
@@ -140,12 +150,16 @@ class \nodoc\ iso _TestPathSegmentsKnownGood is UnitTest
   =>
     match \exhaustive\ PathSegments(input)
     | let segs: Array[String val] val =>
-      h.assert_eq[USize](expected.size(), segs.size(),
+      h.assert_eq[USize](
+        expected.size(),
+        segs.size(),
         "segment count mismatch for: " + input)
       var i: USize = 0
       while i < expected.size() do
         try
-          h.assert_eq[String val](expected(i)?, segs(i)?,
+          h.assert_eq[String val](
+            expected(i)?,
+            segs(i)?,
             "segment " + i.string() + " mismatch for: " + input)
         end
         i = i + 1

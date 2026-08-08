@@ -13,28 +13,39 @@ primitive URIToIRI
   the allowed ranges, remain percent-encoded. Always succeeds.
   """
   fun apply(uri: URI val): URI val =>
-    let iri_authority: (URIAuthority | None) = match \exhaustive\ uri.authority
-    | let a: URIAuthority =>
-      let iri_userinfo: (String | None) = match \exhaustive\ a.userinfo
-      | let u: String => _decode_iri(u, false)
+    """
+    Decode percent-encoded IRI-legal codepoints back to literal UTF-8.
+    """
+    let iri_authority: (URIAuthority | None) =
+      match \exhaustive\ uri.authority
+      | let a: URIAuthority =>
+        let iri_userinfo: (String | None) =
+          match \exhaustive\ a.userinfo
+          | let u: String => _decode_iri(u, false)
+          | None => None
+          end
+        URIAuthority(iri_userinfo, _decode_iri(a.host, false), a.port)
       | None => None
       end
-      URIAuthority(iri_userinfo, _decode_iri(a.host, false), a.port)
-    | None => None
-    end
 
-    let iri_query: (String | None) = match \exhaustive\ uri.query
-    | let q: String => _decode_iri(q, true)
-    | None => None
-    end
+    let iri_query: (String | None) =
+      match \exhaustive\ uri.query
+      | let q: String => _decode_iri(q, true)
+      | None => None
+      end
 
-    let iri_fragment: (String | None) = match \exhaustive\ uri.fragment
-    | let f: String => _decode_iri(f, false)
-    | None => None
-    end
+    let iri_fragment: (String | None) =
+      match \exhaustive\ uri.fragment
+      | let f: String => _decode_iri(f, false)
+      | None => None
+      end
 
-    URI(uri.scheme, iri_authority, _decode_iri(uri.path, false),
-      iri_query, iri_fragment)
+    URI(
+      uri.scheme,
+      iri_authority,
+      _decode_iri(uri.path, false),
+      iri_query,
+      iri_fragment)
 
   fun _decode_iri(s: String val, allow_iprivate: Bool): String val =>
     if not s.contains("%") then return s end
@@ -104,13 +115,17 @@ primitive URIToIRI
     out.clone()
 
   fun _decode_hex(s: String val, offset: USize): U8 ? =>
-    """Decode a single %HH triplet starting at offset."""
+    """
+    Decode a single %HH triplet starting at offset.
+    """
     let hi = PercentDecode._hex_value(s(offset + 1)?)?
     let lo = PercentDecode._hex_value(s(offset + 2)?)?
     (hi * 16) + lo
 
   fun _utf8_sequence_length(first_byte: U8): USize =>
-    """Determine UTF-8 sequence length from the leading byte."""
+    """
+    Determine UTF-8 sequence length from the leading byte.
+    """
     if (first_byte and 0x80) == 0 then 1
     elseif (first_byte and 0xE0) == 0xC0 then 2
     elseif (first_byte and 0xF0) == 0xE0 then 3
@@ -119,7 +134,9 @@ primitive URIToIRI
     end
 
   fun _should_decode(cp: U32, allow_iprivate: Bool): Bool =>
-    """Check if a codepoint should be decoded to literal UTF-8."""
+    """
+    Check if a codepoint should be decoded to literal UTF-8.
+    """
     if _IRIChars.is_bidi_format(cp) then
       return false
     end

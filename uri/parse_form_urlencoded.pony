@@ -21,6 +21,9 @@ primitive ParseFormURLEncoded
   fun apply(input: String val)
     : (FormURLEncoded val | InvalidPercentEncoding val)
   =>
+    """
+    Parse `input` into decoded key-value pairs.
+    """
     if input.size() == 0 then
       return FormURLEncoded(
         recover val Array[(String val, String val)](0) end)
@@ -52,9 +55,10 @@ primitive ParseFormURLEncoded
       i = i + 1
     end
 
-    let result: Array[(String val, String val)] iso = recover iso
-      Array[(String val, String val)](pairs.size())
-    end
+    let result: Array[(String val, String val)] iso =
+      recover iso
+        Array[(String val, String val)](pairs.size())
+      end
     for pair in pairs.values() do
       result.push(pair)
     end

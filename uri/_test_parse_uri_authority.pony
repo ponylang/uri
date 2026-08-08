@@ -30,15 +30,16 @@ class \nodoc\ iso _PropertyInvalidPortRejected is Property1[String val]
   fun name(): String => "uri/parse_uri_authority/invalid_port"
 
   fun gen(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      // non-numeric port
-      (1, Generators.one_of[String val](
-        ["host:abc"; "host:12a"; "host:xy9z"]))
-      // port > 65535
-      (1, Generators.one_of[String val](
-        ["host:65536"; "host:99999"; "host:100000"]))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        // non-numeric port
+        (1, Generators.one_of[String val](
+          ["host:abc"; "host:12a"; "host:xy9z"]))
+        // port > 65535
+        (1, Generators.one_of[String val](
+          ["host:65536"; "host:99999"; "host:100000"]))
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ ParseURIAuthority(arg1)
@@ -55,16 +56,17 @@ class \nodoc\ iso _PropertyInvalidHostRejected is Property1[String val]
   fun name(): String => "uri/parse_uri_authority/invalid_host"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      // unmatched opening bracket
-      "[::1"
-      // unmatched with port
-      "[::1:8080"
-      // empty brackets
-      "[]"
-      // garbage after closing bracket (not a port)
-      "[::1]garbage"
-    ])
+    Generators.one_of[String val](
+      [
+        // unmatched opening bracket
+        "[::1"
+        // unmatched with port
+        "[::1:8080"
+        // empty brackets
+        "[]"
+        // garbage after closing bracket (not a port)
+        "[::1]garbage"
+      ])
 
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     match \exhaustive\ ParseURIAuthority(arg1)
@@ -176,14 +178,13 @@ class \nodoc\ iso _TestParseURIAuthorityKnownGood is UnitTest
     match \exhaustive\ ParseURIAuthority("host:")
     | let a: URIAuthority val =>
       h.assert_eq[String val]("host", a.host)
-      h.assert_true(a.port is None,
-        "empty port should parse as None")
+      h.assert_true(
+        a.port is None, "empty port should parse as None")
     | let e: URIParseError val =>
       h.fail("parse failed for empty port: " + e.string())
     end
 
 // -- Generators --
-
 class val _ValidAuthorityInput
   let userinfo: (String | None)
   let host: String
@@ -213,24 +214,27 @@ primitive _ValidAuthorityInputGenerator
       })
 
   fun _userinfo_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (2, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["user"; "user:pass"; "admin"; "user%40example"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (2, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["user"; "user:pass"; "admin"; "user%40example"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
   fun _host_gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "example.com"; "localhost"; "192.168.1.1"
-      "sub.domain.example.org"; "my-host"
-    ])
+    Generators.one_of[String val](
+      [
+        "example.com"; "localhost"; "192.168.1.1"
+        "sub.domain.example.org"; "my-host"
+      ])
 
   fun _port_gen(): Generator[(U16 | None)] =>
-    Generators.frequency[(U16 | None)]([
-      as WeightedGenerator[(U16 | None)]:
-      (1, Generators.unit[(U16 | None)](None))
-      (1, Generators.one_of[U16]([as U16: 80; 443; 8080; 3000; 8443])
-        .map[(U16 | None)]({(p) => p }))
-    ])
+    Generators.frequency[(U16 | None)](
+      [
+        as WeightedGenerator[(U16 | None)]:
+        (1, Generators.unit[(U16 | None)](None))
+        (1, Generators.one_of[U16]([as U16: 80; 443; 8080; 3000; 8443])
+          .map[(U16 | None)]({(p) => p }))
+      ])

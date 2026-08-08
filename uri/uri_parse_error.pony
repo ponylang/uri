@@ -1,5 +1,7 @@
 primitive InvalidPort is Stringable
-  """Port is non-numeric or exceeds U16 range."""
+  """
+  Port is non-numeric or exceeds U16 range.
+  """
   fun string(): String iso^ => "InvalidPort".clone()
 
 primitive InvalidHost is Stringable

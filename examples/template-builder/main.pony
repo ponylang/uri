@@ -17,9 +17,11 @@ actor Main
       let uri = URITemplateBuilder("{scheme}://{host}{/path*}{?query*}")
         .set("scheme", "https")
         .set("host", "example.com")
-        .set_list("path",
+        .set_list(
+          "path",
           recover val ["api"; "v1"; "users"] end)
-        .set_pairs("query",
+        .set_pairs(
+          "query",
           recover val [("page", "1"); ("limit", "10")] end)
         .build()?
       env.out.print("  " + consume uri)

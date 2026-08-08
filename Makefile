@@ -4,6 +4,7 @@ PACKAGE := uri
 GET_DEPENDENCIES_WITH := corral fetch
 CLEAN_DEPENDENCIES_WITH := corral clean
 COMPILE_WITH := corral run -- ponyc
+LINT_WITH := corral run -- pony-lint
 BUILD_DOCS_WITH := corral run -- pony-doc
 
 BUILD_DIR ?= build/$(config)
@@ -47,6 +48,10 @@ $(EXAMPLES_BINARIES): $(BUILD_DIR)/%: $(SOURCE_FILES) $(EXAMPLES_SOURCE_FILES) |
 	$(GET_DEPENDENCIES_WITH)
 	$(PONYC) -o $(BUILD_DIR) $(EXAMPLES_DIR)/$*
 
+lint:
+	$(GET_DEPENDENCIES_WITH)
+	$(LINT_WITH) .
+
 clean:
 	$(CLEAN_DEPENDENCIES_WITH)
 	rm -rf $(BUILD_DIR)
@@ -66,4 +71,4 @@ all: test
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-.PHONY: all examples clean TAGS test test-one
+.PHONY: all examples clean lint TAGS test test-one

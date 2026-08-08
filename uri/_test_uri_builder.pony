@@ -87,7 +87,8 @@ class \nodoc\ iso _TestBuildFromURI is UnitTest
   fun name(): String => "uri/builder/from_uri"
 
   fun ref apply(h: TestHelper) =>
-    match \exhaustive\ ParseURI("http://user@example.com:8080/path?query=1#frag")
+    let full = "http://user@example.com:8080/path?query=1#frag"
+    match \exhaustive\ ParseURI(full)
     | let original: URI val =>
       match \exhaustive\ URIBuilder.from(original).build()
       | let rebuilt: URI val =>
@@ -201,7 +202,8 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
     match \exhaustive\ URIBuilder.set_scheme("1http").build()
     | let _: URI val => h.fail("expected error for digit-starting scheme")
     | let e: URIBuildError val =>
-      h.assert_true(e is InvalidScheme,
+      h.assert_true(
+        e is InvalidScheme,
         "expected InvalidScheme, got: " + e.string())
     end
 
@@ -209,7 +211,8 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
     match \exhaustive\ URIBuilder.set_scheme("ht tp").build()
     | let _: URI val => h.fail("expected error for space in scheme")
     | let e: URIBuildError val =>
-      h.assert_true(e is InvalidScheme,
+      h.assert_true(
+        e is InvalidScheme,
         "expected InvalidScheme, got: " + e.string())
     end
 
@@ -217,7 +220,8 @@ class \nodoc\ iso _TestBuildInvalidScheme is UnitTest
     match \exhaustive\ URIBuilder.set_scheme("").build()
     | let _: URI val => h.fail("expected error for empty scheme")
     | let e: URIBuildError val =>
-      h.assert_true(e is InvalidScheme,
+      h.assert_true(
+        e is InvalidScheme,
         "expected InvalidScheme, got: " + e.string())
     end
 
@@ -232,7 +236,8 @@ class \nodoc\ iso _TestBuildInvalidIPLiteral is UnitTest
       .build()
     | let _: URI val => h.fail("expected error for malformed IP-literal")
     | let e: URIBuildError val =>
-      h.assert_true(e is InvalidHost,
+      h.assert_true(
+        e is InvalidHost,
         "expected InvalidHost, got: " + e.string())
     end
 
@@ -392,7 +397,6 @@ class \nodoc\ iso _TestBuildAuthorityNoScheme is UnitTest
     end
 
 // -- Property-based tests --
-
 class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
   """
   For generated valid URIs, URIBuilder.from(uri).build() produces a URI
@@ -404,14 +408,19 @@ class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
     _ValidURIInputGenerator()
 
   fun ref property(arg1: _ValidURIInput, ph: PropertyHelper) =>
-    let original = URI(
-      arg1.scheme, arg1.authority, arg1.path,
-      arg1.query, arg1.fragment)
+    let original =
+      URI(
+        arg1.scheme,
+        arg1.authority,
+        arg1.path,
+        arg1.query,
+        arg1.fragment)
     let original_str = original.string()
     match \exhaustive\ URIBuilder.from(original).build()
     | let rebuilt: URI val =>
       ph.assert_eq[String val](
-        consume original_str, rebuilt.string(),
+        consume original_str,
+        rebuilt.string(),
         "roundtrip failed for: " + original.string())
     | let e: URIBuildError val =>
       ph.fail("build failed for: " + original.string()
@@ -441,15 +450,16 @@ class \nodoc\ iso _PropertyBuildParseRoundtrip is Property1[_BuildInput]
       | let parsed: URI val =>
         match parsed.scheme
         | let s': String =>
-          ph.assert_eq[String val](arg1.scheme, s',
-            "scheme mismatch")
+          ph.assert_eq[String val](
+            arg1.scheme, s', "scheme mismatch")
         else
           ph.fail("expected scheme")
         end
         match parsed.authority
         | let a: URIAuthority =>
           ph.assert_eq[String val](
-            PercentEncode(arg1.host, URIPartHost), a.host,
+            PercentEncode(arg1.host, URIPartHost),
+            a.host,
             "host mismatch")
         else
           ph.fail("expected authority")
@@ -476,12 +486,13 @@ class \nodoc\ iso _PropertyBuildInvalidSchemeFails
     | let _: URI val =>
       ph.fail("expected InvalidScheme for: " + arg1)
     | let e: URIBuildError val =>
-      ph.assert_true(e is InvalidScheme,
-        "expected InvalidScheme for: " + arg1 + " got: " + e.string())
+      ph.assert_true(
+        e is InvalidScheme,
+        "expected InvalidScheme for: " + arg1
+          + " got: " + e.string())
     end
 
 // -- Generators --
-
 class val _BuildInput
   let scheme: String
   let host: String
@@ -505,17 +516,18 @@ primitive _BuildInputGenerator
 
 primitive _InvalidSchemeGenerator
   fun apply(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      // starts with digit
-      (1, Generators.one_of[String val](
-        ["1http"; "9scheme"; "0abc"]))
-      // contains space
-      (1, Generators.one_of[String val](
-        ["ht tp"; "a scheme"; "my uri"]))
-      // contains @ or [
-      (1, Generators.one_of[String val](
-        ["sch@eme"; "sch[eme"; "a]b"]))
-      // empty string
-      (1, Generators.unit[String val](""))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        // starts with digit
+        (1, Generators.one_of[String val](
+          ["1http"; "9scheme"; "0abc"]))
+        // contains space
+        (1, Generators.one_of[String val](
+          ["ht tp"; "a scheme"; "my uri"]))
+        // contains @ or [
+        (1, Generators.one_of[String val](
+          ["sch@eme"; "sch[eme"; "a]b"]))
+        // empty string
+        (1, Generators.unit[String val](""))
+      ])

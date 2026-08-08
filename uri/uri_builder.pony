@@ -36,7 +36,9 @@ class ref URIBuilder
   var _fragment: (String | None) = None
 
   new create() =>
-    """Create an empty builder with all components unset."""
+    """
+    Create an empty builder with all components unset.
+    """
     None
 
   new from(uri: URI val) =>
@@ -69,7 +71,9 @@ class ref URIBuilder
     this
 
   fun ref clear_scheme(): URIBuilder ref =>
-    """Remove the scheme component."""
+    """
+    Remove the scheme component.
+    """
     _scheme = None
     this
 
@@ -86,7 +90,9 @@ class ref URIBuilder
     this
 
   fun ref clear_userinfo(): URIBuilder ref =>
-    """Remove the userinfo component."""
+    """
+    Remove the userinfo component.
+    """
     _userinfo = None
     this
 
@@ -128,7 +134,9 @@ class ref URIBuilder
     this
 
   fun ref clear_port(): URIBuilder ref =>
-    """Remove the port component."""
+    """
+    Remove the port component.
+    """
     _port = None
     this
 
@@ -150,13 +158,13 @@ class ref URIBuilder
     it remains a single segment. A `/` separator is prepended automatically.
     """
     let encoded = _PathSegmentEncode(segment)
-    _path = recover val
-      let out = String
-      out.append(_path)
-      out.push('/')
-      out.append(encoded)
-      out
-    end
+    _path =
+      recover val
+        String
+          .> append(_path)
+          .> push('/')
+          .> append(encoded)
+      end
     this
 
   fun ref set_query(query: String): URIBuilder ref =>
@@ -190,25 +198,25 @@ class ref URIBuilder
     """
     let encoded_key = _FormFieldEncode(key)
     let encoded_val = _FormFieldEncode(value)
-    let param = recover val
-      let out = String
-      out.append(encoded_key)
-      out.push('=')
-      out.append(encoded_val)
-      out
-    end
-    _query = match \exhaustive\ _query
-    | None => param
-    | let q: String if q.size() == 0 => param
-    | let q: String =>
+    let param =
       recover val
-        let out = String
-        out.append(q)
-        out.push('&')
-        out.append(param)
-        out
+        String
+          .> append(encoded_key)
+          .> push('=')
+          .> append(encoded_val)
       end
-    end
+    _query =
+      match \exhaustive\ _query
+      | None => param
+      | let q: String if q.size() == 0 => param
+      | let q: String =>
+        recover val
+          String
+            .> append(q)
+            .> push('&')
+            .> append(param)
+        end
+      end
     this
 
   fun ref set_fragment(fragment: String): URIBuilder ref =>
@@ -251,17 +259,18 @@ class ref URIBuilder
       match \exhaustive\ _host
       | let h: String =>
         // Assemble authority string for validation via ParseURIAuthority
-        let auth_str = recover val
-          let out = String
-          match _userinfo
-          | let u: String => out.append(u); out.push('@')
+        let auth_str =
+          recover val
+            let out = String
+            match _userinfo
+            | let u: String => out.append(u); out.push('@')
+            end
+            out.append(h)
+            match _port
+            | let p: U16 => out.push(':'); out.append(p.string())
+            end
+            out
           end
-          out.append(h)
-          match _port
-          | let p: U16 => out.push(':'); out.append(p.string())
-          end
-          out
-        end
         match \exhaustive\ ParseURIAuthority(auth_str)
         | let a: URIAuthority val => a
         | let e: URIParseError val => return e
@@ -277,10 +286,9 @@ class ref URIBuilder
           and (try _path(0)? != '/' else false end)
         then
           recover val
-            let out = String
-            out.push('/')
-            out.append(_path)
-            out
+            String
+              .> push('/')
+              .> append(_path)
           end
         else
           _path

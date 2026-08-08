@@ -19,7 +19,8 @@ actor Main
     vars.set("user", "fred")
     vars.set("query", "pony lang")
     vars.set_list("segments", recover val ["api"; "v1"; "users"] end)
-    vars.set_pairs("params",
+    vars.set_pairs(
+      "params",
       recover val [("page", "1"); ("limit", "10")] end)
 
     // Simple expansion

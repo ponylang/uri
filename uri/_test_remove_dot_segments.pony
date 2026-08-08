@@ -13,8 +13,8 @@ class \nodoc\ iso _PropertyDotSegmentsIdempotent is Property1[String val]
   fun ref property(arg1: String val, ph: PropertyHelper) =>
     let once = RemoveDotSegments(arg1)
     let twice = RemoveDotSegments(once)
-    ph.assert_eq[String val](once, twice,
-      "not idempotent for: " + arg1)
+    ph.assert_eq[String val](
+      once, twice, "not idempotent for: " + arg1)
 
 class \nodoc\ iso _PropertyDotSegmentsNoDots is Property1[String val]
   """
@@ -45,11 +45,12 @@ class \nodoc\ iso _PropertyDotSegmentsNoDots is Property1[String val]
       // Use if/else instead of Bool.op_or — Pony's `or` is not
       // short-circuit, so `(i == path.size()) or (path(i)? == '/')`
       // would evaluate path(i)? even at end-of-string.
-      let at_boundary = if i == path.size() then
-        true
-      else
-        try path(i)? == '/' else false end
-      end
+      let at_boundary =
+        if i == path.size() then
+          true
+        else
+          try path(i)? == '/' else false end
+        end
       if at_boundary then
         let seg = path.substring(start.isize(), i.isize())
         if (consume seg == ".") or
@@ -141,11 +142,12 @@ class \nodoc\ iso _TestRemoveDotSegmentsKnownGood is UnitTest
     _assert(h, "/a/..suffix", "/a/..suffix")
 
   fun _assert(h: TestHelper, input: String, expected: String) =>
-    h.assert_eq[String val](expected, RemoveDotSegments(input),
+    h.assert_eq[String val](
+      expected,
+      RemoveDotSegments(input),
       "RemoveDotSegments(" + input + ")")
 
 // -- Generators --
-
 primitive _DotPathGenerator
   """
   Generates paths likely to contain dot segments. Mixes fixed RFC examples
@@ -153,67 +155,71 @@ primitive _DotPathGenerator
   normal path components.
   """
   fun apply(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      (1, Generators.one_of[String val]([
-        "/a/b/c/./../../g"
-        "mid/content=5/../6"
-        "/a/b/../../../g"
-        "/."
-        "/.."
-        "."
-        ".."
-        "./a"
-        "../a"
-        ""
-        "/a/b/c"
-        "/"
-        "/a/../b/./c"
-        "/../../../g"
-        "/./g"
-        "/../g"
-        "/a/b/c/../d"
-        "a/b/../c"
-      ]))
-      (2, _random_dot_path())
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        (1, Generators.one_of[String val](
+          [
+            "/a/b/c/./../../g"
+            "mid/content=5/../6"
+            "/a/b/../../../g"
+            "/."
+            "/.."
+            "."
+            ".."
+            "./a"
+            "../a"
+            ""
+            "/a/b/c"
+            "/"
+            "/a/../b/./c"
+            "/../../../g"
+            "/./g"
+            "/../g"
+            "/a/b/c/../d"
+            "a/b/../c"
+          ]))
+        (2, _random_dot_path())
+      ])
 
   fun absolute(): Generator[String val] =>
     """
     Generates absolute paths (starting with "/") that contain dot segments.
     """
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      (1, Generators.one_of[String val]([
-        "/a/b/c/./../../g"
-        "/a/b/../../../g"
-        "/."
-        "/.."
-        "/a/../b/./c"
-        "/../../../g"
-        "/./g"
-        "/../g"
-        "/a/b/c/../d"
-        "/a/b/c"
-        "/"
-      ]))
-      (2, Generators.map2[String val, String val, String val](
-        Generators.one_of[String val](
-          ["/a"; "/b"; "/c"; "/x/y"; "/foo/bar"]),
-        Generators.one_of[String val](
-          ["/./"; "/../"; "/."; "/.."; "/./a"; "/../b"
-           "/a/./b"; "/a/../b"; "/./../"]),
-        {(prefix, suffix) => prefix + suffix }))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        (1, Generators.one_of[String val](
+          [
+            "/a/b/c/./../../g"
+            "/a/b/../../../g"
+            "/."
+            "/.."
+            "/a/../b/./c"
+            "/../../../g"
+            "/./g"
+            "/../g"
+            "/a/b/c/../d"
+            "/a/b/c"
+            "/"
+          ]))
+        (2, Generators.map2[String val, String val, String val](
+          Generators.one_of[String val](
+            ["/a"; "/b"; "/c"; "/x/y"; "/foo/bar"]),
+          Generators.one_of[String val](
+            [ "/./"; "/../"; "/."; "/.."; "/./a"; "/../b"
+              "/a/./b"; "/a/../b"; "/./../"]),
+          {(prefix, suffix) => prefix + suffix }))
+      ])
 
   fun _random_dot_path(): Generator[String val] =>
     Generators.map2[String val, String val, String val](
       Generators.one_of[String val](
         ["/a"; "/b"; "/c"; ""; "/x/y"; "/foo"; "a"; "a/b"]),
       Generators.one_of[String val](
-        ["/./"; "/../"; "/."; "/.."; "/./a"; "/../b"
-         "/a/./b"; "/a/../b"; "/./../"; "/../../"
-         "./x"; "../x"]),
+        [ "/./"; "/../"; "/."; "/.."; "/./a"; "/../b"
+          "/a/./b"; "/a/../b"; "/./../"; "/../../"
+          "./x"; "../x"]),
       {(prefix, suffix) => prefix + suffix })
 
 primitive _AnyPathGenerator
@@ -222,11 +228,12 @@ primitive _AnyPathGenerator
   Used for the idempotency property test.
   """
   fun apply(): Generator[String val] =>
-    Generators.frequency[String val]([
-      as WeightedGenerator[String val]:
-      (1, _DotPathGenerator())
-      (1, Generators.one_of[String val](
-        ["/a/b/c"; "/foo"; "bar/baz"; ""; "/"; "/index.html"
-         "/a.b/c.d"; "relative"; "/path/to/resource"
-         "no-dots-here"; "/simple"]))
-    ])
+    Generators.frequency[String val](
+      [
+        as WeightedGenerator[String val]:
+        (1, _DotPathGenerator())
+        (1, Generators.one_of[String val](
+          [ "/a/b/c"; "/foo"; "bar/baz"; ""; "/"; "/index.html"
+            "/a.b/c.d"; "relative"; "/path/to/resource"
+            "no-dots-here"; "/simple"]))
+      ])

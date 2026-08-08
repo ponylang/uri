@@ -19,7 +19,8 @@ class \nodoc\ iso _PropertyNormalizeIdempotent
     | let once: URI val =>
       match \exhaustive\ NormalizeURI(once)
       | let twice: URI val =>
-        ph.assert_true(once == twice,
+        ph.assert_true(
+          once == twice,
           "not idempotent: once=" + once.string()
             + " twice=" + twice.string()
             + " original=" + uri.string())
@@ -214,7 +215,8 @@ class \nodoc\ iso _PropertyNormalizeNoDotSegments
     | let u: URI val =>
       let path = u.path
       ph.assert_eq[String val](
-        RemoveDotSegments(path), path,
+        RemoveDotSegments(path),
+        path,
         "path still has dot segments: " + path
           + " from: " + arg1.uri.string())
     | let e: InvalidPercentEncoding val =>
@@ -236,7 +238,8 @@ class \nodoc\ iso _PropertyNormalizeParseRoundtrip
     | let normalized: URI val =>
       match \exhaustive\ ParseURI(normalized.string())
       | let reparsed: URI val =>
-        ph.assert_true(normalized == reparsed,
+        ph.assert_true(
+          normalized == reparsed,
           "roundtrip failed: normalized=" + normalized.string()
             + " reparsed=" + reparsed.string())
       | let e: URIParseError val =>
@@ -269,7 +272,8 @@ class \nodoc\ iso _PropertyNormalizeNoDefaultPort
           | let a: URIAuthority =>
             match a.port
             | let p: U16 =>
-              ph.assert_false(p == default_port,
+              ph.assert_false(
+                p == default_port,
                 "default port " + default_port.string()
                   + " not removed for scheme " + scheme)
             end
@@ -299,7 +303,8 @@ class \nodoc\ iso _PropertyNormalizeNoEmptyPathWithAuthority
         if (scheme == "http") or (scheme == "https") then
           match u.authority
           | let _: URIAuthority =>
-            ph.assert_false(u.path == "",
+            ph.assert_false(
+              u.path == "",
               "empty path with authority for " + scheme + ": "
                 + u.string())
           end
@@ -328,12 +333,14 @@ class \nodoc\ iso _PropertyNormalizeEquivalentConsistent
     (let a_in, let b_in) = arg1
     let a = a_in.uri
     let b = b_in.uri
-    match (NormalizeURI(a), NormalizeURI(b))
+    match \exhaustive\ (NormalizeURI(a), NormalizeURI(b))
     | (let norm_a: URI val, let norm_b: URI val) =>
       let expected = norm_a == norm_b
       match \exhaustive\ URIEquivalent(a, b)
       | let actual: Bool =>
-        ph.assert_eq[Bool](expected, actual,
+        ph.assert_eq[Bool](
+          expected,
+          actual,
           "equivalent inconsistent: a=" + a.string()
             + " b=" + b.string()
             + " norm_a=" + norm_a.string()
@@ -356,8 +363,9 @@ class \nodoc\ iso _PropertyNormalizeInvalidPercentRejected
   fun name(): String => "uri/normalize_uri/invalid_percent_rejected"
 
   fun gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "http://example.com/path%GG"
+    Generators.one_of[String val](
+      [
+        "http://example.com/path%GG"
       "http://example.com/path%0"
       "http://example.com/path%"
       "http://example.com/%ZZfoo"
@@ -381,7 +389,6 @@ class \nodoc\ iso _PropertyNormalizeInvalidPercentRejected
     end
 
 // -- Known-good example tests --
-
 class \nodoc\ iso _TestNormalizeURIKnownGood is UnitTest
   """
   Known-good normalization examples from RFC 3986 section 6.2.2 and 6.2.3.
@@ -392,73 +399,74 @@ class \nodoc\ iso _TestNormalizeURIKnownGood is UnitTest
     // -- 6.2.2 Syntax-based normalization --
 
     // Case normalization (scheme + host)
-    _assert_normalize(h,
-      "HTTP://Example.COM/", "http://example.com/")
+    _assert_normalize(
+      h, "HTTP://Example.COM/", "http://example.com/")
 
     // Percent-encoding normalization (unreserved decoded)
-    _assert_normalize(h,
-      "http://example.com/%7Euser", "http://example.com/~user")
+    _assert_normalize(
+      h, "http://example.com/%7Euser", "http://example.com/~user")
 
     // Dot-segment removal
-    _assert_normalize(h,
-      "http://example.com/a/../b", "http://example.com/b")
+    _assert_normalize(
+      h, "http://example.com/a/../b", "http://example.com/b")
 
     // Percent-encoded dot segments decoded then removed
-    _assert_normalize(h,
-      "http://example.com/%2E%2E/b", "http://example.com/b")
+    _assert_normalize(
+      h, "http://example.com/%2E%2E/b", "http://example.com/b")
 
     // Query percent-encoding normalization
-    _assert_normalize(h,
-      "http://example.com/path?q=%6A", "http://example.com/path?q=j")
+    _assert_normalize(
+      h, "http://example.com/path?q=%6A", "http://example.com/path?q=j")
 
     // Already-normalized URI unchanged
-    _assert_normalize(h,
-      "http://example.com/path", "http://example.com/path")
+    _assert_normalize(
+      h, "http://example.com/path", "http://example.com/path")
 
     // Relative reference (no scheme) — scheme normalization skipped
-    _assert_normalize(h,
-      "/A/../b/%7Epath", "/b/~path")
+    _assert_normalize(
+      h, "/A/../b/%7Epath", "/b/~path")
 
     // IP-literal host lowercased
-    _assert_normalize(h,
-      "http://[FE80::1]/", "http://[fe80::1]/")
+    _assert_normalize(
+      h, "http://[FE80::1]/", "http://[fe80::1]/")
 
     // -- 6.2.3 Scheme-based normalization --
 
     // Default port removal: http
-    _assert_normalize(h,
-      "http://example.com:80/", "http://example.com/")
+    _assert_normalize(
+      h, "http://example.com:80/", "http://example.com/")
 
     // Default port removal: https
-    _assert_normalize(h,
-      "https://example.com:443/", "https://example.com/")
+    _assert_normalize(
+      h, "https://example.com:443/", "https://example.com/")
 
     // Default port removal: ftp
-    _assert_normalize(h,
-      "ftp://example.com:21/", "ftp://example.com/")
+    _assert_normalize(
+      h, "ftp://example.com:21/", "ftp://example.com/")
 
     // Non-default port kept
-    _assert_normalize(h,
-      "http://example.com:8080/", "http://example.com:8080/")
+    _assert_normalize(
+      h, "http://example.com:8080/", "http://example.com:8080/")
 
     // Unknown scheme — port kept even if it matches a known default
-    _assert_normalize(h,
-      "unknown://example.com:80/", "unknown://example.com:80/")
+    _assert_normalize(
+      h, "unknown://example.com:80/", "unknown://example.com:80/")
 
     // Empty path with authority → "/" (http)
-    _assert_normalize(h,
-      "http://example.com", "http://example.com/")
+    _assert_normalize(
+      h, "http://example.com", "http://example.com/")
 
     // Empty path with query → "/" inserted (http)
-    _assert_normalize(h,
-      "http://example.com?query", "http://example.com/?query")
+    _assert_normalize(
+      h, "http://example.com?query", "http://example.com/?query")
 
     // ftp: empty path NOT normalized to "/"
-    _assert_normalize(h,
-      "ftp://example.com", "ftp://example.com")
+    _assert_normalize(
+      h, "ftp://example.com", "ftp://example.com")
 
     // -- Combined 6.2.2 + 6.2.3 --
-    _assert_normalize(h,
+    _assert_normalize(
+      h,
       "HTTP://Example.COM:80/%7Euser/a/../b?q=%6A",
       "http://example.com/~user/b?q=j")
 
@@ -471,7 +479,9 @@ class \nodoc\ iso _TestNormalizeURIKnownGood is UnitTest
     | let u: URI val =>
       match \exhaustive\ NormalizeURI(u)
       | let normalized: URI val =>
-        h.assert_eq[String val](expected, normalized.string(),
+        h.assert_eq[String val](
+          expected,
+          normalized.string(),
           "NormalizeURI(" + input + ")")
       | let e: InvalidPercentEncoding val =>
         h.fail("normalization failed for " + input + ": " + e.string())
@@ -488,17 +498,19 @@ class \nodoc\ iso _TestURIEquivalentKnownGood is UnitTest
 
   fun ref apply(h: TestHelper) =>
     // Equivalent: case + default port
-    _assert_equivalent(h,
-      "HTTP://Example.COM:80/path", "http://example.com/path", true)
+    _assert_equivalent(
+      h, "HTTP://Example.COM:80/path", "http://example.com/path", true)
 
     // Not equivalent: different paths
-    _assert_equivalent(h,
-      "http://example.com/a", "http://example.com/b", false)
+    _assert_equivalent(
+      h, "http://example.com/a", "http://example.com/b", false)
 
     // Reflexive: any URI equivalent to itself
-    _assert_equivalent(h,
+    _assert_equivalent(
+      h,
       "http://example.com/path?q=1#frag",
-      "http://example.com/path?q=1#frag", true)
+      "http://example.com/path?q=1#frag",
+      true)
 
   fun _assert_equivalent(
     h: TestHelper,
@@ -508,9 +520,11 @@ class \nodoc\ iso _TestURIEquivalentKnownGood is UnitTest
   =>
     match \exhaustive\ (ParseURI(a_str), ParseURI(b_str))
     | (let a: URI val, let b: URI val) =>
-      match URIEquivalent(a, b)
+      match \exhaustive\ URIEquivalent(a, b)
       | let result: Bool =>
-        h.assert_eq[Bool](expected, result,
+        h.assert_eq[Bool](
+          expected,
+          result,
           "URIEquivalent(" + a_str + ", " + b_str + ")")
       | let e: InvalidPercentEncoding val =>
         h.fail("equivalence failed for (" + a_str + ", " + b_str
@@ -521,9 +535,10 @@ class \nodoc\ iso _TestURIEquivalentKnownGood is UnitTest
     end
 
 // -- Helpers --
-
 primitive _HasUpperASCII
-  """Check if a string contains any uppercase ASCII letter."""
+  """
+  Check if a string contains any uppercase ASCII letter.
+  """
   fun apply(s: String val): Bool =>
     for c in s.values() do
       if (c >= 'A') and (c <= 'Z') then
@@ -558,7 +573,6 @@ primitive _HasUpperASCIIOutsidePercent
     false
 
 // -- Generators --
-
 class \nodoc\ val _NormalizableURIInput
   let uri: URI val
 
@@ -610,13 +624,14 @@ primitive _NormalizableURIInputGenerator
       })
 
   fun _scheme_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (1, Generators.unit[(String val | None)](None))
-      (3, Generators.one_of[String val](
-        ["HTTP"; "Http"; "https"; "FTP"; "Scheme"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (1, Generators.unit[(String val | None)](None))
+        (3, Generators.one_of[String val](
+          ["HTTP"; "Http"; "https"; "FTP"; "Scheme"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
   fun _authority_gen(): Generator[_NormAuthority] =>
     Generators.map2[
@@ -628,10 +643,11 @@ primitive _NormalizableURIInputGenerator
       {(userinfo, host_port) =>
         match host_port.value
         | let hp: String =>
-          let auth = match userinfo
-          | let u: String => u + "@" + hp
-          else hp
-          end
+          let auth =
+            match userinfo
+            | let u: String => u + "@" + hp
+            else hp
+            end
           _NormAuthority(auth)
         else
           _NormAuthority(None)
@@ -639,13 +655,14 @@ primitive _NormalizableURIInputGenerator
       })
 
   fun _userinfo_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (3, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["user"; "us%65r"; "user:pass"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (3, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["user"; "us%65r"; "user:pass"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
   fun _host_port_gen(): Generator[_NormHostPort] =>
     Generators.map2[String val, (String val | None), _NormHostPort](
@@ -659,23 +676,25 @@ primitive _NormalizableURIInputGenerator
       })
 
   fun _host_gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "EXAMPLE.COM"
-      "Example.Org"
-      "LOCALHOST"
-      "ex%61mple.com"
-      "[FE80::1]"
-      "192.168.1.1"
-    ])
+    Generators.one_of[String val](
+      [
+        "EXAMPLE.COM"
+        "Example.Org"
+        "LOCALHOST"
+        "ex%61mple.com"
+        "[FE80::1]"
+        "192.168.1.1"
+      ])
 
   fun _port_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (2, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["80"; "443"; "21"; "8080"; "3000"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (2, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["80"; "443"; "21"; "8080"; "3000"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
   fun _path_query_frag_gen(): Generator[_NormPathQueryFrag] =>
     Generators.map2[String val, (String val | None), _NormPathQueryFrag](
@@ -684,38 +703,42 @@ primitive _NormalizableURIInputGenerator
       {(path, query) => _NormPathQueryFrag(path, query) })
 
   fun _path_gen(): Generator[String val] =>
-    Generators.one_of[String val]([
-      "/a/../b"
-      "/%7Epath"
-      "/a/%2E%2E/b"
-      "/normal/path"
-      ""
-      "/"
-      "/a/b/c"
-    ])
+    Generators.one_of[String val](
+      [
+        "/a/../b"
+        "/%7Epath"
+        "/a/%2E%2E/b"
+        "/normal/path"
+        ""
+        "/"
+        "/a/b/c"
+      ])
 
   fun _query_or_frag_gen(): Generator[(String val | None)] =>
-    Generators.frequency[(String val | None)]([
-      as WeightedGenerator[(String val | None)]:
-      (2, Generators.unit[(String val | None)](None))
-      (1, Generators.one_of[String val](
-        ["q=%6a"; "key=%7Eval"; "plain"])
-        .map[(String val | None)]({(s) => s }))
-    ])
+    Generators.frequency[(String val | None)](
+      [
+        as WeightedGenerator[(String val | None)]:
+        (2, Generators.unit[(String val | None)](None))
+        (1, Generators.one_of[String val](
+          ["q=%6a"; "key=%7Eval"; "plain"])
+          .map[(String val | None)]({(s) => s }))
+      ])
 
 // Helper types for generator composition
-
 class \nodoc\ val _NormAuthority
   let value: (String | None)
+
   new val create(value': (String | None)) => value = value'
 
 class \nodoc\ val _NormHostPort
   let value: (String | None)
+
   new val create(value': (String | None)) => value = value'
 
 class \nodoc\ val _NormPathQueryFrag
   let path: String
   let query: (String | None)
+
   new val create(path': String, query': (String | None)) =>
     path = path'
     query = query'

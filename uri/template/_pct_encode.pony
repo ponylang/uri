@@ -27,11 +27,12 @@ primitive _PctEncode
           and _is_hex_digit(value(i + 2)?)
         then
           // Pass through existing pct-encoded triplet
-          out.>push(byte).>push(value(i + 1)?).>push(value(i + 2)?)
+          out .> push(byte) .> push(value(i + 1)?)
+            .> push(value(i + 2)?)
           i = i + 3
         else
-          out.>push('%').>push(_hex_digit(byte >> 4))
-            .>push(_hex_digit(byte and 0x0F))
+          out .> push('%') .> push(_hex_digit(byte >> 4))
+            .> push(_hex_digit(byte and 0x0F))
           i = i + 1
         end
       else
