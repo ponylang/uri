@@ -78,12 +78,12 @@ class \nodoc\ iso _PropertyPercentEncodeOutputLegal
     ((c >= 'A') and (c <= 'Z')) or
       ((c >= 'a') and (c <= 'z')) or
       ((c >= '0') and (c <= '9')) or
-      (c == '-') or (c == '.') or (c == '_') or (c == '~')
-      // sub-delims or
+      (c == '-') or (c == '.') or (c == '_') or (c == '~') or
+      // sub-delims
       (c == '!') or (c == '$') or (c == '&') or (c == '\'') or
       (c == '(') or (c == ')') or (c == '*') or (c == '+') or
-      (c == ',') or (c == ';') or (c == '=')
-      // path-specific or
+      (c == ',') or (c == ';') or (c == '=') or
+      // path-specific
       (c == ':') or (c == '@') or (c == '/')
 
   fun _hex_string(c: U8): String val =>
