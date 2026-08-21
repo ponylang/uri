@@ -25,8 +25,8 @@ class \nodoc\ iso _PropertyURIRoundtrip is Property1[_ValidURIInput]
         original == reparsed,
         "roundtrip failed for: " + original.string())
     | let err: URIParseError val =>
-      ph.fail("roundtrip parse failed for: " + original.string()
-        + " error: " + err.string())
+      ph.fail("roundtrip parse failed for: " + original.string() +
+        " error: " + err.string())
     end
 
 class \nodoc\ iso _PropertyInvalidSchemeRejected is Property1[String val]

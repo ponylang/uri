@@ -112,9 +112,9 @@ primitive NormalizeURI
 
         // Empty path normalization (http and https only)
         let scheme_path =
-          if (norm_path == "")
-            and (scheme_authority isnt None)
-            and ((scheme == "http") or (scheme == "https"))
+          if (norm_path == "") and
+            (scheme_authority isnt None) and
+            ((scheme == "http") or (scheme == "https"))
           then
             "/"
           else

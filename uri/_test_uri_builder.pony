@@ -423,8 +423,8 @@ class \nodoc\ iso _PropertyBuildFromRoundtrip is Property1[_ValidURIInput]
         rebuilt.string(),
         "roundtrip failed for: " + original.string())
     | let e: URIBuildError val =>
-      ph.fail("build failed for: " + original.string()
-        + " error: " + e.string())
+      ph.fail("build failed for: " + original.string() +
+        " error: " + e.string())
     end
 
 class \nodoc\ iso _PropertyBuildParseRoundtrip is Property1[_BuildInput]
@@ -488,8 +488,8 @@ class \nodoc\ iso _PropertyBuildInvalidSchemeFails
     | let e: URIBuildError val =>
       ph.assert_true(
         e is InvalidScheme,
-        "expected InvalidScheme for: " + arg1
-          + " got: " + e.string())
+        "expected InvalidScheme for: " + arg1 +
+          " got: " + e.string())
     end
 
 // -- Generators --

@@ -282,8 +282,8 @@ class ref URIBuilder
     let path: String val =
       match authority
       | let _: URIAuthority =>
-        if (_path.size() > 0)
-          and (try _path(0)? != '/' else false end)
+        if (_path.size() > 0) and
+          (try _path(0)? != '/' else false end)
         then
           recover val
             String
@@ -303,8 +303,8 @@ class ref URIBuilder
     if s.size() == 0 then return false end
     try
       let first = s(0)?
-      if not (((first >= 'A') and (first <= 'Z'))
-        or ((first >= 'a') and (first <= 'z')))
+      if not (((first >= 'A') and (first <= 'Z')) or
+        ((first >= 'a') and (first <= 'z')))
       then
         return false
       end
@@ -315,10 +315,10 @@ class ref URIBuilder
       var i: USize = 1
       while i < s.size() do
         let c = s(i)?
-        if not (((c >= 'A') and (c <= 'Z'))
-          or ((c >= 'a') and (c <= 'z'))
-          or ((c >= '0') and (c <= '9'))
-          or (c == '+') or (c == '-') or (c == '.'))
+        if not (((c >= 'A') and (c <= 'Z')) or
+          ((c >= 'a') and (c <= 'z')) or
+          ((c >= '0') and (c <= '9')) or
+          (c == '+') or (c == '-') or (c == '.'))
         then
           return false
         end

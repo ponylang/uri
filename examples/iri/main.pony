@@ -97,8 +97,8 @@ actor Main
     | (let a: URI val, let b: URI val) =>
       match \exhaustive\ IRIEquivalent(a, b)
       | let result: Bool =>
-        env.out.print("  " + eq_a + " == " + eq_b + "? "
-          + result.string())
+        env.out.print("  " + eq_a + " == " + eq_b + "? " +
+          result.string())
       | let e: InvalidPercentEncoding val =>
         env.out.print("  Error: " + e.string())
       end

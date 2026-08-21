@@ -259,5 +259,5 @@ class val URI is (Stringable & Equatable[URI])
       else
         false
       end
-    scheme_eq and authority_eq and (path == that.path)
-      and query_eq and fragment_eq
+    scheme_eq and authority_eq and (path == that.path) and
+      query_eq and fragment_eq

@@ -85,8 +85,8 @@ primitive URIToIRI
 
               if valid and (bytes.size() == seq_len) then
                 (let cp, let cp_len) = bytes.utf32(0)?
-                if (cp_len.usize() == seq_len)
-                  and _should_decode(cp, allow_iprivate)
+                if (cp_len.usize() == seq_len) and
+                  _should_decode(cp, allow_iprivate)
                 then
                   for b in bytes.values() do
                     out.push(b)

@@ -58,8 +58,8 @@ class \nodoc\ iso _PropertyPercentEncodeOutputLegal
         else
           ph.assert_true(
             _is_path_legal(c),
-            "illegal character in encoded output: " + String.from_array([c])
-              + " (0x" + _hex_string(c) + ")")
+            "illegal character in encoded output: " + String.from_array([c]) +
+              " (0x" + _hex_string(c) + ")")
           i = i + 1
         end
       else
@@ -69,22 +69,22 @@ class \nodoc\ iso _PropertyPercentEncodeOutputLegal
     end
 
   fun _is_hex(c: U8): Bool =>
-    ((c >= '0') and (c <= '9'))
-      or ((c >= 'A') and (c <= 'F'))
-      or ((c >= 'a') and (c <= 'f'))
+    ((c >= '0') and (c <= '9')) or
+      ((c >= 'A') and (c <= 'F')) or
+      ((c >= 'a') and (c <= 'f'))
 
   fun _is_path_legal(c: U8): Bool =>
     // unreserved
-    ((c >= 'A') and (c <= 'Z'))
-      or ((c >= 'a') and (c <= 'z'))
-      or ((c >= '0') and (c <= '9'))
-      or (c == '-') or (c == '.') or (c == '_') or (c == '~')
+    ((c >= 'A') and (c <= 'Z')) or
+      ((c >= 'a') and (c <= 'z')) or
+      ((c >= '0') and (c <= '9')) or
+      (c == '-') or (c == '.') or (c == '_') or (c == '~') or
       // sub-delims
-      or (c == '!') or (c == '$') or (c == '&') or (c == '\'')
-      or (c == '(') or (c == ')') or (c == '*') or (c == '+')
-      or (c == ',') or (c == ';') or (c == '=')
+      (c == '!') or (c == '$') or (c == '&') or (c == '\'') or
+      (c == '(') or (c == ')') or (c == '*') or (c == '+') or
+      (c == ',') or (c == ';') or (c == '=') or
       // path-specific
-      or (c == ':') or (c == '@') or (c == '/')
+      (c == ':') or (c == '@') or (c == '/')
 
   fun _hex_string(c: U8): String val =>
     let hex = "0123456789ABCDEF"

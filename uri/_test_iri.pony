@@ -22,8 +22,8 @@ class \nodoc\ iso _PropertyIRIToURINoNonASCII
       let uri_str: String val = uri.string()
       for c in uri_str.values() do
         if c >= 0x80 then
-          ph.fail("non-ASCII byte in IRIToURI output: " + uri_str
-            + " from: " + arg1)
+          ph.fail("non-ASCII byte in IRIToURI output: " + uri_str +
+            " from: " + arg1)
           return
         end
       end
@@ -59,8 +59,8 @@ class \nodoc\ iso _PropertyURIToIRINoEncodedUcschar
         if s(i)? == '%' then
           if (i + 2) < s.size() then
             let first_byte =
-              (PercentDecode._hex_value(s(i + 1)?)? * 16)
-                + PercentDecode._hex_value(s(i + 2)?)?
+              (PercentDecode._hex_value(s(i + 1)?)? * 16) +
+                PercentDecode._hex_value(s(i + 2)?)?
             let seq_len = URIToIRI._utf8_sequence_length(first_byte)
             if (seq_len > 1) and ((i + (seq_len * 3)) <= s.size()) then
               let bytes = String(seq_len)
@@ -74,20 +74,20 @@ class \nodoc\ iso _PropertyURIToIRINoEncodedUcschar
                   break
                 end
                 bytes.push(
-                  (PercentDecode._hex_value(s(offset + 1)?)? * 16)
-                    + PercentDecode._hex_value(s(offset + 2)?)?)
+                  (PercentDecode._hex_value(s(offset + 1)?)? * 16) +
+                    PercentDecode._hex_value(s(offset + 2)?)?)
                 j = j + 1
               end
               if valid and (bytes.size() == seq_len) then
                 try
                   (let cp, let cp_len) = bytes.utf32(0)?
-                  if (cp_len.usize() == seq_len)
-                    and _IRIChars.is_ucschar(cp)
-                    and (not _IRIChars.is_bidi_format(cp))
+                  if (cp_len.usize() == seq_len) and
+                    _IRIChars.is_ucschar(cp) and
+                    (not _IRIChars.is_bidi_format(cp))
                   then
                     ph.fail(
-                      "encoded ucschar U+"
-                        + _hex_u32(cp) + " in: " + s)
+                      "encoded ucschar U+" +
+                        _hex_u32(cp) + " in: " + s)
                     return
                   end
                 end
@@ -143,9 +143,9 @@ class \nodoc\ iso _PropertyIRIToURIIdempotent
       let twice = IRIToURI(once)
       ph.assert_true(
         once == twice,
-        "not idempotent: once=" + once.string()
-          + " twice=" + twice.string()
-          + " input=" + arg1)
+        "not idempotent: once=" + once.string() +
+          " twice=" + twice.string() +
+          " input=" + arg1)
     | let _: URIParseError val => None
     end
 
@@ -166,9 +166,9 @@ class \nodoc\ iso _PropertyURIToIRIIdempotent
       let twice = URIToIRI(once)
       ph.assert_true(
         once == twice,
-        "not idempotent: once=" + once.string()
-          + " twice=" + twice.string()
-          + " input=" + arg1)
+        "not idempotent: once=" + once.string() +
+          " twice=" + twice.string() +
+          " input=" + arg1)
     | let _: URIParseError val => None
     end
 
@@ -190,9 +190,9 @@ class \nodoc\ iso _PropertyIRIToURIRoundtrip
       let back = URIToIRI(uri_form)
       ph.assert_true(
         iri == back,
-        "roundtrip failed: original=" + iri.string()
-          + " uri=" + uri_form.string()
-          + " back=" + back.string())
+        "roundtrip failed: original=" + iri.string() +
+          " uri=" + uri_form.string() +
+          " back=" + back.string())
     | let _: URIParseError val => None
     end
 
@@ -214,9 +214,9 @@ class \nodoc\ iso _PropertyNormalizeIRIIdempotent
       | let twice: URI val =>
         ph.assert_true(
           once == twice,
-          "not idempotent: once=" + once.string()
-            + " twice=" + twice.string()
-            + " original=" + uri.string())
+          "not idempotent: once=" + once.string() +
+            " twice=" + twice.string() +
+            " original=" + uri.string())
       | let e: InvalidPercentEncoding val =>
         ph.fail("second normalization failed for: " + once.string())
       end
@@ -262,8 +262,8 @@ class \nodoc\ iso _PropertyIRIEquivalentCrossForms
       | let result: Bool =>
         ph.assert_true(
           result,
-          "IRI and URI form not equivalent: iri=" + iri.string()
-            + " uri=" + uri_form.string())
+          "IRI and URI form not equivalent: iri=" + iri.string() +
+            " uri=" + uri_form.string())
       | let e: InvalidPercentEncoding val =>
         ph.fail("equivalence failed: " + iri.string())
       end
@@ -289,10 +289,10 @@ class \nodoc\ iso _PropertyIRIPercentEncodePreservesUcschar
     ph.assert_eq[USize](
       input_ucschar,
       output_ucschar,
-      "ucschar count mismatch: input has " + input_ucschar.string()
-        + " non-ASCII codepoints but output has "
-        + output_ucschar.string()
-        + " input=" + arg1 + " output=" + encoded)
+      "ucschar count mismatch: input has " + input_ucschar.string() +
+        " non-ASCII codepoints but output has " +
+        output_ucschar.string() +
+        " input=" + arg1 + " output=" + encoded)
 
   fun _count_non_ascii_codepoints(s: String val): USize =>
     var count: USize = 0
@@ -337,8 +337,8 @@ class \nodoc\ iso _PropertyIRIPercentEncodeEncodesNonAllowed
     // All non-ASCII bytes should be percent-encoded
     for c in encoded.values() do
       if c >= 0x80 then
-        ph.fail("non-ASCII byte in output for non-ucschar input: " + encoded
-          + " from: " + arg1)
+        ph.fail("non-ASCII byte in output for non-ucschar input: " + encoded +
+          " from: " + arg1)
         return
       end
     end
@@ -748,8 +748,8 @@ class \nodoc\ iso _TestNormalizeIRIKnownGood is UnitTest
           result,
           "IRIEquivalent(" + a_str + ", " + b_str + ")")
       | let e: InvalidPercentEncoding val =>
-        h.fail("equivalence failed for (" + a_str + ", " + b_str
-          + "): " + e.string())
+        h.fail("equivalence failed for (" + a_str + ", " + b_str +
+          "): " + e.string())
       end
     else
       h.fail("parse failed for (" + a_str + ", " + b_str + ")")

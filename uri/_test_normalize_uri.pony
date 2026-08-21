@@ -21,9 +21,9 @@ class \nodoc\ iso _PropertyNormalizeIdempotent
       | let twice: URI val =>
         ph.assert_true(
           once == twice,
-          "not idempotent: once=" + once.string()
-            + " twice=" + twice.string()
-            + " original=" + uri.string())
+          "not idempotent: once=" + once.string() +
+            " twice=" + twice.string() +
+            " original=" + uri.string())
       | let e: InvalidPercentEncoding val =>
         ph.fail("second normalization failed for: " + once.string())
       end
@@ -127,8 +127,8 @@ class \nodoc\ iso _PropertyNormalizeNoEncodedUnreserved
             let byte = (hi * 16) + lo
             ph.assert_false(
               PercentEncode._is_unreserved(byte),
-              label + " has encoded unreserved char: "
-                + s.substring(i.isize(), (i + 3).isize()))
+              label + " has encoded unreserved char: " +
+                s.substring(i.isize(), (i + 3).isize()))
           end
           i = i + 3
         else
@@ -186,10 +186,10 @@ class \nodoc\ iso _PropertyNormalizeUppercaseHex
             let h1 = s(i + 1)?
             let h2 = s(i + 2)?
             ph.assert_false(
-              ((h1 >= 'a') and (h1 <= 'f'))
-                or ((h2 >= 'a') and (h2 <= 'f')),
-              label + " has lowercase hex: "
-                + s.substring(i.isize(), (i + 3).isize()))
+              ((h1 >= 'a') and (h1 <= 'f')) or
+                ((h2 >= 'a') and (h2 <= 'f')),
+              label + " has lowercase hex: " +
+                s.substring(i.isize(), (i + 3).isize()))
           end
           i = i + 3
         else
@@ -217,8 +217,8 @@ class \nodoc\ iso _PropertyNormalizeNoDotSegments
       ph.assert_eq[String val](
         RemoveDotSegments(path),
         path,
-        "path still has dot segments: " + path
-          + " from: " + arg1.uri.string())
+        "path still has dot segments: " + path +
+          " from: " + arg1.uri.string())
     | let e: InvalidPercentEncoding val =>
       ph.fail("normalization failed: " + arg1.uri.string())
     end
@@ -240,11 +240,11 @@ class \nodoc\ iso _PropertyNormalizeParseRoundtrip
       | let reparsed: URI val =>
         ph.assert_true(
           normalized == reparsed,
-          "roundtrip failed: normalized=" + normalized.string()
-            + " reparsed=" + reparsed.string())
+          "roundtrip failed: normalized=" + normalized.string() +
+            " reparsed=" + reparsed.string())
       | let e: URIParseError val =>
-        ph.fail("reparse failed for: " + normalized.string()
-          + " error: " + e.string())
+        ph.fail("reparse failed for: " + normalized.string() +
+          " error: " + e.string())
       end
     | let e: InvalidPercentEncoding val =>
       ph.fail("normalization failed: " + arg1.uri.string())
@@ -274,8 +274,8 @@ class \nodoc\ iso _PropertyNormalizeNoDefaultPort
             | let p: U16 =>
               ph.assert_false(
                 p == default_port,
-                "default port " + default_port.string()
-                  + " not removed for scheme " + scheme)
+                "default port " + default_port.string() +
+                  " not removed for scheme " + scheme)
             end
           end
         end
@@ -305,8 +305,8 @@ class \nodoc\ iso _PropertyNormalizeNoEmptyPathWithAuthority
           | let _: URIAuthority =>
             ph.assert_false(
               u.path == "",
-              "empty path with authority for " + scheme + ": "
-                + u.string())
+              "empty path with authority for " + scheme + ": " +
+                u.string())
           end
         end
       end
@@ -341,13 +341,13 @@ class \nodoc\ iso _PropertyNormalizeEquivalentConsistent
         ph.assert_eq[Bool](
           expected,
           actual,
-          "equivalent inconsistent: a=" + a.string()
-            + " b=" + b.string()
-            + " norm_a=" + norm_a.string()
-            + " norm_b=" + norm_b.string())
+          "equivalent inconsistent: a=" + a.string() +
+            " b=" + b.string() +
+            " norm_a=" + norm_a.string() +
+            " norm_b=" + norm_b.string())
       | let e: InvalidPercentEncoding val =>
-        ph.fail("URIEquivalent failed: " + a.string()
-          + " vs " + b.string())
+        ph.fail("URIEquivalent failed: " + a.string() +
+          " vs " + b.string())
       end
     | (let _: InvalidPercentEncoding val, _) =>
       ph.fail("normalization failed for a: " + a.string())
@@ -527,8 +527,8 @@ class \nodoc\ iso _TestURIEquivalentKnownGood is UnitTest
           result,
           "URIEquivalent(" + a_str + ", " + b_str + ")")
       | let e: InvalidPercentEncoding val =>
-        h.fail("equivalence failed for (" + a_str + ", " + b_str
-          + "): " + e.string())
+        h.fail("equivalence failed for (" + a_str + ", " + b_str +
+          "): " + e.string())
       end
     else
       h.fail("parse failed for (" + a_str + ", " + b_str + ")")
