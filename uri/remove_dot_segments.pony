@@ -17,8 +17,8 @@ primitive RemoveDotSegments
     // Fast path: if the path can't contain dot segments, return unchanged.
     // Check for substrings "./" and "/." which cover all mid-path and
     // trailing dot segments, plus exact matches for bare "." and "..".
-    if (not path.contains("./")) and (not path.contains("/."))
-      and (path != ".") and (path != "..")
+    if (not path.contains("./")) and (not path.contains("/.")) and
+      (path != ".") and (path != "..")
     then
       return path
     end
@@ -61,8 +61,8 @@ primitive RemoveDotSegments
     output.clone()
 
   fun _starts_with(s: String box, prefix: String box): Bool =>
-    (s.size() >= prefix.size())
-      and (s.compare_sub(prefix, prefix.size()) is Equal)
+    (s.size() >= prefix.size()) and
+      (s.compare_sub(prefix, prefix.size()) is Equal)
 
   fun _remove_last_segment(output: String ref) =>
     """

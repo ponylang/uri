@@ -31,8 +31,8 @@ class \nodoc\ iso _PropertyDotSegmentsNoDots is Property1[String val]
     // Check that none of the segments are "." or ".."
     ph.assert_true(
       not _has_dot_segment(result),
-      "dot segment in output for input: " + arg1
-        + " output: " + result)
+      "dot segment in output for input: " + arg1 +
+        " output: " + result)
 
   fun _has_dot_segment(path: String val): Bool =>
     """
@@ -78,8 +78,8 @@ class \nodoc\ iso _PropertyDotSegmentsPreservesAbsolute
     let result = RemoveDotSegments(arg1)
     ph.assert_true(
       try result(0)? == '/' else false end,
-      "lost leading / for input: " + arg1
-        + " output: " + result)
+      "lost leading / for input: " + arg1 +
+        " output: " + result)
 
 class \nodoc\ iso _TestRemoveDotSegmentsKnownGood is UnitTest
   """

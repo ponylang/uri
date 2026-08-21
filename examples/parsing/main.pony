@@ -41,7 +41,8 @@ actor Main
     env.out.print("")
 
     // Query parameter lookup
-    match \exhaustive\ ParseURI("https://example.com/search?q=pony&page=1&page=2")
+    match \exhaustive\ ParseURI(
+          "https://example.com/search?q=pony&page=1&page=2")
     | let u: URI val =>
       env.out.print("Query parameters for: " + u.string())
       match u.query_params()
@@ -87,8 +88,8 @@ actor Main
 
     // Percent encoding and decoding
     env.out.print("Percent encoding:")
-    env.out.print("  encode(\"hello world/foo\", Path): "
-      + PercentEncode("hello world/foo", URIPartPath))
+    env.out.print("  encode(\"hello world/foo\", Path): " +
+      PercentEncode("hello world/foo", URIPartPath))
 
     env.out.print("Percent decoding:")
     match \exhaustive\ PercentDecode("hello%20world")
@@ -156,8 +157,8 @@ actor Main
     | (let a: URI val, let b: URI val) =>
       match \exhaustive\ URIEquivalent(a, b)
       | let result: Bool =>
-        env.out.print("  " + eq_a + " == " + eq_b + "? "
-          + result.string())
+        env.out.print("  " + eq_a + " == " + eq_b + "? " +
+          result.string())
       | let e: InvalidPercentEncoding val =>
         env.out.print("  Equivalence error: " + e.string())
       end
@@ -170,8 +171,8 @@ actor Main
     | let reference: URI val =>
       match \exhaustive\ ResolveURI(base, reference)
       | let result: URI val =>
-        env.out.print("  resolve(\"" + reference_str + "\") = "
-          + result.string())
+        env.out.print("  resolve(\"" + reference_str + "\") = " +
+          result.string())
       | let e: ResolveURIError val =>
         env.out.print("  resolve error: " + e.string())
       end

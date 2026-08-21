@@ -145,13 +145,13 @@ primitive PercentEncode
 
   fun _is_unreserved(c: U8): Bool =>
     // ALPHA / DIGIT / "-" / "." / "_" / "~"
-    ((c >= 'A') and (c <= 'Z'))
-      or ((c >= 'a') and (c <= 'z'))
-      or ((c >= '0') and (c <= '9'))
-      or (c == '-') or (c == '.') or (c == '_') or (c == '~')
+    ((c >= 'A') and (c <= 'Z')) or
+      ((c >= 'a') and (c <= 'z')) or
+      ((c >= '0') and (c <= '9')) or
+      (c == '-') or (c == '.') or (c == '_') or (c == '~')
 
   fun _is_sub_delim(c: U8): Bool =>
     // "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-    (c == '!') or (c == '$') or (c == '&') or (c == '\'')
-      or (c == '(') or (c == ')') or (c == '*') or (c == '+')
-      or (c == ',') or (c == ';') or (c == '=')
+    (c == '!') or (c == '$') or (c == '&') or (c == '\'') or
+      (c == '(') or (c == ')') or (c == '*') or (c == '+') or
+      (c == ',') or (c == ';') or (c == '=')

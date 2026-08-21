@@ -192,10 +192,10 @@ primitive ParseURIAuthority
     // Basic validation: only hex digits, ':', and '.' (for IPv4-mapped)
     for c in content.values() do
       if not (
-        ((c >= '0') and (c <= '9'))
-          or ((c >= 'A') and (c <= 'F'))
-          or ((c >= 'a') and (c <= 'f'))
-          or (c == ':') or (c == '.'))
+        ((c >= '0') and (c <= '9')) or
+          ((c >= 'A') and (c <= 'F')) or
+          ((c >= 'a') and (c <= 'f')) or
+          (c == ':') or (c == '.'))
       then
         return false
       end
@@ -241,9 +241,9 @@ primitive ParseURIAuthority
       while i < dot_pos do
         let c = content(i)?
         if not (
-          ((c >= '0') and (c <= '9'))
-            or ((c >= 'A') and (c <= 'F'))
-            or ((c >= 'a') and (c <= 'f')))
+          ((c >= '0') and (c <= '9')) or
+            ((c >= 'A') and (c <= 'F')) or
+            ((c >= 'a') and (c <= 'f')))
         then
           return false
         end
@@ -275,12 +275,12 @@ primitive ParseURIAuthority
     true
 
   fun _is_unreserved(c: U8): Bool =>
-    ((c >= 'A') and (c <= 'Z'))
-      or ((c >= 'a') and (c <= 'z'))
-      or ((c >= '0') and (c <= '9'))
-      or (c == '-') or (c == '.') or (c == '_') or (c == '~')
+    ((c >= 'A') and (c <= 'Z')) or
+      ((c >= 'a') and (c <= 'z')) or
+      ((c >= '0') and (c <= '9')) or
+      (c == '-') or (c == '.') or (c == '_') or (c == '~')
 
   fun _is_sub_delim(c: U8): Bool =>
-    (c == '!') or (c == '$') or (c == '&') or (c == '\'')
-      or (c == '(') or (c == ')') or (c == '*') or (c == '+')
-      or (c == ',') or (c == ';') or (c == '=')
+    (c == '!') or (c == '$') or (c == '&') or (c == '\'') or
+      (c == '(') or (c == ')') or (c == '*') or (c == '+') or
+      (c == ',') or (c == ';') or (c == '=')

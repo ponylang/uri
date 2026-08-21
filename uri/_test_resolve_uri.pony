@@ -34,8 +34,8 @@ class \nodoc\ iso _PropertyResolveResultAbsolute
         | let _: String => true
         else false
         end,
-        "result has no scheme for base: " + base.string()
-          + " ref: " + reference.string())
+        "result has no scheme for base: " + base.string() +
+          " ref: " + reference.string())
     | let e: ResolveURIError val =>
       ph.fail("unexpected error: " + e.string())
     end
@@ -181,8 +181,8 @@ class \nodoc\ iso _PropertyResolveRoundtrip
           result == reparsed,
           "roundtrip failed for: " + result.string())
       | let e: URIParseError val =>
-        ph.fail("reparse failed for: " + result.string()
-          + " error: " + e.string())
+        ph.fail("reparse failed for: " + result.string() +
+          " error: " + e.string())
       end
     | let e: ResolveURIError val =>
       ph.fail("unexpected error: " + e.string())
@@ -336,12 +336,12 @@ primitive _AssertResolve
             result.string(),
             "resolve(" + base_str + ", " + reference_str + ")")
         | let e: ResolveURIError val =>
-          h.fail("resolve error for (" + base_str + ", " + reference_str
-            + "): " + e.string())
+          h.fail("resolve error for (" + base_str + ", " + reference_str +
+            "): " + e.string())
         end
       | let e: URIParseError val =>
-        h.fail("parse error for reference " + reference_str
-          + ": " + e.string())
+        h.fail("parse error for reference " + reference_str +
+          ": " + e.string())
       end
     | let e: URIParseError val =>
       h.fail("parse error for base " + base_str + ": " + e.string())

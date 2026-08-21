@@ -13,7 +13,8 @@ actor Main
 
     // Parse a form-urlencoded string (e.g., from an HTTP POST body)
     env.out.print("Parsing a standalone string:")
-    match \exhaustive\ ParseFormURLEncoded("username=jane&color=blue&color=green")
+    match \exhaustive\ ParseFormURLEncoded(
+          "username=jane&color=blue&color=green")
     | let params: FormURLEncoded val =>
       // Look up a single value
       match params.get("username")
@@ -41,7 +42,8 @@ actor Main
 
     // Plus signs decode as spaces, percent-encoding is decoded
     env.out.print("Decoding special characters:")
-    match \exhaustive\ ParseFormURLEncoded("greeting=hello+world&path=%2Fhome%2Fuser")
+    match \exhaustive\ ParseFormURLEncoded(
+          "greeting=hello+world&path=%2Fhome%2Fuser")
     | let params: FormURLEncoded val =>
       match params.get("greeting")
       | let v: String => env.out.print("  greeting: " + v)
@@ -68,7 +70,8 @@ actor Main
 
     // URI.query_params() — convenience wrapper for query strings
     env.out.print("Parsing query parameters from a URI:")
-    match \exhaustive\ ParseURI("https://example.com/search?q=pony+lang&limit=10")
+    match \exhaustive\ ParseURI(
+          "https://example.com/search?q=pony+lang&limit=10")
     | let u: URI val =>
       match u.query_params()
       | let params: FormURLEncoded val =>

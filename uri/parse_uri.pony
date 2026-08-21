@@ -135,8 +135,8 @@ primitive ParseURI
     end
     try
       let first = candidate(0)?
-      if not (((first >= 'A') and (first <= 'Z'))
-        or ((first >= 'a') and (first <= 'z')))
+      if not (((first >= 'A') and (first <= 'Z')) or
+        ((first >= 'a') and (first <= 'z')))
       then
         return false
       end
@@ -144,10 +144,10 @@ primitive ParseURI
       while i < candidate.size() do
         let c = candidate(i)?
         if not (
-          ((c >= 'A') and (c <= 'Z'))
-            or ((c >= 'a') and (c <= 'z'))
-            or ((c >= '0') and (c <= '9'))
-            or (c == '+') or (c == '-') or (c == '.'))
+          ((c >= 'A') and (c <= 'Z')) or
+            ((c >= 'a') and (c <= 'z')) or
+            ((c >= '0') and (c <= '9')) or
+            (c == '+') or (c == '-') or (c == '.'))
         then
           return false
         end

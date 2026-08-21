@@ -63,8 +63,8 @@ class \nodoc\ iso _PropertyPathSegmentRoundtrip is Property1[String val]
             ph.assert_eq[String val](
               segs(i)?,
               segs2(i)?,
-              "roundtrip segment " + i.string()
-                + " mismatch for: " + arg1)
+              "roundtrip segment " + i.string() +
+                " mismatch for: " + arg1)
           end
           i = i + 1
         end

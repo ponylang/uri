@@ -46,9 +46,9 @@ primitive IRIToURI
       uri_fragment)
 
   fun _is_hex(c: U8): Bool =>
-    ((c >= '0') and (c <= '9'))
-      or ((c >= 'A') and (c <= 'F'))
-      or ((c >= 'a') and (c <= 'f'))
+    ((c >= '0') and (c <= '9')) or
+      ((c >= 'A') and (c <= 'F')) or
+      ((c >= 'a') and (c <= 'f'))
 
   fun _encode(s: String val): String val =>
     var has_non_ascii: Bool = false
@@ -65,8 +65,8 @@ primitive IRIToURI
     while i < s.size() do
       try
         let c = s(i)?
-        if (c == '%') and ((i + 2) < s.size())
-          and _is_hex(s(i + 1)?) and _is_hex(s(i + 2)?)
+        if (c == '%') and ((i + 2) < s.size()) and
+          _is_hex(s(i + 1)?) and _is_hex(s(i + 2)?)
         then
           // Pass through existing percent-encoded triplets
           out.push(c)
