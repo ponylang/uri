@@ -18,7 +18,7 @@ class \nodoc\ iso _PropertyFormURLEncodedRoundtrip
         ["value"; "1"; "hello"; ""; "test"; "42"; "abc"])
     let pair_gen = Generators.zip2[String val, String val](key_gen, val_gen)
     Generators.array_of[
-      (String val, String val)](pair_gen where min = 0, max = 5)
+      (String val, String val)](pair_gen where from = 0, to = 5)
       .map[Array[(String val, String val)] val](
         {(arr: Array[(String val, String val)] ref)
           : Array[(String val, String val)] val
