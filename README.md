@@ -13,6 +13,7 @@ Beta quality software that will change frequently. Expect breaking changes. That
 * `corral fetch` to fetch your dependencies
 * `use "uri"` to include this package
   * `use "uri/template"` for URI template expansion
+* Requires ponyc 0.70.0 or later.
 * `corral run -- ponyc` to compile your application
 
 ## Usage
